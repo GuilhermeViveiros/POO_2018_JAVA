@@ -6,8 +6,6 @@
  * @version (número de versão ou data)
  */
 
-import java.util.Random;
-
 public class Entidade
 {
     // variáveis de instância - substitua o exemplo abaixo pelo seu próprio
@@ -15,16 +13,14 @@ public class Entidade
     private String nome;
     private String mail;
     private String morada;
-    private long pw;
-    private int key;
+    private Password pw;
 
     public Entidade(){
         this.nif    = -1;
         this.nome   = " O Seu nome ";
         this.mail   = " utilizario@example.com";
         this.morada = " A sua morada ";
-        this.key    = java.util.Random.nextInt();
-        this.pw     = -1;
+        this.pw     = new Password();
     }
 
     public Entidade( long ni_p, String nom_p, String mai_p , String morad_p ){
@@ -32,8 +28,8 @@ public class Entidade
         this.nome   = nom_p ;
         this.mail   = mai_p ;
         this.morada = morad_p ;
-        this.key    = java.util.Random.nextInt();
-        this.pw     = -1;
+        this.pw     = new Password();
+
     }
 
     public Entidade( Entidade inc ){
@@ -41,8 +37,9 @@ public class Entidade
         this.nome   = inc.getNome();
         this.mail   = inc.getMail();
         this.morada = inc.getMorada();
-        this.key    = java.util.Random.nextInt();
-        this.pw     = -1;
+        this.pw     = new Password();
+
+        
     }
     // getters!
 
