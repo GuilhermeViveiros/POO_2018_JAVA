@@ -21,7 +21,7 @@ public class StringA extends Empresa
         this.use = v.length;
         
     }
-    
+    // copia de uma string para a original
     public StringA ( StringA aux ){
         
         String[] v = aux.getA();
@@ -42,7 +42,7 @@ public class StringA extends Empresa
     }
     
     
-    
+    // aumenta para o dobro o tamanho
     private void tabledoubling(){
         String[] v = new String[ this.x.length * 2 ];
         System.arraycopy(this.x, 0, v, 0, this.x.length);
