@@ -24,8 +24,12 @@ public class Password
         this.password = -1;
     }
 
-    public boolean check(String entry ){
+    public Password( Password x ){
         
+    }
+
+    public boolean check(String entry ){
+
         return (this.code( entry ) == this.password) ;
     }
     

@@ -37,9 +37,8 @@ public class Entidade
         this.nome   = inc.getNome();
         this.mail   = inc.getMail();
         this.morada = inc.getMorada();
-        this.pw     = new Password();
+        this.pw     = new Password( inc.pw );
 
-        
     }
     // getters!
 
@@ -60,8 +59,20 @@ public class Entidade
     }
 
     public String toString(){
-        
-        return ( )
+        String text;
+        space = "________________________________________";
+
+        text  = space;
+        text += "nome: " + this.nome + "\n";
+        text += "nif: " + this.nif + "\n";
+        text += space;
+
+        text += "morada: " + this.morada + "\n";
+        text += space + "\n" ;
+
+        text += "mail: " + this.mail + "\n";
+
+        return ( text );
     }
 
     
