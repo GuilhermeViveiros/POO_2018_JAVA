@@ -75,19 +75,6 @@ public class Entidade
         return ( text );
     }
 
-    
-    public boolean verifymail( String x){
-    
-    }
-    
-    public boolean verifymorada( String x){
-    
-    }
-    
-    public boolean verifynif( long x, int key ){
+
         
-    }
-    
-    
-    
 }
