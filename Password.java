@@ -40,6 +40,7 @@ public class Password
     public void setPassword( String x){
         this.pw = this.encode( x );
     }
+    
     // métodos publicos.
     public boolean check(String entry ){
 

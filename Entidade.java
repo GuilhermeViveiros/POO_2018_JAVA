@@ -60,7 +60,7 @@ public class Entidade
 
     public String toString(){
         String text;
-        space = "________________________________________";
+        space = "________________________________________\n";
 
         text  = space;
         text += "nome: " + this.nome + "\n";
@@ -68,7 +68,7 @@ public class Entidade
         text += space;
 
         text += "morada: " + this.morada + "\n";
-        text += space + "\n" ;
+        text += space;
 
         text += "mail: " + this.mail + "\n";
 
