@@ -49,10 +49,14 @@ public class StringA extends Empresa
         this.x=v;
     }
     
+    public boolean full( ){
+        return this.use == this.x.length;
+    }
+
     // mete um int no fim da lista
     public void append( String val ){
         
-        if( 2 * this.use > this.x.length ){
+        if( this.full() ){
             
             this.tabledoubling();
             this.append(val);
