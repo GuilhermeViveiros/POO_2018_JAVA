@@ -2,8 +2,8 @@
 /**
  * Escreva a descrição da classe Entidade aqui.
  * 
- * @author (seu nome) 
- * @version (número de versão ou data)
+ * @author (Gonçalo Faria); 
+ * @version (v1);
  */
 
 public class Entidade
@@ -37,10 +37,10 @@ public class Entidade
         this.nome   = inc.getNome();
         this.mail   = inc.getMail();
         this.morada = inc.getMorada();
-        this.pw     = new Password( inc.pw );
+        this.pw     = new Password();
 
     }
-    // getters!
+    // getters !! 
 
     public long getNif(){
         return this.nif;
@@ -59,11 +59,11 @@ public class Entidade
     }
 
     public String toString(){
-        String text;
+        String text,space;
         space = "________________________________________\n";
 
         text  = space;
-        text += "nome: " + this.nome + "\n";
+        text += "nome: " + this.nome + "\n\n";
         text += "nif: " + this.nif + "\n";
         text += space;
 
@@ -75,6 +75,40 @@ public class Entidade
         return ( text );
     }
 
+    // setters!!
 
+    public void setNif( long n){
+        this.nif = n;
+    }
+
+    public void setNome( String n ){
+        this.nome = n;
+    }
+
+    public void setMail( String n ){
+        this.mail = n;
+    }
+
+    public void setMorada( String n ){
+        this.morada = n;
+    }
+
+    public boolean setPassword( String n ){
         
+        return this.pw.setPassword( n );
+    }
+    
+    
+    public boolean AlterPassword( String next ,String current ){
+        Password nPW = new Password();
+        
+        if ( this.pw.check( current ) ){
+            nPW.setPassword( next );
+            this.pw = nPW;
+            
+            return true;
+        }
+        return false;
+    }
+    
 }

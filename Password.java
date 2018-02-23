@@ -6,39 +6,33 @@
  * @version (número de versão ou data)
  */
 
-import java.util.Random;
+import java.util.*;
 
-public class Password
+public class Password 
 {
     private int key;
     private long pw;
 
     public Password(){
-        this.key = java.util.Random.nextInt();
+        Random randomno = new Random();
+        
+        this.key = randomno.nextInt( Integer.MAX_VALUE - 1 ) + 1;
         this.pw  = -1;
     }
 
-    public Password( Password x ,String pass ){
-        if ( x.check( pass ) ){
-            this.key = x.getKey();
-            this.pw  = x.getPw(); 
-
-        }
+    public boolean empty(){
+        return ( this.pw == -1 );
     }
-
-    // get -> privados.
-    private Password getKey(){
-        return this.key ;
-    }
-
-    private Password getPw(){
-        return this.pw ;
-    }
-
+    
     // set ->
 
-    public void setPassword( String x){
-        this.pw = this.encode( x );
+    public boolean setPassword( String x){
+        if ( this.empty() ){
+            this.pw = this.encode( x );
+            return true;
+        }  
+        
+        return false;
     }
     
     // métodos publicos.
@@ -48,14 +42,15 @@ public class Password
 
     }
 
-    private long encode ( String pw ){
+    private long encode ( String pp ){
         
         long tmp=0;
 
-        for(int i=0; i<pw.length() ; i++ ){
-            tmp+=  (int)pw.charAt(i) * pow( this.key , (i+1) );
+        for(int i=0; i<pp.length() ; i++ ){
+            tmp+=  (int)pp.charAt(i) * Math.pow( this.key , (i+1) );
         }
-        this.pw = tmp%MAX_VALUE;
+        return tmp%Integer.MAX_VALUE;
+        
     }
     
     
