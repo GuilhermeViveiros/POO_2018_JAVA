@@ -8,30 +8,31 @@ import java.text.SimpleDateFormat; //formato da data
 public class Empresa extends Entidade 
 {   
     Scanner s = new Scanner(System.in);
-   // StringA ex = new StringA();
+    //acedo a StringA 
+    StringA My_string = new StringA();
     //modulo para aceder a todas as funcoes da Entidade
     Entidade aux = new Entidade();
     //esta Entidade ainda é nula 
     private Entidade comum ;
     //esta e a lista de setores que eu tenho , posso os remover adicionar .. StringA faz isso
-    private String[] setores;
+    private StringA[] setores;
     // verifica se algo está correto ou nao em termos de "Passwords"
    
    
        
     public Empresa(){  
-       this.comum = new Entidade(); //Entidade 
+    
+       
     }
     
    //falta acabar 
-    public void rem_set ( String [] x){
+    public void rem_set ( StringA [] x){
      
     } 
 
     // cria me a minha empresa a partir de uma entidade dada 
     // neste caso so copia os valores da entidade
-    // colocei pass mas nao sei se preciso qualquer coisa tiro ::::::????????
-       public Empresa( long nif, String nome, String mail , String morada ,  String[] x){
+       public Empresa( long nif, String nome, String mail , String morada ,  StringA[] x){
         System.out.println ("Digite uma password para a sua empresa");
         String pass =  s.nextLine();
         setPassword ( pass);
@@ -51,7 +52,7 @@ public class Empresa extends Entidade
          
          comum = new Entidade();   
 
-         String[] set = x.getSetores();
+         StringA[] set = x.getSetores();
       
          
          this.comum = new Entidade();
@@ -63,13 +64,13 @@ public class Empresa extends Entidade
          
     }
          
-        public void setSetores ( String[] x) {
+        public void setSetores ( StringA[] x) {
             this.setores = x;
         }
         
         
         // da me os setores de uma string
-        public String[] getSetores() {
+        public StringA[] getSetores() {
             return this.setores;   
         }
 
