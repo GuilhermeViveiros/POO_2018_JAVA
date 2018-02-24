@@ -16,8 +16,7 @@ public class Empresa extends Entidade
     //esta e a lista de setores que eu tenho , posso os remover adicionar .. StringA faz isso
     private String[] setores;
     // verifica se algo está correto ou nao em termos de "Passwords"
-    public boolean check;
-    //
+   
    
        
     public Empresa(){  
