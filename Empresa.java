@@ -4,7 +4,7 @@ public class Empresa extends Entidade
 {   
 
     //modulo para aceder a todas as funcoes da Entidade
-    Entidade Entidad3 = new Entidade();
+    Entidade aux = new Entidade();
     //esta Entidade ainda é nula 
     private Entidade comum ;
     //esta e a lista de setores que eu tenho , posso os remover adicionar .. StringA faz isso
@@ -12,12 +12,9 @@ public class Empresa extends Entidade
     // da me a classe da empresa para saber em que "setor" está agrupada
     private String[] classe;
     // verifica se algo está correto ou nao em termos de "Passwords"
-
-    // _____-------------_______________-
-    private bollean check;
-    // check = checkPass();  -> a empresa recebe a pass????
-    
-
+    public boolean check;
+ 
+       
     public Empresa(){  
        this.comum = new Entidade(); //Entidade
        
@@ -27,12 +24,14 @@ public class Empresa extends Entidade
 
     // cria me a minha empresa a partir de uma entidade dada 
     // neste caso so copia os valores da entidade
-       public Empresa( long nif, String nome, String mail , String morada ){
-        this.comum.nif    = nif  ;
-        this.comum.nome   = nome ;
-        this.comum.mail   = mail ;
-        this.comum.morada = morada ;
-       
+    // colocei pass mas nao sei se preciso qualquer coisa tiro ::::::????????
+       public Empresa( long nif, String nome, String mail , String morada , String pass){
+       this.comum.setNif(nif) ;
+       this.comum.setNome (nome);   
+       this.comum.setMail (mail); 
+       this.comum.setMorada (morada);
+       // verifica se a pass está certa , ainda estou a decidir se é preciso
+       check = aux.checkPassword(pass);
         
 
     }
@@ -43,25 +42,12 @@ public class Empresa extends Entidade
          String[] pmoc = x.getclasse();
          
          this.comum = x;
-         
+         // estou a meter o array de setores e classes na minha empresa
          System.arraycopy ( this.setores , 0 , x.getsetores() ,0 , comp.length); 
          System.arraycopy ( this.classe  , 0 , x.getsetores() ,0 , pmoc.length);     
          
     }
-
-        
-          // retorna me o nif da
-        public long nif = Entidad3.getNif();
-        // retorna me o nome
-        public String nome = Entidad3.getNome();
-        // retorna me o mail 
-        public String mail = Entidad3.getMail();
-        // retorna me a morada
-        public String morada = Entidad3.getMorada();
-        // -> verifica se a pass está correta ou nao
-        public boolean checkPass = Entidad3.checkPassword();
-
-   
+          
         // da me os setores de uma string
         public String[] getsetores() {
             return this.setores;   
@@ -75,7 +61,27 @@ public class Empresa extends Entidade
         //public Entidade getID() {
         //    return this.comum;
         //} 
+        public String toString() {
+            String space;
+            String texto_final;
+            space = "         ";
+            texto_final = space + '\n';
+            // junta o nome
+            texto_final += "Nome :" + this.comum.getNome() + '\n' ;
+            // junta o mail
+            texto_final += "Mail :" + this.comum.getMail() + '\n'; 
+            //junta o nif
+            texto_final += "Nif :" + this.comum.getNif() + '\n';
+            // junta a morada
+            texto_final += "Morada :" + this.comum.getMorada() + '\n';
+            
+            texto_final += space;
 
+
+
+          return texto_final;  
+
+        }
 
   
 
