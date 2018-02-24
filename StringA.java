@@ -1,4 +1,4 @@
-public class StringA 
+public class StringA extends Empresa 
 {
     // variáveis de instância - substitua o exemplo abaixo pelo seu próprio
     private String[] x;
@@ -69,6 +69,19 @@ public class StringA
         }
         
     }
+   // Acabar esta funcao que retira uns elementos proprios de StringA 
+/*  
+    public void rmv ( int StringA[] v) {
+    
+        for ( int i=0 ; i < v.length ; i++) {
+            if ( elem v[i] ) 
+              1_back ( this.x , i);   
+        }
+    }
+
+*/
+
+    
     
  // cria um sub-array com as strings entre from e tu   
     public String[] getSub(int from , int to){
