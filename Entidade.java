@@ -98,6 +98,9 @@ public class Entidade
         return this.pw.setPassword( n );
     }
     
+    public boolean checkPassword( String n){
+        return this.pw.check(n);
+    }
     
     public boolean AlterPassword( String next ,String current ){
         Password nPW = new Password();
