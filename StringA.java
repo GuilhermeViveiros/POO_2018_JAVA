@@ -36,6 +36,10 @@ public class StringA extends Empresa
     public String[] getA(){
         return this.x;
     }
+
+    public void SetU(int x){
+        this.use = x;
+    }
     
     public int getU(){
         return this.use;
@@ -43,7 +47,7 @@ public class StringA extends Empresa
     
     
     // aumenta para o dobro o tamanho
-    private void tabledoubling(){
+    public void tabledoubling(){
         String[] v = new String[ this.x.length * 2 ];
         System.arraycopy(this.x, 0, v, 0, this.x.length);
         this.x=v;
@@ -70,16 +74,33 @@ public class StringA extends Empresa
         
     }
    // Acabar esta funcao que retira uns elementos proprios de StringA 
-/*  
-    public void rmv ( int StringA[] v) {
+ 
+    public boolean elem ( StringA x , String b) {
+        for ( int i=0; i < x.getA().length ; i++) {
+            if ( b == x.getA()[i] ) return true;
+        }
+        return false;
+    }
+
+    public void rmv ( String v) {
     
-        for ( int i=0 ; i < v.length ; i++) {
-            if ( elem v[i] ) 
-              1_back ( this.x , i);   
+        for ( int i=0 ; i < this.x.length ; i++) {
+            if ( elem(this , v) == true ) {
+              fix ( this.x , i );   
+            }
         }
     }
 
-*/
+    public void fix (String[] x , int a) {
+
+        for ( ; a+1 < x.length ; a++) {
+
+            x[a] = x[a++];
+        }
+        //coloca me o meu use da class StrinA com menos 1
+        this.SetU(getU()-1);
+
+    }
 
     
     
