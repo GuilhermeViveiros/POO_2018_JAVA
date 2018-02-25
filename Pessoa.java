@@ -58,4 +58,18 @@ public class Pessoa{
 	private Entidade getInfo(){
 		return this.info;
 	}
+
+	//retorna como string toda a informação fiscal disponivel da pessoa -> senão gostarem da forma q esta função está escrita digam algo que eu altero
+	public String toString(){
+
+		return "Nome : " + this.info.getNome() + 
+		"\nMail : " + this.info.getMail() +
+		"\nNIF : " + this.info.getNif() +
+		"\nMorada : " + this.info.getMorada() +
+		"\nNúmero de dependentes do agregado Familiar : " + this.getNrDAF() +
+		"\nNúmeros de fiscais do agregado Familiar : " + this.getNrFAF() +
+		"\nCoeficiente Fiscal : " + this.getCF() +
+		"\nCódigos das atividades ecónimas : " + this.getCAE();
+	}
 }
+
