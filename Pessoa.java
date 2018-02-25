@@ -62,14 +62,30 @@ public class Pessoa{
 	//retorna como string toda a informação fiscal disponivel da pessoa -> senão gostarem da forma q esta função está escrita digam algo que eu altero
 	public String toString(){
 
-		return "Nome : " + this.info.getNome() + 
-		"\nMail : " + this.info.getMail() +
-		"\nNIF : " + this.info.getNif() +
-		"\nMorada : " + this.info.getMorada() +
+		return this.info.toString() +
 		"\nNúmero de dependentes do agregado Familiar : " + this.getNrDAF() +
 		"\nNúmeros de fiscais do agregado Familiar : " + this.getNrFAF() +
 		"\nCoeficiente Fiscal : " + this.getCF() +
 		"\nCódigos das atividades ecónimas : " + this.getCAE();
 	}
+	
+	//setters
+	
+	public void setNrDAF(int novo){
+		this.nrDAF = novo;
+	}
+	
+	public void setNrFAF(int novo){
+		this.nrFAF = novo;
+	}
+	
+	public void setNrDAF(float novo){
+		this.cF = novo;
+	}
+	
+	public void setNrDAF(string novo){
+		this.cAE = novo;
+	}	
+	
 }
 
