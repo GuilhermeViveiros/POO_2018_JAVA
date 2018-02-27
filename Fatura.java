@@ -2,32 +2,36 @@
 /**
  * Escreva a descrição da classe Fatura aqui.
  * 
- * @author (seu nome) 
- * @version (número de versão ou data)
+ * @author (Gonçalo Faria) 
+ * @version (v1)
  */
 public class Fatura
 {
-    // variáveis de instância - substitua o exemplo abaixo pelo seu próprio
-    private int x;
+    //
 
-    /**
-     * COnstrutor para objetos da classe Fatura
-     */
-    public Fatura()
-    {
-        // inicializa variáveis de instância
-        x = 0;
+    private Empresa servidor;
+    private Entidade cliente;
+
+
+
+
+    public Fatura(){
+        Empresa servidor = new Empresa();
+        Entidade cliente1 = new Entidade();
     }
 
-    /**
-     * Exemplo de método - substitua este comentário pelo seu próprio
-     * 
-     * @param  y   exemplo de um parâmetro de método
-     * @return     a soma de x com y 
-     */
-    public int sampleMethod(int y)
-    {
-        // ponha seu código aqui
-        return x + y;
+    public Fatura( Empresa servidor , Pessoa cliente ){
+        this.servidor = servidor; // recebe apontador.
+        this.cliente  = client.getInfo();// recebe novo pedaço de memória. (sem pass)
+
+
+
     }
+
+    public Fatura( Empresa servidor , Empresa client ){
+        this.servidor = servidor; // recebe apontador.
+        this.cliente  = client.getID();// recebe novo pedaço de memória. (sem pass)
+    }
+
+    
 }

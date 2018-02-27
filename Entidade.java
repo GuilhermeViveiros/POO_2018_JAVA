@@ -12,6 +12,7 @@ public class Entidade
     private String nome;
     private String mail;
     private String morada;
+    private String telefone;
     private Password pw;
 
     public Entidade(){
@@ -20,14 +21,16 @@ public class Entidade
         this.mail   = " utilizario@example.com";
         this.morada = " A sua morada ";
         this.pw     = new Password();
+        this.telefone = "+351 000 000 000"
     }
 
-    public Entidade( long ni_p, String nom_p, String mai_p , String morad_p ){
+    public Entidade( long ni_p, String nom_p, String mai_p , String morad_p , String telefone ){
         this.nif    = ni_p  ;
         this.nome   = nom_p ;
         this.mail   = mai_p ;
         this.morada = morad_p ;
         this.pw     = new Password();
+        this.telefone = telefone;
 
     }
 
@@ -37,6 +40,7 @@ public class Entidade
         this.mail   = inc.getMail();
         this.morada = inc.getMorada();
         this.pw     = new Password();
+        this.telefone = inc.getTelefone();
         // a password está vazia.
     }
     // getters !! 
@@ -45,6 +49,10 @@ public class Entidade
         return this.nif;
     } 
 
+    public String getTelefone(){
+        return this.telefone;
+    }
+    
     public String getNome(){
         return this.nome;
     } 
@@ -76,6 +84,10 @@ public class Entidade
 
     // setters!!
 
+    public String setTelefone(String telefone){
+        this.telefone = telefone ;
+    }
+
     public void setNif( long n){
         this.nif = n;
     }
@@ -98,6 +110,7 @@ public class Entidade
     }
     
     public boolean checkPassword( String n){
+        
         return this.pw.check(n);
     }
     
@@ -129,6 +142,8 @@ public class Entidade
     }
 
     public Entidade clone() {
+        
         return (new Entidade(this));  
     }
+    
 }
