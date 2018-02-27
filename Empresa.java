@@ -7,10 +7,7 @@ import java.text.SimpleDateFormat; //formato da data
 
 public class Empresa extends Entidade 
 {   
-    Scanner s = new Scanner(System.in);
-    //modulo para aceder a todas as funcoes da Entidade
-    Entidade aux ;
-    //esta Entidade ainda é nula 
+   
     private Entidade comum ;
     //esta e a lista de setores que eu tenho , posso os remover adicionar .. StringA faz isso
     private StringA setores = new StringA();
@@ -20,17 +17,16 @@ public class Empresa extends Entidade
        
     public Empresa(){  
         //crio entidade
-        aux = new Entidade();
+        this.comum = new Entidade();
         //crio os meus setores , String[] setores e quantos usados
-        setores = new StringA();
+        this.setores = new StringA();
     }
     
     public void add_set ( String x ) {
-        if ( this.setores.full() == true ) this.setores.tabledoubling();
-         else this.setores.append(x);
+      this.setores.append(x);
 
     }
-
+//?????????????????????????'''
    //falta acabar 
     public void rem_set ( String x){
      this.setores.rmv(x);
@@ -38,27 +34,24 @@ public class Empresa extends Entidade
 
     // cria me a minha empresa a partir de uma entidade dada 
     // neste caso so copia os valores da entidade
-       public Empresa( long nif, String nome, String mail , String morada ,  StringA x){
-        System.out.println ("Digite uma password para a sua empresa");
-        String pass =  s.nextLine();
-        setPassword ( pass);
+       public Empresa( long nif, String nome, String mail , String morada ,  StringA x , String pass){
         
         this.comum = new Entidade(nif,nome,mail,morada);
-        this.setores = new StringA ( x );
+        this.comum.setPassword ( pass);
+
+        this.setores = new StringA ( x);
            
     }
     // cria me a minha empresa a partir de uma empresa dada (copia dados)
     // copia os setores , as classes e a entidade
     public Empresa ( Empresa x) {
         
-         System.out.println ("Digite uma password para a sua empresa");
-         String pass =  s.nextLine();
-         setPassword ( pass);
-
          
           //estou a copiar os meus setores referente ha empresa x  
-         this.setores = new  StringA ( getSetores () ) ;
+         this.setores = new  StringA ( x.getSetores() ) ;
           // estou a copiar a entidade referente ha empresa x
+
+         // identidade é privade ver melhor
          this.comum = new Entidade( x.getID() );
             
          
@@ -71,21 +64,21 @@ public class Empresa extends Entidade
         
         // da me os setores de uma string
         public StringA getSetores() {
-            return this.setores;   
+            return this.setores.clone();   
         }
       
         
-        public int getUsed_setores(){
+        public int getLenSet(){
             return this.setores.getU();
         }
-
+//??????
         public Entidade getID () {
-            return this.comum;
+            return this.comum.clone();
         }
-
+//??????
         // coloca uma "entidade" x na minha entidade comum
         public void setID ( Empresa x) {
-            this.comum = x.comum;
+            this.comum = new Entidade( x.comum ) ;
         } 
         
         
