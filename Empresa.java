@@ -9,9 +9,11 @@ public class Empresa extends Entidade
 {   
    
     private Entidade comum ;
-    //esta e a lista de setores que eu tenho , posso os remover adicionar .. StringA faz isso
-    private StringA setores = new StringA();
-    // verifica se algo está correto ou nao em termos de "Passwords"
+    //lista de produtos da Empresa
+    private StringA produtos ;
+    //setor da empresa
+    private String setor ;
+   
    
    
        
@@ -19,18 +21,10 @@ public class Empresa extends Entidade
         //crio entidade
         this.comum = new Entidade();
         //crio os meus setores , String[] setores e quantos usados
-        this.setores = new StringA();
+        this.produtos = new StringA();
+        this.setor = null;
     }
-    
-    public void add_set ( String x ) {
-      this.setores.append(x);
 
-    }
-//?????????????????????????'''
-   //falta acabar 
-    public void rem_set ( String x){
-     this.setores.rmv(x);
-    } 
 
     // cria me a minha empresa a partir de uma entidade dada 
     // neste caso so copia os valores da entidade
@@ -39,8 +33,7 @@ public class Empresa extends Entidade
         this.comum = new Entidade(nif,nome,mail,morada);
         this.comum.setPassword ( pass);
 
-        this.setores = new StringA ( x);
-           
+        this.produtos = new StringA ( x);
     }
     // cria me a minha empresa a partir de uma empresa dada (copia dados)
     // copia os setores , as classes e a entidade
@@ -48,7 +41,7 @@ public class Empresa extends Entidade
         
          
           //estou a copiar os meus setores referente ha empresa x  
-         this.setores = new  StringA ( x.getSetores() ) ;
+         this.produtos = new  StringA ( x.getSetores() ) ;
           // estou a copiar a entidade referente ha empresa x
 
          // identidade é privade ver melhor
@@ -56,20 +49,29 @@ public class Empresa extends Entidade
             
          
     }
+
+    public void add_set ( String x ) {
+      this.produtos.append(x);
+
+    }
+
+    public void rem_set ( String x){
+     this.produtos.rmv(x);
+    } 
          
         public void setSetores ( StringA x) {
-            this.setores = x;
+            this.produtos = x;
         }
         
         
         // da me os setores de uma string
-        public StringA getSetores() {
-            return this.setores.clone();   
+        public StringA getProdutos() {
+            return this.produtos.clone();   
         }
       
         
         public int getLenSet(){
-            return this.setores.getU();
+            return this.produtos.getU();
         }
 //??????
         public Entidade getID () {
@@ -96,7 +98,7 @@ public class Empresa extends Entidade
             // junta a morada
             texto_final += "Morada :" + this.comum.getMorada() + '\n';
             //juntos os setores de determinada empresa
-            texto_final += "Setores :" + this.getSetores() +  '\n';
+            texto_final += "Produtos :" + this.getProdutos() +  '\n';
             
             texto_final += space;
 
