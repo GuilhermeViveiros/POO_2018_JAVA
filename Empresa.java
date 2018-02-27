@@ -3,14 +3,15 @@ import java.lang.String;//string
 import java.time.LocalDate;// é bom para comparar datas e isso
 import java.sql.Date; //data presente
 import java.text.SimpleDateFormat; //formato da data
-import java.util.ArrayList;
+import java.util.ArrayList; 
 
 public class Empresa extends Entidade 
 {   
+    private String aglomerado;
    
     private Entidade comum ;
-    //lista de produtos da Empresa
-    private ArrayList<String> produtos ;
+    
+    private ArrayList<Produto> artigo ;
     //setor da empresa
     private String setor ;
    
@@ -21,28 +22,31 @@ public class Empresa extends Entidade
         //crio entidade
         this.comum = new Entidade();
         //crio os meus setores , String[] setores e quantos usados
-        this.produtos = new ArrayList<String>();
+        this.artigo = new ArrayList();
         this.setor = null;
     }
 
 
     // cria me a minha empresa a partir de uma entidade dada 
     // neste caso so copia os valores da entidade
-    public Empresa( long nif, String nome, String mail , String morada ,  ArrayList products , String pass , String setor){
+    public Empresa( long nif, String nome, String mail , String morada ,  String pass , String setor){
         
         this.comum = new Entidade(nif,nome,mail,morada);
-        this.comum.setPassword ( pass);
+        this.comum.setPassword (pass);
         this.setor = new String(setor);
-        this.produtos = new ArrayList <String>(products);
+        
+ 
+        
     }
     // cria me a minha empresa a partir de uma empresa dada (copia dados)
     // copia os setores , as classes e a entidade
     public Empresa ( Empresa x) {
         
          //estou a copiar os meus setores referente ha empresa x  
-         this.produtos = new  ArrayList<String>( x.getProdutos() ) ;
+         this.artigo =  x.getArtigo();
          // estou a copiar a entidade referente ha empresa x
          this.comum = new Entidade( x.getID() );
+         
          this.setor = new String (x.getSetor());
             
          
@@ -51,42 +55,66 @@ public class Empresa extends Entidade
 
 
     //Setters!
-
-    public void setSetores ( ArrayList x) {
-            this.produtos = x;
+    
+    // super classe , os "filhos" 
+    public void setAglomerado ( String x ) {
+        this.aglomerado = x;
+    }
+    
+    public void setSetores( ArrayList x) {
+            this.artigo = x;
     }
         
     //Getters!
+    
+    public ArrayList getArtigo() {
+        return this.artigo;
+        
+    }
+    
     public String getSetor(){
         return this.setor;
     }
     // da me os setores de uma string
-    public ArrayList getProdutos() {
-        return ( new ArrayList (this.produtos));   
+    // cast atrás para dar return do meu ArrayList em tipo Array de Produto
+    public Produto[] getProduto() {
+        return  (Produto []) this.artigo.toArray() ;   
     }
       
         
     public int getLenSet(){
-        return this.produtos.size();
+        return this.artigo.size();
         }
 
     public Entidade getID() {
         return (new Entidade (this.comum));
         }
+        
 
-      
-
-
-    public void add_product ( String x ) {
-      this.produtos.add(x);
+    public void add_product ( Produto x ) {
+        // adiciona um artigo x ao meu ArrayList e numeros
+      this.artigo.add(x);
 
     }
-
-    public void rem_product( String x){
-     this.produtos.remove(x);
-    } 
-
-
+    
+    public boolean rem_product( Produto x){
+    // indexof é bollean que 
+    if ( this.artigo.indexOf(x) == -1 ) return false;
+    else {
+        this.artigo.remove(this.artigo.indexOf(x)) ;
+        return true;
+     } 
+    }
+    
+     public void Clone_ArrytoList ( ArrayList <Produto> aux){
+         this.artigo = new ArrayList();
+         
+         for ( int i=1; i < aux.size() ; i++ ) {
+             this.artigo.add ( aux.get(i) ) ;
+            }
+	
+     }
+     
     public String info () {
             String space;
             String texto_final;
@@ -126,7 +154,7 @@ public class Empresa extends Entidade
             //junta o setor da empresa
             texto_final += "Setor economico :" + this.getSetor() +  '\n';
             //junta os produtos todos da empresa 
-            texto_final += "Produtos :" + this.getProdutos() +  '\n';
+            texto_final += "Produtos :" + this.getProduto() +  '\n';
             
             texto_final += space;
 
