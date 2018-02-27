@@ -38,7 +38,7 @@ public class Entidade
         this.mail   = inc.getMail();
         this.morada = inc.getMorada();
         this.pw     = new Password();
-
+        // a password está vazia.
     }
     // getters !! 
 

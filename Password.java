@@ -37,9 +37,10 @@ public class Password
     
     // métodos publicos.
     public boolean check(String entry ){
+        if ( this.empty() )
+            return false;
 
         return (this.encode( entry ) == this.pw);
-
     }
 
     private long encode ( String pp ){
