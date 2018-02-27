@@ -37,7 +37,7 @@ public class Pessoa{
     public Pessoa(Pessoa iD){
         this.info = iD.getInfo();
         this.nrDAF = iD.getNrDAF();
-        iD.getNrFAF();
+        ArrayToArrayList(iD.getNrFAF());
         this.cF = iD.getCF();
         this.cAE = iD.getCAE();
     }
@@ -48,8 +48,8 @@ public class Pessoa{
         return this.nrDAF;
     }
 
-    public void getNrFAF(){
-        this.nrFAF.toArray();
+    public long[] getNrFAF(){
+        return (long[])this.nrFAF.toArray();
     }
 
     public float getCF(){
