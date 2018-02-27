@@ -113,5 +113,24 @@ public class Entidade
         }
         return false;
     }
-    
+
+    public boolean equals ( Object o ){
+
+        if ( this == o ) return true;
+
+        if (o==null || getClass() != o.getClass()) return false;
+
+        Entidade inc = (Entidade) o;
+
+        if ( (this.nif == inc.getNif()) && (this.morada == inc.getMorada()) && (this.nome == inc.getNome()) && (this.mail == inc.getMail() ) )
+            return true;
+
+        return false;
+
+    }
+
+    public Entidade clone() {
+
+        return (new Entidade(this));  
+    }
 }
