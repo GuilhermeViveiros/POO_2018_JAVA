@@ -1,4 +1,3 @@
-
 /**
  * Escreva a descrição da classe Entidade aqui.
  * 
@@ -130,7 +129,6 @@ public class Entidade
     }
 
     public Entidade clone() {
-
         return (new Entidade(this));  
     }
 }

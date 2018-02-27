@@ -1,10 +1,11 @@
 
 /**
- * Escreva a descrição da classe Password aqui.
+ * Escreva a descrição da classe Entidade aqui.
  * 
- * @author (seu nome) 
- * @version (número de versão ou data)
+ * @author (Gonçalo Faria); 
+ * @version (v1);
  */
+
 
 import java.util.*;
 
