@@ -21,7 +21,7 @@ public class Entidade
         this.mail   = " utilizario@example.com";
         this.morada = " A sua morada ";
         this.pw     = new Password();
-        this.telefone = "+351 000 000 000"
+        this.telefone = "+351 000 000 000";
     }
 
     public Entidade( long ni_p, String nom_p, String mai_p , String morad_p , String telefone ){
@@ -84,7 +84,7 @@ public class Entidade
 
     // setters!!
 
-    public String setTelefone(String telefone){
+    public void setTelefone(String telefone){
         this.telefone = telefone ;
     }
 

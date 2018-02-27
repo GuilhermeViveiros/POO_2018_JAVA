@@ -29,9 +29,9 @@ public class Empresa extends Entidade
 
     // cria me a minha empresa a partir de uma entidade dada 
     // neste caso so copia os valores da entidade
-    public Empresa( long nif, String nome, String mail , String morada ,  String pass , String setor){
+    public Empresa( long nif, String nome, String mail , String morada ,  String pass , String setor ,String number ){
         
-        this.comum = new Entidade(nif,nome,mail,morada);
+        this.comum = new Entidade(nif,nome,mail,morada, number);
         this.comum.setPassword (pass);
         this.setor = new String(setor);
         
