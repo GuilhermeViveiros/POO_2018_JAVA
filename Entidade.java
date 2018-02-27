@@ -127,14 +127,10 @@ public class Entidade
     }
 
     // setters!!
-<<<<<<< HEAD
     /**
      * Atualiza o valor da variável de instância telfone.
      * @param telefone novo numero de telfone.
      */
-=======
-
->>>>>>> f6ecc56a74eda8ae306e5ef507b70b2e7026ffaf
     public void setTelefone(String telefone){
         this.telefone = telefone ;
     }
