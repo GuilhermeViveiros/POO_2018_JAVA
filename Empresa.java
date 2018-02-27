@@ -1,66 +1,87 @@
-import java.lang.String;
+import java.util.Scanner;//scanner
+import java.lang.String;//string
+import java.time.LocalDate;// é bom para comparar datas e isso
+import java.sql.Date; //data presente
+import java.text.SimpleDateFormat; //formato da data
+
 
 public class Empresa extends Entidade 
 {   
-
-    //modulo para aceder a todas as funcoes da Entidade
-    Entidade aux = new Entidade();
-    //esta Entidade ainda é nula 
+   
     private Entidade comum ;
     //esta e a lista de setores que eu tenho , posso os remover adicionar .. StringA faz isso
-    private String[] setores;
-    // da me a classe da empresa para saber em que "setor" está agrupada
-    private String[] classe;
+    private StringA setores = new StringA();
     // verifica se algo está correto ou nao em termos de "Passwords"
-    public boolean check;
- 
+   
+   
        
     public Empresa(){  
-       this.comum = new Entidade(); //Entidade
-       
+        //crio entidade
+        this.comum = new Entidade();
+        //crio os meus setores , String[] setores e quantos usados
+        this.setores = new StringA();
     }
     
+    public void add_set ( String x ) {
+      this.setores.append(x);
 
+    }
+//?????????????????????????'''
+   //falta acabar 
+    public void rem_set ( String x){
+     this.setores.rmv(x);
+    } 
 
     // cria me a minha empresa a partir de uma entidade dada 
     // neste caso so copia os valores da entidade
-    // colocei pass mas nao sei se preciso qualquer coisa tiro ::::::????????
-       public Empresa( long nif, String nome, String mail , String morada , String pass){
-       this.comum.setNif(nif) ;
-       this.comum.setNome (nome);   
-       this.comum.setMail (mail); 
-       this.comum.setMorada (morada);
-       // verifica se a pass está certa , ainda estou a decidir se é preciso
-       check = aux.checkPassword(pass);
+       public Empresa( long nif, String nome, String mail , String morada ,  StringA x , String pass){
         
+        this.comum = new Entidade(nif,nome,mail,morada);
+        this.comum.setPassword ( pass);
 
+        this.setores = new StringA ( x);
+           
     }
     // cria me a minha empresa a partir de uma empresa dada (copia dados)
     // copia os setores , as classes e a entidade
     public Empresa ( Empresa x) {
-         String[] comp = x.getsetores();
-         String[] pmoc = x.getclasse();
+        
          
-         this.comum = x;
-         // estou a meter o array de setores e classes na minha empresa
-         System.arraycopy ( this.setores , 0 , x.getsetores() ,0 , comp.length); 
-         System.arraycopy ( this.classe  , 0 , x.getsetores() ,0 , pmoc.length);     
+          //estou a copiar os meus setores referente ha empresa x  
+         this.setores = new  StringA ( x.getSetores() ) ;
+          // estou a copiar a entidade referente ha empresa x
+
+         // identidade é privade ver melhor
+         this.comum = new Entidade( x.getID() );
+            
          
     }
-          
+         
+        public void setSetores ( StringA x) {
+            this.setores = x;
+        }
+        
+        
         // da me os setores de uma string
-        public String[] getsetores() {
-            return this.setores;   
+        public StringA getSetores() {
+            return this.setores.clone();   
         }
-        // da me as classes das empresas
-        public String[] getclasse() {
-            return this.classe;
+      
+        
+        public int getLenSet(){
+            return this.setores.getU();
         }
-
+//??????
+        public Entidade getID () {
+            return this.comum.clone();
+        }
+//??????
         // coloca uma "entidade" x na minha entidade comum
-        //public Entidade getID() {
-        //    return this.comum;
-        //} 
+        public void setID ( Empresa x) {
+            this.comum = new Entidade( x.comum ) ;
+        } 
+        
+        
         public String toString() {
             String space;
             String texto_final;
@@ -74,6 +95,8 @@ public class Empresa extends Entidade
             texto_final += "Nif :" + this.comum.getNif() + '\n';
             // junta a morada
             texto_final += "Morada :" + this.comum.getMorada() + '\n';
+            //juntos os setores de determinada empresa
+            texto_final += "Setores :" + this.getSetores() +  '\n';
             
             texto_final += space;
 
