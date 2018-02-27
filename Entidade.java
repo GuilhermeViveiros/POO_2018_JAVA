@@ -30,7 +30,7 @@ public class Entidade
         this.mail   = " utilizario@example.com";
         this.morada = " A sua morada ";
         this.pw     = new Password();
-        this.telefone = "+351 000 000 000"
+        this.telefone = "+351 000 000 000";
     }
     /**
      * Construtor parametrizado de Entidade.
@@ -127,10 +127,14 @@ public class Entidade
     }
 
     // setters!!
+<<<<<<< HEAD
     /**
      * Atualiza o valor da variável de instância telfone.
      * @param telefone novo numero de telfone.
      */
+=======
+
+>>>>>>> f6ecc56a74eda8ae306e5ef507b70b2e7026ffaf
     public void setTelefone(String telefone){
         this.telefone = telefone ;
     }
