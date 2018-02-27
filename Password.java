@@ -41,7 +41,7 @@ public class Password
         if ( this.empty() )
             return false;
 
-        return (this.encode( entry ) == this.pw);
+        return (this.encode( entry ) == this.pw);// longs
     }
 
     private long encode ( String pp ){
