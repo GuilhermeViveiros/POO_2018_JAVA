@@ -3,6 +3,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+
+
 public class Pessoa{
 
     private Entidade info;
@@ -23,11 +25,12 @@ public class Pessoa{
     
     // cria uma pessoa ao receber todos os dados necessários
 
-    public Pessoa(long ni_P, String nom_P, String mai_P, String morad_P, int nrDAF_P, long[] nrFAF_P, float cF_P, String cAE_P){
+    public Pessoa(long ni_P, String nom_P, String mai_P, String morad_P, int nrDAF_P, long[] nrFAF_P, float cF_P, String cAE_P, String number){
 
-        this.info = new Entidade(ni_P, nom_P, mai_P, morad_P);
+        this.info = new Entidade(ni_P, nom_P, mai_P, morad_P, number);
         this.nrDAF = nrDAF_P;
-        ArrayToArrayList(nrFAF_P);
+        this.nrFAF= new ArrayList();
+        for(long l : nrFAF_P) this.nrFAF.add(l);
         this.cF = cF_P;
         this.cAE = cAE_P;
     }
@@ -49,7 +52,11 @@ public class Pessoa{
     }
 
     public long[] getNrFAF(){
-        return (long[])this.nrFAF.toArray();
+        Long[] l= this.nrFAF.toArray(new Long[0]);
+        long[] r= new long[l.length];
+        for(int i=0; i< l.length; i++)
+            r[i]= l[i].longValue();
+        return r;
     }
 
     public float getCF(){
