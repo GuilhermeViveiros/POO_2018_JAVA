@@ -108,7 +108,7 @@ public class Entidade
      * Método que devolve a representação em String de toda a Entidade.
      * @return String com tudas as variáveis de instâncias(exceto password).
      */
-    public String toString(){
+    public String toStringg(){
         String text,space;
         space = "________________________________________\n";
 
