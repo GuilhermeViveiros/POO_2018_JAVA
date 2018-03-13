@@ -1,3 +1,4 @@
+import java.util.*;
 import java.time.LocalDate;
 
 //
@@ -14,7 +15,7 @@ public class data
     }
     
     public data ( LocalDate[] data , int x) {
-         this.arrays = new LocalDate[data.length];
+         this.arrays = ;
          this.used = x;
         
     }
@@ -28,8 +29,9 @@ public class data
     public data check_full (data a ) {
         data novo;
         int x;
+        
         if ( this.used >= this.arrays.length){
-         x = (this.arrays.length)*2;   
+        x = (this.arrays.length)*2;  
         novo = new data();
         novo.setUsed(this.used);
         novo.setArray ( new LocalDate[x] );
@@ -50,10 +52,21 @@ public class data
         
     }
     
+    public LocalDate clone (){
+        return new LocalDate(this);
+    }
+    
+    
+    //Setters!
     public void setArray (  LocalDate[] x) {
         this.arrays = x;
     }
     
+    public void setUsed ( int x) {    
+       this.used = x;
+    }
+    
+    //Getters!
     public LocalDate[] getArray(){
         return this.arrays;   
     }
@@ -61,11 +74,7 @@ public class data
     public int getUsed () {
         return this.used;
     }
-    
-    public void setUsed ( int x) {
-        
-       this.used = x;
-    }
+  
 
 }
 

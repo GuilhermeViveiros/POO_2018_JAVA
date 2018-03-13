@@ -4,25 +4,26 @@ import java.time.LocalDate;// é bom para comparar datas e isso
 import java.sql.Date; //data presente
 import java.text.SimpleDateFormat; //formato da data
 import java.util.ArrayList; 
+import java.lang.StringBuilder; // mete -me o meu ArrayList para String
 
-public class Empresa extends Entidade 
+public class Empresa 
 {   
     private String aglomerado;
    
     private Entidade comum ;
     
-    private ArrayList<Produto> artigo ;
+    // Array List , tipo predefenido em java que me cria ( x,x,x)...com produtos , um identificador e um price
+    private ArrayList<Produto> artigo = null ;
     //setor da empresa
     private String setor ;
    
    
-   
-       
     public Empresa(){  
         //crio entidade
         this.comum = new Entidade();
         //crio os meus setores , String[] setores e quantos usados
         this.artigo = new ArrayList();
+        //setor da empresa
         this.setor = null;
     }
 
@@ -71,49 +72,74 @@ public class Empresa extends Entidade
         return this.artigo;
         
     }
-    
+    // devolve me o setor 
     public String getSetor(){
         return this.setor;
     }
-    // da me os setores de uma string
+   
     // cast atrás para dar return do meu ArrayList em tipo Array de Produto
     public Produto[] getProduto() {
-        return  (Produto []) this.artigo.toArray() ;   
-    }
-      
+        if (this.artigo == null) {
+            return new Produto[1];
+        }
         
+        //this.artigo.t;
+        return   this.artigo.toArray(new Produto[0]) ;   
+    }
+    
+    
+    // devolve me a string com todos os meus produtos
+    public String ArrayList_for_String  ( Produto [] x) {
+        
+        String res = new String(); 
+        res = "";
+         // vou buscar a minha lista de produtos "artigos";
+         for (int i= 0 ; i < x.length ; i++) {
+             // estou a transformar tudo em String
+             res += "    " + x[i].getPrice() + "--" + x[i].getIdf() + "--" + x[i].getProduct() + "||||";
+          
+            }   
+      return res;
+    }
+   
+      
+    // retorna o tamanho do array em questao
     public int getLenSet(){
         return this.artigo.size();
         }
-
+    // retorna me a entidade
     public Entidade getID() {
         return (new Entidade (this.comum));
         }
         
-
-    public void add_product ( Produto x ) {
-        // adiciona um artigo x ao meu ArrayList e numeros
-      this.artigo.add(x);
-
+        
+        // adiciona um novo artigo(Produto) ao (ArrayList)    
+    public boolean add_product ( Produto x ) {  
+     if ( this.artigo == null ) this.artigo = new ArrayList();
+     return  this.artigo.add(x);
     }
-    
+    // boolean que me remove um determinado Produto
     public boolean rem_product( Produto x){
-    // indexof é bollean que 
+    // indexof é bollean que devolve o index da posicao x no array , se houver
     if ( this.artigo.indexOf(x) == -1 ) return false;
     else {
+        // remove me o Produto x do array
         this.artigo.remove(this.artigo.indexOf(x)) ;
         return true;
      } 
     }
     
+    // minha funcao clone para ArrayList de produtos
      public void Clone_ArrytoList ( ArrayList <Produto> aux){
          this.artigo = new ArrayList();
          
          for ( int i=1; i < aux.size() ; i++ ) {
              this.artigo.add ( aux.get(i) ) ;
             }
-	
+    
      }
+     
+   
      
     public String info () {
             String space;
@@ -128,7 +154,9 @@ public class Empresa extends Entidade
             texto_final += "Morada :" + this.comum.getMorada() + '\n';
             //juntos os setores de determinada empresa
             texto_final += "Setor economico :" + this.getSetor() +  '\n';
-
+            
+            texto_final += "Produtos :" + ArrayList_for_String(this.getProduto()) +  '\n';
+             
             texto_final += space;
 
 
@@ -137,12 +165,12 @@ public class Empresa extends Entidade
 
         }
          
-     public void toString_extends( String texto_final) {
+     public String toString_extends( String texto_final) {
 
             texto_final = toString();
             String space;
             space = "         ";
-            texto_final = space + '\n';
+            texto_final += space + '\n';
             // junta o nome
             texto_final += "Nome :" + this.comum.getNome() + '\n' ;
             // junta o mail
@@ -153,14 +181,12 @@ public class Empresa extends Entidade
             texto_final += "Morada :" + this.comum.getMorada() + '\n';
             //junta o setor da empresa
             texto_final += "Setor economico :" + this.getSetor() +  '\n';
-            //junta os produtos todos da empresa 
-            texto_final += "Produtos :" + this.getProduto() +  '\n';
-            
+          
             texto_final += space;
 
 
 
-       
+       return texto_final;
 
         }
 
