@@ -25,12 +25,14 @@ public class Pessoa{
     
     // cria uma pessoa ao receber todos os dados necessários
 
-    public Pessoa(long ni_P, String nom_P, String mai_P, String morad_P, int nrDAF_P, long[] nrFAF_P, float cF_P, String cAE_P, String number){
+    public Pessoa(long ni_P, String nom_P, String mai_P, String morad_P, int nrDAF_P, ArrayList<Long> nrFAF_P, float cF_P, String cAE_P, String number){
 
         this.info = new Entidade(ni_P, nom_P, mai_P, morad_P, number);
         this.nrDAF = nrDAF_P;
-        this.nrFAF= new ArrayList();
-        for(long l : nrFAF_P) this.nrFAF.add(l);
+        this.nrFAF = new ArrayList<Long>();
+        for(long s : nrFAF_P){
+            this.nrFAF.add(s);
+        }
         this.cF = cF_P;
         this.cAE = cAE_P;
     }
@@ -40,7 +42,8 @@ public class Pessoa{
     public Pessoa(Pessoa iD){
         this.info = iD.getInfo();
         this.nrDAF = iD.getNrDAF();
-        ArrayToArrayList(iD.getNrFAF());
+        this.nrFAF = iD.getNrFAF();
+        //ArrayToArrayList(iD.getNrFAF());
         this.cF = iD.getCF();
         this.cAE = iD.getCAE();
     }
@@ -51,12 +54,23 @@ public class Pessoa{
         return this.nrDAF;
     }
 
+    /*
     public long[] getNrFAF(){
         Long[] l= this.nrFAF.toArray(new Long[0]);
         long[] r= new long[l.length];
         for(int i=0; i< l.length; i++)
             r[i]= l[i].longValue();
         return r;
+    }
+    */
+
+    public ArrayList getNrFAF(){
+        
+        ArrayList<Long> nr = new ArrayList();
+        for(long l : this.nrFAF){
+            nr.add(l);
+        }
+        return nr;
     }
 
     public float getCF(){
@@ -77,7 +91,7 @@ public class Pessoa{
 
         return this.info.toString() +
         "\nNúmero de dependentes do agregado Familiar : " + this.getNrDAF() +
-        "\nNúmeros de fiscais do agregado Familiar : " + this.nrFAF +
+        "\nNúmeros de fiscais do agregado Familiar : " + this.getNrFAF() +
         "\nCoeficiente Fiscal : " + this.getCF() +
         "\nCódigos das atividades ecónimas : " + this.getCAE();
     }
@@ -88,8 +102,8 @@ public class Pessoa{
         this.nrDAF = novo;
     }
     
-    public void setNrFAF(long[] novo){
-        ArrayToArrayList(novo);
+    public void setNrFAF(ArrayList novo){
+        
     }
     
     public void setNrDAF(float novo){
@@ -100,6 +114,7 @@ public class Pessoa{
         this.cAE = novo;
     }   
 
+    /* 
     private void ArrayToArrayList(long[] b){
 
         this.nrFAF = new ArrayList<Long>();
@@ -108,5 +123,10 @@ public class Pessoa{
             this.nrFAF.add(b[i]);
         }
     }
-    
+    */
+
+    public Pessoa clone(){
+        return (new Pessoa(this));
+    }
+
 }
