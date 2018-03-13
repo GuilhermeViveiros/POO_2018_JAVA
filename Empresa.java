@@ -165,32 +165,13 @@ public class Empresa
 
         }
          
-     public String toString_extends( String texto_final) {
-
-            texto_final = toString();
-            String space;
-            space = "         ";
-            texto_final += space + '\n';
-            // junta o nome
-            texto_final += "Nome :" + this.comum.getNome() + '\n' ;
-            // junta o mail
-            texto_final += "Mail :" + this.comum.getMail() + '\n'; 
-            //junta o nif
-            texto_final += "Nif :" + this.comum.getNif() + '\n';
-            // junta a morada
-            texto_final += "Morada :" + this.comum.getMorada() + '\n';
+     public String toString() {
+             String space = " ";
+         
+            return this.comum.toString() +
             //junta o setor da empresa
-            texto_final += "Setor economico :" + this.getSetor() +  '\n';
-          
-            texto_final += space;
-
-
-
-       return texto_final;
-
+            "Setor economico :" + this.getSetor() +  '\n' ;
+              
         }
-
-  
-
     }
    

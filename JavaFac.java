@@ -1,5 +1,5 @@
 import java.util.Scanner;
-
+import java.util.ArrayList;
 public class JavaFac
 {
     
@@ -11,17 +11,27 @@ public class JavaFac
 public static void main (String[] args) {
 Scanner s = new Scanner (System.in);
 
+//Pessoa(long ni_P, String nom_P, String mai_P, String morad_P, int nrDAF_P, ArrayList<Long> nrFAF_P, float cF_P, String cAE_P, String number
        String teste;
        Produto[] product ;
+       ArrayList<Long> n = new ArrayList();
+       n.add((long)8);
+       n.add((long)7);
+       long x = 312312;
+       Pessoa pessoa = new Pessoa ( 29120312 , "pessoas" , "angelo@gmail.com" , "rua das pessoas" , 982 , n , 212212 , "Pilas" ,"+351 pessoas");  
        Entidade aux = new Entidade( 263744361 , "entidades" , "goncas@gmail.entidades" , "rua das entidades" ,"+351 entidades");
-       Empresa empresa = new Empresa ( 263744361 , "empresa" , "goncas@gmail.empresa" , "rua das empresas" ,"+351 empresas" , "Saude" , "empresaa:987217" );
+       Empresa empresa = new Empresa ( 263744361 , "empresa" , "guilherme@gmail.empresa" , "rua das empresas" ,"+351 empresas" , "Saude" , "empresaa:987217" );
       
        //Entidade nova = new Entidade ( aux ) ESTA A FUNCIONAR -> FAZ O QUE SE PEDE
        //System.out.println ( aux.toString())  ESTA A FUNCIONAR -> FAZ O QUE SE PEDE
-       //System.out.println ( x.toString_extends(aux.toString())) ; ESTA A FUNCIONAR -> FAZ O QUE SE PEDE
+      
        //System.out.println ( x.info())  ESTA A FUNCIONAR -> FAZ O QUE SE PEDE
        
-       /*
+       System.out.println ( empresa.toString() ) ; 
+       System.out.println ( pessoa.toString() ) ;
+         
+         
+    /*
        aux.setPassword ( "coisas" );
        System.out.println ( "Digite uma pass ");
        teste = s.nextLine();
