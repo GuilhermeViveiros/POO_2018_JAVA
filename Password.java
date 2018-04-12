@@ -15,9 +15,7 @@ public class Password
     private long pw;
 
     public Password(){
-        Random randomno = new Random();
-        
-        this.key = randomno.nextInt( Integer.MAX_VALUE - 1 ) + 1;
+        this.key = (int) Math.round(Math.round(Math.random()));
         this.pw  = -1;
     }
 

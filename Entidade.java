@@ -14,7 +14,7 @@ public class Entidade
     private String mail;
     private String morada;
     private String telefone;
-    private Password pw;
+    //private Password pw;
     /**
      * Construtores de classe Entidade.
      * Declaração dos construtores por omissão(vazio),
@@ -29,7 +29,7 @@ public class Entidade
         this.nome   = " O Seu nome ";
         this.mail   = " utilizario@example.com";
         this.morada = " A sua morada ";
-        this.pw     = new Password();
+        //this.pw     = new Password();
         this.telefone = "+351 000 000 000";
     }
     /**
@@ -41,7 +41,7 @@ public class Entidade
         this.nome   = nom_p ;
         this.mail   = mai_p ;
         this.morada = morad_p ;
-        this.pw     = new Password();
+        //this.pw     = new Password();
         this.telefone = telefone;
 
     }
@@ -57,7 +57,7 @@ public class Entidade
         this.nome   = inc.getNome();
         this.mail   = inc.getMail();
         this.morada = inc.getMorada();
-        this.pw     = new Password();
+        //this.pw     = new Password();
         this.telefone = inc.getTelefone();
         // a password está vazia.
     }
@@ -161,19 +161,24 @@ public class Entidade
      * Convém confirmar a palavra pass antes de usar este método.
      * @param n nova palavra pass da Entidade.
      */
-    public boolean setPassword( String n ){
+    
+     /*
+     public boolean setPassword( String n ){
         
         return this.pw.setPassword( n );
     }
+    */
     
      /**
      * Método que verifica se uma data String é a palavra pass da Entidade.
      * @param n possível palavra pass.
      */
-    public boolean checkPassword( String n){
+    /*
+     public boolean checkPassword( String n){
         
         return this.pw.check(n);
     }
+    */
     /**
      * Método que altera a palavra pass da Entidade.
      * Para isso terá que fornecer a palavra pass atual da Entidade.
@@ -181,7 +186,8 @@ public class Entidade
      * @param next nova palavra ass. 
      * @param current proxima palavra pass.
      */
-    public boolean AlterPassword( String next ,String current ){
+    /*
+     public boolean AlterPassword( String next ,String current ){
         Password nPW = new Password();
         
         if ( this.pw.check( current ) ){
@@ -192,6 +198,7 @@ public class Entidade
         }
         return false;
     }
+    */
 
     /**
      * Método que determina se 2 Entidades são iguais.
@@ -226,4 +233,8 @@ public class Entidade
         return (new Entidade(this));  
     }
     
+    public int hashCode(){
+        long  v = this.nif;
+        return (int)(v ^ (v >>> 32));
+    }
 }

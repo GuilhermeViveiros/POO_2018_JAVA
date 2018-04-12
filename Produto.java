@@ -1,59 +1,63 @@
-import java.util.ArrayList; 
 
-public class Produto
-{
+public class Produto {
 
-    private String products; //= new ArrayList<String>(); 
-    private int identificador;
-    private double price; 
+    private String nome;
+    private int id;
+    private double preco;
 
-public Produto () {
-    products = null;
-    identificador = 0;
-    price = 0.0;
-}
+    public Produto() {
+        this.nome = "invalido";
+        this.id = 0;
+        this.preco = 0.0;
+    }
 
-public Produto ( String x , int y , double c) {
-    this.products = x;
-    this.identificador = y;
-    this.price = c;
-}
+    public Produto(String x, int y, double c) {
+        this.nome = x;
+        this.id = y;
+        this.preco = c;
+    }
 
+    public Produto(Produto x) {
+        this.setNome(x.getNome());
+        this.setId(x.getId());
+        this.setPreco(x.getPreco());
 
-public Produto ( Produto x ) {
-    this.setProduct(x.products);
-    this.setIdf(x.identificador);
-    this.setPrice (x.price);
+    }
 
-}
+    //Getters!
 
-//Getters!
+    public double getPreco() {
+        return this.preco;
+    }
 
-public double getPrice () {
-    return this.price;
-}
-public int getIdf () {
-    return this.identificador;
-}
+    public int getId() {
+        return this.id;
+    }
 
-public String getProduct () {
-     return this.products;
-}
+    public String getNome() {
+        return this.nome;
+    }
 
-//setters!
+    //setters!
 
-public void setPrice ( double x) {
-    this.price = x;
-}
+    public void setPreco(double x) {
+        this.preco = x;
+    }
 
-public void setProduct(String x ) {
-    this.products = x;
-}
+    public void setNome(String x) {
+        this.nome = x;
+    }
 
-public void setIdf(int x) {
-    this.identificador = x;
-}
+    public void setId(int x) {
+        this.id = x;
+    }
 
+    public boolean equals(Produto x) {
+        return ((this.id == x.getId()) && (this.nome == x.getNome()));
+    }
 
+    public Produto clone() {
+        return new Produto(this.nome, this.id, this.preco);
+    }
 
 }
