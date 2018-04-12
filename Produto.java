@@ -1,3 +1,9 @@
+/**
+ *
+ *  Guilherme Viveiros -> nao mexer
+ *  Classe empresa na qual esta submetida a uma entidade 
+ */
+
 
 public class Produto {
 
@@ -52,12 +58,15 @@ public class Produto {
         this.id = x;
     }
 
-    public boolean equals(Produto x) {
-        return ((this.id == x.getId()) && (this.nome == x.getNome()));
+    //so comparamos o ID e os Nomes , nao os precos
+    public boolean equals(Produto obj) {
+        if(obj==this) return true;
+        if(obj==null || obj.getClass()!=this.getClass()) return false;
+        Produto p = /*(Produto)*/ obj;
+        return (this.id == p.getId() && this.nome == p.getNome());
     }
 
     public Produto clone() {
-        return new Produto(this.nome, this.id, this.preco);
+        return new Produto(this);
     }
-
 }

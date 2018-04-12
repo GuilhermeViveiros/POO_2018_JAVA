@@ -1,3 +1,14 @@
+/**
+ *
+ *  Guilherme Viveiros -> nao mexer
+ *  Classe empresa na qual esta submetida a uma entidade 
+ */
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.lang.String;//string
 import java.util.HashMap;
@@ -18,7 +29,7 @@ public class Empresa extends Entidade {
         //crio os meus setores , String[] setores e quantos usados
         this.artigos = new HashMap<Integer, Produto>();
         //setor da empresa
-        this.setor = "invalid";
+        this.setor = "";
     }
 
     // cria me a minha empresa a partir de uma entidade dada 
@@ -78,7 +89,30 @@ public class Empresa extends Entidade {
         }
         return false;
     }
+    
+    /* Fazer iterador pelo Map e transformar em String os produtos
+    //Set of Entry
+    Set< Entry <Integer, Produto>> setMap = artigos.entrySet();
+    // Um iterador para o map
+    Iterator< Entry <Integer, Produto >> iteratorMap = setMap.iterator();
+    //funcao dedicada para testes individuais
+    public void info(){
+        System.out.println("\n HashMap com Multiple Values");
+        
+        // display all the elements
+        while(iteratorMap.hasNext()) {
 
+            Map.Entry<Integer,Produto> entry = (Map.Entry<Integer, Produto>) iteratorMap.next();
+
+            Integer key = entry.getKey();
+
+            Produto produto = entry.getValue();
+
+            System.out.println("Key = '" + key + "' has values: " + produto);
+
+        }
+    }
+    */
     public String toString() {
         return super.toString() + "\nEmpresa\nSetor economico : " + this.getSetor() + "\n";
     }

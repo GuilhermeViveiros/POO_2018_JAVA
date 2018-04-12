@@ -5,17 +5,17 @@ import java.util.List;
 
 
 
-public class Pessoa{
+public class Pessoa extends Entidade{
 
-    private Entidade info;
+   
     private int nrDAF; // número de dependentes do agregado familiar
     private ArrayList<Long> nrFAF; // números fiscais do agregado familiar
     private float cF; // coeficiente fiscal
     private String cAE; // códigos das atividades economicas
 
     public Pessoa(){ // cria uma pessoa do ponto zero(DEFAULT)
-
-        this.info = new Entidade();
+        
+        super();
         this.nrDAF = 0;
         this.nrFAF = new ArrayList<Long>();
         this.cF = 0;
@@ -25,9 +25,9 @@ public class Pessoa{
     
     // cria uma pessoa ao receber todos os dados necessários
 
-    public Pessoa(long ni_P, String nom_P, String mai_P, String morad_P, int nrDAF_P, ArrayList<Long> nrFAF_P, float cF_P, String cAE_P, String number){
-
-        this.info = new Entidade(ni_P, nom_P, mai_P, morad_P, number);
+    public Pessoa(long nif, String nome, String mail, String morada, int nrDAF_P, ArrayList<Long> nrFAF_P, float cF_P, String cAE_P, String number){
+        
+        super(nif, nome, mail, morada, number);
         this.nrDAF = nrDAF_P;
         this.nrFAF = new ArrayList<Long>();
         for(long s : nrFAF_P){
@@ -40,7 +40,7 @@ public class Pessoa{
     // cria uma pessoa a partir de outra
 
     public Pessoa(Pessoa iD){
-        this.info = iD.getInfo();
+        super(iD.getNif(), iD.getNome(), iD.getMail(),iD.getMorada(), iD.getTelefone());
         this.nrDAF = iD.getNrDAF();
         this.nrFAF = iD.getNrFAF();
         //ArrayToArrayList(iD.getNrFAF());
@@ -81,15 +81,10 @@ public class Pessoa{
         return this.cAE;
     }
 
-    public Entidade getInfo(){
-        return (new Entidade(this.info));
-    }
-
     //retorna como string toda a informação fiscal disponivel da pessoa
-
     public String toString(){
 
-        return this.info.toString() +
+        return super.toString() +
         "\nNúmero de dependentes do agregado Familiar : " + this.getNrDAF() +
         "\nNúmeros de fiscais do agregado Familiar : " + this.getNrFAF() +
         "\nCoeficiente Fiscal : " + this.getCF() +
