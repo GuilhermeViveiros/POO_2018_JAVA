@@ -1,4 +1,7 @@
 import java.util.TreeSet;
+import java.util.*;
+import java.util.stream.Collectors;
+
 /**
  * Esta classe implementa uma Entidade.
  * Uma Entidade será a unidade basica à qual será aplicada tributação fiscal.
@@ -49,7 +52,7 @@ public class Entidade {
      */
     
     public TreeSet<Fatura> getFaturas() {
-        return this.stream().map(Fatura::clone).collect(Collectors.toCollection(TreeSet::new));
+        return this.faturas.stream().map(Fatura::clone).collect(Collectors.toCollection(TreeSet::new));
     }
 
     public Contacto getContacto(){

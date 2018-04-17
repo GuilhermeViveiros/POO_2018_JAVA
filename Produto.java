@@ -63,10 +63,14 @@ public class Produto {
         if(obj==this) return true;
         if(obj==null || obj.getClass()!=this.getClass()) return false;
         Produto p = /*(Produto)*/ obj;
-        return (this.id == p.getId() && this.nome == p.getNome());
+        return (this.id == p.getPreco() && this.nome.equals( p.getNome()) );
     }
 
     public Produto clone() {
         return new Produto(this);
+    }
+
+    public String toString(){
+        return this.nome + " " + this.preco;
     }
 }

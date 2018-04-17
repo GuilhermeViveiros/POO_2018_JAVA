@@ -1,6 +1,7 @@
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Escreva a descrição da classe Fatura aqui.
@@ -13,7 +14,6 @@ public class Fatura {
     private Contacto servidor;
     private String area;
     private String desc; 
-        
     private LocalDate date;
     private List<Produto> compras;
 
@@ -21,7 +21,6 @@ public class Fatura {
         this.servidor  = new Contacto();
         this.area = "campo vazio";
         this.desc = "campo vazio";
-
         this.date =  LocalDate.now();
         this.compras = new ArrayList<Produto>();
     }
@@ -30,7 +29,6 @@ public class Fatura {
         this.servidor = x.clone();
         this.area = area;
         this.desc = "campo vazio";
-
         this.date = LocalDate.now();
         this.compras = compras.stream().map(Produto::clone).collect( Collectors.toList() );
     }
@@ -39,7 +37,6 @@ public class Fatura {
         this.servidor = x.getServidor();
         this.area = x.getArea();
         this.desc = x.getDescricao();
-
         this.date = x.getDate();
         this.compras = x.getCompras();
     }
@@ -71,7 +68,7 @@ public class Fatura {
     }
 
     public LocalDate getDate(){
-        return this.date.clone();
+        return this.date;
     }
 
     public Contacto getServidor(){
@@ -93,7 +90,7 @@ public class Fatura {
     //------- Setters ---------------------------------
 
     public void setDate(LocalDate newd ){
-        this.date = newd.clone();
+        this.date = newd;
     }
 
     public void setServidor( Contacto serv){

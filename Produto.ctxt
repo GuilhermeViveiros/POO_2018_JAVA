@@ -1,8 +1,9 @@
 #BlueJ class context
 comment0.target=Produto
+comment0.text=\r\n\r\n\ \ Guilherme\ Viveiros\ ->\ nao\ mexer\r\n\ \ Classe\ empresa\ na\ qual\ esta\ submetida\ a\ uma\ entidade\ \r\n
 comment1.params=
 comment1.target=Produto()
-comment10.params=x
+comment10.params=obj
 comment10.target=boolean\ equals(Produto)
 comment11.params=
 comment11.target=Produto\ clone()

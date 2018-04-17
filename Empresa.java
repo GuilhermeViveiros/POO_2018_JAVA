@@ -3,85 +3,92 @@
  *  Guilherme Viveiros -> nao mexer
  *  Classe empresa na qual esta submetida a uma entidade 
  */
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.stream.Collector;
+
+import java.util.*;
 import java.util.stream.Collectors;
 import java.lang.String;//string
-import java.util.HashMap;
-import java.util.Map;
 
 public class Empresa extends Entidade {
-    //private String aglomerado;
-    //private Entidade comum ;
-
-    // Array List , tipo predefenido em java que me cria ( x,x,x)...com produtos , um identificador e um price
+    //tree Map com id associado a cada Fatura
+    private TreeMap<Integer,Fatura> emissoes;
+    //Map com a key sendo o nome de uma Pessoa , values é um conjunto de Faturas
+    private Map<String,Set<Fatura>> cliente;
+    //Map com id e respetivo Produto
     private Map<Integer,Produto> artigos;
     //setor da empresa
-    private String setor;
+    private String area;
 
     public Empresa() {
-        //crio entidade
         super();
-        //crio os meus setores , String[] setores e quantos usados
+        this.emissoes = new TreeMap<Integer , Fatura>();
+        this.cliente = new HashMap<String, Set<Fatura>>();
         this.artigos = new HashMap<Integer, Produto>();
-        //setor da empresa
-        this.setor = "";
+        this.area = "";
     }
 
-    // cria me a minha empresa a partir de uma entidade dada 
-    // neste caso so copia os valores da entidade
     public Empresa(long nif, String nome, String mail, String morada, String setor, String telefone) {
-
         super(nif, nome, mail, morada, telefone);
+        this.emissoes = new TreeMap<Integer , Fatura>();
+        this.cliente = new HashMap<String, Set<Fatura>>();
         this.artigos = new HashMap<Integer, Produto>();
-        this.setor = setor;
+        this.area = setor;
 
     }
 
-    // cria me a minha empresa a partir de uma empresa dada (copia dados)
-    // copia os setores , as classes e a entidade
     public Empresa(Empresa x) {
-        super(x.getNif(), x.getNome(), x.getMail(),x.getMorada(), x.getTelefone());
-        //estou a copiar os meus setores referente ha empresa x  
+        super(x.getContacto().getNif(), x.getContacto().getNome(), x.getContacto().getMail(),x.getContacto().getMorada(), x.getContacto().getTelefone());
+        //estou a copiar os meus setores referentes ha empresa x  
         this.artigos = x.getArtigos();
-        this.setor = x.getSetor();
+        this.area = x.getArea();
     }
+    
+    
 
+    
     //Setters!
-
-    public void setSetor(String x) {
-        this.setor = x;
+    public void setArea(String x) {
+        this.area = x;
     }
-
+    
+    
     //Getters!
-
     public Map<Integer,Produto> getArtigos() {
-        return this.artigos.values().stream().collect(Collectors.toMap( p -> p.getId(), p -> p.clone() ));
-
+        return this.artigos.values().stream().map(Produto :: clone).collect(Collectors.toMap( p -> p.getId(), p -> p.clone() ));
     }
-
-    // devolve me o setor 
-    public String getSetor() {
-        return this.setor;
+    
+    public TreeMap<Integer , Fatura> getEmissoes(){
+        return this.emissoes.values().stream().map(Fatura::clone).collect(Collectors.toMap( p->p.getId() , p -> p));
     }
+    
+    
+    private TreeMap<Integer , Fatura> makeClienteBase(   Map<String,Set<Fatura>> x  ){
+        
+        TreeMap<Integer, Fatura > g = new TreeMap();
+        
+        for( Set<Fatura > l : x.values() ){
+            
+            for( Fatura k : l){
+                g.put(k.getId() , k );
+            }
+        }
+        return g;
+    } 
+           
 
-    // retorna o tamanho do array em questao
-    public int quantidadeArtigos() {
-        return this.artigos.size();
+    public String getArea() {
+        return this.area;
     }
-
-    // adiciona um novo artigo(Produto) ao (ArrayList)    
+       
+    
+    //Metodos
+    //Adiciona um novo Produto ao Map   
     public void AdicionarArtigo ( Produto x ) {  
         
         if( !this.artigos.containsKey( x.getId() ) )
             this.artigos.put( x.getId() , x );
     }
 
-    // boolean que me remove um determinado Produto
+    //Remove um Produto
     public boolean RemoverArtigo(Produto x) {
         if (this.artigos.containsKey(x.getId())) {
             this.artigos.remove(x.getId());
@@ -90,30 +97,16 @@ public class Empresa extends Entidade {
         return false;
     }
     
-    /* Fazer iterador pelo Map e transformar em String os produtos
-    //Set of Entry
-    Set< Entry <Integer, Produto>> setMap = artigos.entrySet();
-    // Um iterador para o map
-    Iterator< Entry <Integer, Produto >> iteratorMap = setMap.iterator();
-    //funcao dedicada para testes individuais
-    public void info(){
-        System.out.println("\n HashMap com Multiple Values");
-        
-        // display all the elements
-        while(iteratorMap.hasNext()) {
-
-            Map.Entry<Integer,Produto> entry = (Map.Entry<Integer, Produto>) iteratorMap.next();
-
-            Integer key = entry.getKey();
-
-            Produto produto = entry.getValue();
-
-            System.out.println("Key = '" + key + "' has values: " + produto);
-
-        }
+    //Devolve a fatura emitida pela Empresa 
+    public Fatura Fatura_emi(Empresa x ,List <Integer> compras ) {
+         //= new Fatura(x.getContacto() , x.getArea() , compras);
+        List produtos = this.artigos.values().stream().filter( l -> compras.contains(l.getId())).map(Produto :: clone).collect(Collectors.toList());
+        Fatura f = new Fatura(x.getContacto() , x.getArea() , produtos);
+        return f;
     }
-    */
+    
+    //toString
     public String toString() {
-        return super.toString() + "\nEmpresa\nSetor economico : " + this.getSetor() + "\n";
+        return super.toString() + "\nEmpresa\nSetor economico : " + this.getArea() + "\n";
     }
 }
