@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
  * @author (Gonçalo Faria) 
  * @version (v1)
  */
+
 public class Fatura {
     //
     private Contacto servidor;

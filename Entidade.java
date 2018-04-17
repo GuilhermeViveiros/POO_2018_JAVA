@@ -1,4 +1,5 @@
 import java.util.TreeSet;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,13 +31,14 @@ public class Entidade {
      * Aceita como parâmetros os valores para cada variável de instância.
      */
 
-    public Entidade(Contact x) {
+    public Entidade(Contacto x) {
         this.info    = x.clone() ;
         this.faturas = new TreeSet<Fatura>();
         this.despesa = 0.0;
     }
 
     public Entidade(Contacto x, TreeSet<Fatura> fat ) {
+        
         this.info    = x.clone() ;
         this.faturas = fat.stream().map(Fatura::clone).collect( Collectors.toCollection(TreeSet::new) );
         this.despesa = fat.stream().mapToDouble( Fatura::getTotal ).sum();
@@ -74,6 +76,15 @@ public class Entidade {
     
     public double getDespesa(){
         return this.despesa;
+    }
+
+    public double getDespesa( LocalDate begin , LocalDate end ){        
+        return this.faturas.stream().filter( p -> ( p.getDate().isAfter( begin ) ) && ( p.getDate().isBefore(end) ) ).mapToDouble(Fatura::getTotal).sum();
+    }
+
+    public boolean removerFatura( Fatura bh ){
+
+        return this.faturas.remove(bh);
     }
     /**
      * Método que devolve a representação em String de toda a Entidade.

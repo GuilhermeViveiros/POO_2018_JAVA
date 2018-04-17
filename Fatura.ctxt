@@ -36,5 +36,5 @@ comment7.target=Fatura\ clone()
 comment8.params=
 comment8.target=java.time.LocalDate\ getDate()
 comment9.params=
-comment9.target=java.lang.Double\ getTotal()
+comment9.target=double\ getTotal()
 numComments=19
