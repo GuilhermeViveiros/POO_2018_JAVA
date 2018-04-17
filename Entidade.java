@@ -30,8 +30,8 @@ public class Entidade {
      * Aceita como parâmetros os valores para cada variável de instância.
      */
 
-    public Entidade(long ni_p, String nom_p, String mai_p, String morad_p, String telefone) {
-        this.info    = new Contacto(ni_p, nom_p, mai_p, morad_p, telefone);
+    public Entidade(Contact x) {
+        this.info    = x.clone() ;
         this.faturas = new TreeSet<Fatura>();
         this.despesa = 0.0;
     }
