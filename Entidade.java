@@ -14,7 +14,7 @@ public class Entidade {
     // variáveis de instância
     private Contacto info;
     private TreeSet<Fatura> faturas;
-    private Double despesa;
+    private double despesa;
     /**
     * Construtor por omissão de Entidade.
     */
@@ -72,7 +72,7 @@ public class Entidade {
         return this.info.clone();
     }
     
-    public Double getDespesa(){
+    public double getDespesa(){
         return this.despesa;
     }
     /**

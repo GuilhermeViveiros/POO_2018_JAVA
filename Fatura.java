@@ -16,7 +16,7 @@ public class Fatura {
     private String desc; 
     private LocalDate date;
     private List<Produto> compras;
-    private Double total;
+    private double total;
 
     public Fatura() {
         this.servidor  = new Contacto();
@@ -79,7 +79,7 @@ public class Fatura {
         return this.date;
     }
 
-    public Double getTotal(){
+    public double getTotal(){
         return this.total;
     }
 
