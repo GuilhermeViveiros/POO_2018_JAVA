@@ -14,14 +14,15 @@ public class Entidade {
     // variáveis de instância
     private Contacto info;
     private TreeSet<Fatura> faturas;
-
+    private Double despesa;
     /**
     * Construtor por omissão de Entidade.
     */
 
     public Entidade() {
-        this.info = new Contacto();
+        this.info    = new Contacto();
         this.faturas = new TreeSet<Fatura>();
+        this.despesa = 0.0;
     }
 
     /**
@@ -30,8 +31,15 @@ public class Entidade {
      */
 
     public Entidade(long ni_p, String nom_p, String mai_p, String morad_p, String telefone) {
-        this.info = new Contacto(ni_p, nom_p, mai_p, morad_p, telefone);
+        this.info    = new Contacto(ni_p, nom_p, mai_p, morad_p, telefone);
         this.faturas = new TreeSet<Fatura>();
+        this.despesa = 0.0;
+    }
+
+    public Entidade(Contacto x, TreeSet<Fatura> fat ) {
+        this.info    = x.clone() ;
+        this.faturas = fat.stream().map(Fatura::clone).collect( Collectors.toCollection(TreeSet::new) );
+        this.despesa = fat.stream().mapToDouble( Fatura::getTotal ).sum();
     }
 
     /**
@@ -42,8 +50,9 @@ public class Entidade {
      */
 
     public Entidade(Entidade inc) {
-        this.info = new Contacto( inc.getContacto() );
+        this.info    = new Contacto( inc.getContacto() );
         this.faturas = inc.getFaturas();
+        this.despesa = inc.getDespesa();
         // a password está vazia.
     }
 
@@ -55,10 +64,17 @@ public class Entidade {
         return this.faturas.stream().map(Fatura::clone).collect(Collectors.toCollection(TreeSet::new));
     }
 
+    public List<Fatura> listFaturas(){
+        return this.faturas.stream().map(Fatura::clone).collect(Collectors.toList());
+    }
+
     public Contacto getContacto(){
         return this.info.clone();
     }
-
+    
+    public Double getDespesa(){
+        return this.despesa;
+    }
     /**
      * Método que devolve a representação em String de toda a Entidade.
      * @return String com tudas as variáveis de instâncias(exceto password).
@@ -73,6 +89,7 @@ public class Entidade {
 
     public void addFatura(Fatura x) {
         this.faturas.add(x.clone());
+        this.despesa += x.getTotal();
     }
 
     public void setContacto( Contacto x){

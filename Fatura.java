@@ -22,7 +22,7 @@ public class Fatura {
         this.servidor  = new Contacto();
         this.area = "campo vazio";
         this.desc = "campo vazio";
-        this.total = 0;
+        this.total = 0.0;
         this.date =  LocalDate.now();
         this.compras = new ArrayList<Produto>();
     }
