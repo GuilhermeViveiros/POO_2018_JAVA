@@ -14,7 +14,8 @@ import java.util.stream.Collectors;
 public class Entidade {
     // variáveis de instância
     private Contacto info;
-    private TreeSet<Fatura> faturas;
+    private TreeSet<Fatura> faturas_dt;
+    private TreeSet<Fatura> faturas_val;
     private double despesa;
     /**
     * Construtor por omissão de Entidade.
@@ -22,7 +23,13 @@ public class Entidade {
 
     public Entidade() {
         this.info    = new Contacto();
-        this.faturas = new TreeSet<Fatura>();
+        this.faturas_dt = new TreeSet<Fatura>();
+        this.faturas_val = new TreeSet<Fatura>(
+                                new Comparator<Fatura>(){
+                                    public int compare(Fatura x, Fatura y ){
+                                        return x.comparePreco(y);
+                                    }
+                                } );
         this.despesa = 0.0;
     }
 
@@ -33,14 +40,32 @@ public class Entidade {
 
     public Entidade(Contacto x) {
         this.info    = x.clone() ;
-        this.faturas = new TreeSet<Fatura>();
+        this.faturas_dt = new TreeSet<Fatura>();
+        this.faturas_val = new TreeSet<Fatura>(
+                                new Comparator<Fatura>(){
+                                    public int compare(Fatura x, Fatura y ){
+                                        return x.comparePreco(y);
+                                    }
+                                } );
         this.despesa = 0.0;
     }
 
     public Entidade(Contacto x, TreeSet<Fatura> fat ) {
         
         this.info    = x.clone() ;
-        this.faturas = fat.stream().map(Fatura::clone).collect( Collectors.toCollection(TreeSet::new) );
+        this.faturas_dt = new TreeSet<Fatura>();
+        this.faturas_val = new TreeSet<Fatura>(
+                                new Comparator<Fatura>(){
+                                    public int compare(Fatura x, Fatura y ){
+                                        return x.comparePreco(y);
+                                    }
+                                } );
+        Fatura j;
+        for ( Fatura l : fat ){
+            j  = l.clone();
+            this.faturas_dt.add( j );
+            this.faturas_val.add( j ); 
+        }
         this.despesa = fat.stream().mapToDouble( Fatura::getTotal ).sum();
     }
 
@@ -52,9 +77,11 @@ public class Entidade {
      */
 
     public Entidade(Entidade inc) {
-        this.info    = new Contacto( inc.getContacto() );
-        this.faturas = inc.getFaturas();
+        this.info        = new Contacto( inc.getContacto() ); 
+        this.faturas_val =inc.getfaturas_Valor();
+        this.faturas_dt = this.faturas_val.stream().collect( Collectors.toCollection(TreeSet::new) );
         this.despesa = inc.getDespesa();
+
         // a password está vazia.
     }
 
@@ -62,13 +89,31 @@ public class Entidade {
      * Métodos de instância
      */
     
-    public TreeSet<Fatura> getFaturas() {
-        return this.faturas.stream().map(Fatura::clone).collect(Collectors.toCollection(TreeSet::new));
+    public TreeSet<Fatura> getfaturas_Crono() {
+        return this.faturas_dt.stream().map(Fatura::clone).collect(Collectors.toCollection(TreeSet::new));
     }
 
-    public List<Fatura> listFaturas(){
-        return this.faturas.stream().map(Fatura::clone).collect(Collectors.toList());
+    public TreeSet<Fatura> getfaturas_Valor() {
+        return this.faturas_val.stream().map(Fatura::clone).collect(Collectors.toCollection(TreeSet::new));
     }
+
+    public List<Fatura> listafaturas_Crono(){
+        return this.faturas_dt.stream().map(Fatura::clone).collect(Collectors.toList());
+    }
+
+    public List<Fatura> listafaturas_Crono(LocalDate begin, LocalDate end){
+        return this.faturas_dt.stream().map(Fatura::clone).filter( p-> p.isAfter(begin) && p.isBefore(end) ).collect(Collectors.toList());
+    }
+
+    public List<Fatura> listafaturas_Valor( ){
+        return this.faturas_val.stream().map(Fatura::clone).collect(Collectors.toList());
+    }
+
+    public List<Fatura> listafaturas_Valor( LocalDate begin, LocalDate end ){
+        return this.faturas_val.stream().map(Fatura::clone).filter( p-> p.isAfter(begin) && p.isBefore(end) ).collect(Collectors.toList());
+    }
+
+
 
     public Contacto getContacto(){
         return this.info.clone();
@@ -79,12 +124,12 @@ public class Entidade {
     }
 
     public double getDespesa( LocalDate begin , LocalDate end ){        
-        return this.faturas.stream().filter( p -> ( p.getDate().isAfter( begin ) ) && ( p.getDate().isBefore(end) ) ).mapToDouble(Fatura::getTotal).sum();
+        return this.faturas_dt.stream().filter( p -> ( p.getDate().isAfter( begin ) ) && ( p.getDate().isBefore(end) ) ).mapToDouble(Fatura::getTotal).sum();
     }
 
     public boolean removerFatura( Fatura bh ){
 
-        return this.faturas.remove(bh);
+        return this.faturas_dt.remove(bh);
     }
     /**
      * Método que devolve a representação em String de toda a Entidade.
@@ -93,13 +138,13 @@ public class Entidade {
     public String toString() {
         String text, space;
 
-        text = this.info.toString() + " " + faturas.toString();
+        text = this.info.toString() + " " + faturas_dt.toString();
 
         return text;
     }
 
     public void addFatura(Fatura x) {
-        this.faturas.add(x.clone());
+        this.faturas_dt.add(x.clone());
         this.despesa += x.getTotal();
     }
 
