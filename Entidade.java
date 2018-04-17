@@ -98,6 +98,7 @@ public class Entidade {
         if ( this.info.equals( inc.getContacto() ) )
             return true;
 
+
         // não é neces 
 
         return false;
