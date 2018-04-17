@@ -1,3 +1,4 @@
+import java.util.TreeSet;
 /**
  * Esta classe implementa uma Entidade.
  * Uma Entidade será a unidade basica à qual será aplicada tributação fiscal.
@@ -14,7 +15,7 @@ public class Entidade {
     /**
     * Construtor por omissão de Entidade.
     */
-    
+
     public Entidade() {
         this.info = new Contacto();
         this.faturas = new TreeSet<Fatura>();
@@ -91,7 +92,7 @@ public class Entidade {
 
         Entidade inc = (Entidade) o;
 
-        if ((this.nif == inc.getNif()))
+        if ( this.info.equals( inc.getContacto() ) )
             return true;
 
         // não é neces 
