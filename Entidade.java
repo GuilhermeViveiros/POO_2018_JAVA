@@ -102,7 +102,7 @@ public class Entidade {
     }
 
     public List<Fatura> listafaturas_Crono(LocalDate begin, LocalDate end){
-        return this.faturas_dt.stream().map(Fatura::clone).filter( p-> p.isAfter(begin) && p.isBefore(end) ).collect(Collectors.toList());
+        return this.faturas_dt.stream().map(Fatura::clone).filter( p-> p.getDate().isAfter(begin) && p.getDate().isBefore(end) ).collect(Collectors.toList());
     }
 
     public List<Fatura> listafaturas_Valor( ){
@@ -110,7 +110,7 @@ public class Entidade {
     }
 
     public List<Fatura> listafaturas_Valor( LocalDate begin, LocalDate end ){
-        return this.faturas_val.stream().map(Fatura::clone).filter( p-> p.isAfter(begin) && p.isBefore(end) ).collect(Collectors.toList());
+        return this.faturas_val.stream().map(Fatura::clone).filter( p-> p.getDate().isAfter(begin) && p.getDate().isBefore(end) ).collect(Collectors.toList());
     }
 
 
