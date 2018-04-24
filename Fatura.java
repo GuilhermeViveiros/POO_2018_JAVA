@@ -2,7 +2,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
+import java.util.*;
 /**
  * Escreva a descrição da classe Fatura aqui.
  * 
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class Fatura {
     //
     private Contacto servidor;
-    private String area;
+    private Set<String> areas;
     private String desc; 
     private LocalDate date;
     private List<Produto> compras;
@@ -21,16 +21,16 @@ public class Fatura {
 
     public Fatura() {
         this.servidor  = new Contacto();
-        this.area = "campo vazio";
+        this.areas = new HashSet<String>();
         this.desc = "campo vazio";
         this.total = 0.0;
         this.date =  LocalDate.now();
         this.compras = new ArrayList<Produto>();
     }
 
-    public Fatura(Contacto x, String area , List<Produto> compras) {
+    public Fatura(Contacto x, Set<String> areas , List<Produto> compras) {
         this.servidor = x.clone();
-        this.area = area;
+        this.areas = areas.stream().collect(Collectors.toSet());
         this.desc = "campo vazio";
         this.date = LocalDate.now();
         this.compras = compras.stream().map(Produto::clone).collect( Collectors.toList() );
@@ -39,7 +39,7 @@ public class Fatura {
 
     public Fatura( Fatura x){
         this.servidor = x.getServidor();
-        this.area = x.getArea();
+        this.areas = x.getAreas();
         this.desc = x.getDescricao();
         this.date = x.getDate();
         this.compras = x.getCompras();
@@ -92,8 +92,8 @@ public class Fatura {
         return this.desc;
     }
 
-    public String getArea(){
-        return this.area;
+    public Set<String> getAreas(){
+        return this.areas.stream().collect(Collectors.toSet());
     }
 
     public List<Produto> getCompras(){
@@ -114,8 +114,8 @@ public class Fatura {
         this.desc = com;
     }
 
-    public void setArea( String Area ){
-        this.area = Area;
+    public void setArea( Set<String> areas ){
+        this.areas = areas.stream().collect(Collectors.toSet());
     }
     
     public void addCompra( Produto x ){

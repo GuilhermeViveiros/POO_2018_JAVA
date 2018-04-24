@@ -6,24 +6,38 @@
  */
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
+
+import javax.print.DocFlavor.STRING;
+
 import java.lang.String;//string
 
 public class Empresa extends Entidade {
-    // Tree Map associado a cada Fatura (ordenada por data)
+    // Tree associado a cada Fatura (ordenada por data)
     private TreeSet<Fatura> emissoes_data;
-    // Tree Map associado a cada Fatura (ordenada por valor)
+    // Tree  associado a cada Fatura (ordenada por valor)
     private TreeSet<Fatura> emissoes_valor;
-    // Faturas agrupadas por cliente que as 'recebeu'
+    // Map associados a uma Pessoa e todas as suas Faturas
     private Map<String, Set<Fatura>> cliente;
-    //Map com id e respetivo Produto
+    //Set com todos os produtos de uma empresa
     private Set<Produto> artigos;
-    //Area da empresa
-    //Tem que pertencer às áreas na variavel de classe.
-    private String area;
+    //Conjunto de areas que cada empresa pode ter
+    private static Set<String> areas;
+    //Conjunto de aeras que um empresa tem!
+    private static Set<String> setores;
+
+    static{
+        areas = new HashSet<String>();
+        //this.area.add("Gestao");
+        areas.add("Saúde");
+        areas.add("Educação");
+    }
 
     public Empresa() {
         super();
+        //quando nao declaramos nenhuma função para o comparator ele assume a dele ou usa a nossa funcao se tiver o nome de ->"compare"
+        //neste caso ja temos , em que a comparaçao é feita a partir da data
         this.emissoes_data = new TreeSet<Fatura>();
         this.emissoes_valor = new TreeSet<>(new Comparator<Fatura>() {
             public int compare(Fatura x, Fatura y) {
@@ -32,12 +46,13 @@ public class Empresa extends Entidade {
         });
         this.cliente = new HashMap<String, Set<Fatura>>();
         this.artigos = new HashSet<Produto>();
-        this.area = "empty";
+        this.setores = new HashSet<String> ();
     }
 
-    public Empresa(long nif, String nome, String mail, String morada, String setor, String telefone) {
+    public Empresa(long nif, String nome, String mail, String morada, String telefone) {
         super(new Contacto(nif, nome, mail, morada, telefone));
         this.emissoes_data = new TreeSet<Fatura>();
+
         this.emissoes_valor = new TreeSet<>(new Comparator<Fatura>() {
             public int compare(Fatura x, Fatura y) {
                 return x.comparePreco(y);
@@ -45,8 +60,26 @@ public class Empresa extends Entidade {
         });
         this.cliente = new HashMap<String, Set<Fatura>>();
         this.artigos = new HashSet<Produto>();
-        this.area = setor;
+        this.setores = new HashSet<String>();
+    }
 
+    public Empresa(Set<String> setor){
+        super();
+        this.emissoes_data  =new TreeSet<Fatura>();
+        this.emissoes_valor = new TreeSet<>(new Comparator<Fatura>() {
+            public int compare(Fatura x, Fatura y) {
+                return x.comparePreco(y);
+            }
+        });
+        this.cliente = new HashMap<String, Set<Fatura>>();
+        this.artigos = new HashSet<Produto>();
+        this.setores = new HashSet<String>();
+        for (String x : setor){
+            //tem que pertencer as areas para conseguir entrar para os setores da empresa
+           if (areas.contains(x)){
+               this.setores.add(x);
+           }
+        }
     }
 
     public Empresa(Empresa x) {
@@ -57,33 +90,13 @@ public class Empresa extends Entidade {
         this.makeClienteValue();
 
         this.artigos = x.getArtigos();
-        this.area = x.getArea();
-    }
-
-    //Setters!
-    public void setArea(String x) {
-        // tem de ser mais restrito pois Têm de constar no conjunto de class que define as áreas.
-        this.area = x;
-    }
-
-    //Getters!
-    public Set<Produto> getArtigos() {
-        return this.artigos.stream().map(Produto::clone).collect(Collectors.toSet());
-    }
-
-    public Set<Fatura> getEmissoes() {
-        return this.emissoes_data.stream().map(Fatura::clone).collect(Collectors.toSet());
-    }
-
-    public Map<String, Set<Fatura>> getCliente() {
-        return this.cliente.entrySet().stream().collect(Collectors.toMap(l -> l.getKey(),
-                l -> l.getValue().stream().map(Fatura::clone).collect(Collectors.toSet())));
+        this.setores = x.getSetores();
     }
 
     //Privado -> apenas para os construtores pois nao queres clone da mesma informacao entre os mesmos
     //atraves do Map criamos um set de Faturas iguais com ordenacao baseada na data
     private void makeClienteData() {
-
+        this.emissoes_data =new TreeSet<>();
         for (Set<Fatura> l : this.cliente.values()) {
 
             for (Fatura k : l) {
@@ -94,7 +107,11 @@ public class Empresa extends Entidade {
 
     //atraves do Map criamos um set de Faturas iguais com ordenacao baseada no valor
     private void makeClienteValue() {
-
+        this.emissoes_valor = new TreeSet<>(new Comparator<Fatura>() {
+            public int compare(Fatura x, Fatura y) {
+                return x.comparePreco(y);
+            }
+        });
         for (Set<Fatura> l : this.cliente.values()) {
 
             for (Fatura k : l) {
@@ -103,23 +120,23 @@ public class Empresa extends Entidade {
         }
     }
 
-    public String getArea() {
-        return this.area;
+    //Metodos -----------------------------------------------------------------------------------------------------
+
+    //Getters!
+    public Set<Produto> getArtigos() {return this.artigos.stream().map(Produto::clone).collect(Collectors.toSet());}
+
+    public Set<Fatura> getEmissoes() {return this.emissoes_data.stream().map(Fatura::clone).collect(Collectors.toSet());}
+
+    public Map<String, Set<Fatura>> getCliente() {
+        return this.cliente.entrySet().stream().collect(Collectors.toMap(l -> l.getKey(),
+                l -> l.getValue().stream().map(Fatura::clone).collect(Collectors.toSet())));
     }
 
-    //Metodos de classe
+    public Set<String> getSetores(){ return this.setores.stream().collect(Collectors.toSet());}
 
-    //Add -----------------------------------
-    //Adiciona um novo Produto ao Map   
-    public void AdicionarArtigo(Produto x) {
-
-        if (!this.artigos.contains(x))
-            this.artigos.add(x.clone());
-    }
-
-    //Adiciona e devolve a fatura emitida pela Empresa 
+    //Método que adiciona e devolve a fatura emitida pela Empresa 
     public Fatura Fatura_emi(Entidade x, List<Produto> compras) {
-        Fatura f = new Fatura(this.getContacto(), this.getArea(), compras);
+        Fatura f = new Fatura(this.getContacto(), this.setores, compras);
 
         if (this.artigos.containsAll(compras)) { //estou a verificar se a lista de Produtos corresponde com a lista de produtos da minha empresa
             this.emissoes_data.add(f);
@@ -142,7 +159,60 @@ public class Empresa extends Entidade {
         return f.clone();
     }
 
-    //Remove um Produto
+    //Método que remove um Setor
+    public boolean RemoveSetor(String x){
+        if (this.setores.contains(x)){
+            this.setores.remove(x);
+            return true;
+        }
+        return false;
+    }
+
+    //Método que adiciona um Setor
+    public boolean AdicionaSetor(String x){
+        if (this.setores.contains(x)){
+            this.setores.add(x);
+            return true;
+        }
+        return false;
+    }
+
+    //Método que troca um conjunto de setores
+    public void MudaSetores(Set<String> x){
+        this.setores =  x.stream().filter(l -> this.areas.contains(l)).collect(Collectors.toSet());
+    }
+
+    //Método que remove uma area
+    public boolean RemoveArea(String x){
+        if (areas.contains(x)){
+            areas.remove(x);
+            return true;
+        }
+        return false;
+    }
+
+    //Método que adiciona um Setor
+    public boolean AdicionaArea(String x){
+        if (areas.contains(x)){
+            areas.add(x);
+            return true;
+        }
+        return false;
+    }
+
+    //Método estatico que troca um conjunto de areas
+    public static void MudaAreas(Set<String> x){
+        areas =  x.stream().filter(l -> areas.contains(l)).collect(Collectors.toSet());
+    }
+        
+    //Adiciona um novo Produto ao Map   
+    public void AdicionarArtigo(Produto x) {
+
+        if (!this.artigos.contains(x))
+            this.artigos.add(x.clone());
+    }
+
+    //Método que remove um Produto
     public boolean RemoveArtigo(Produto x) {
         if (this.artigos.contains(x)) {
             this.artigos.remove(x);
@@ -151,7 +221,7 @@ public class Empresa extends Entidade {
         }
         return false;
     }
-
+    //Método que remove uma Fatura de uma determinada Pessoa
     public boolean RemoveRegisto(Entidade ent, Fatura x) {
         if (this.cliente.containsKey(ent.getContacto().getNome())) {
             Set<Fatura> fac_set = this.cliente.get(ent.getContacto().getNome());
@@ -167,7 +237,7 @@ public class Empresa extends Entidade {
 
     //Metodo toString
     public String toString() {
-        return super.toString() + "\nEmpresa\nSetor economico : " + this.getArea() + this.artigos.toString()
+        return super.toString() + "\nEmpresa\nSetores economico : " + this.setores.toString() + this.artigos.toString()
                 + this.cliente.toString() + "\n";
     }
 
