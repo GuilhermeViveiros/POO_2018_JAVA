@@ -138,7 +138,6 @@ public class Entidade {
                 count = new Double(0);
             }
             hist.put(l.getArea(), new Double(count.doubleValue() + l.getTotal()));
-
         }
         return hist;
     }
