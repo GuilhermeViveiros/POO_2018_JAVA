@@ -25,7 +25,7 @@ public class Empresa extends Entidade {
     //Conjunto de areas que cada empresa pode ter
     private static Set<String> areas;
     //Conjunto de aeras que um empresa tem!
-    private static Set<String> setores;
+    private Set<String> setores;
 
     static{
         areas = new HashSet<String>();
@@ -33,7 +33,10 @@ public class Empresa extends Entidade {
         areas.add("Saúde");
         areas.add("Educação");
     }
-
+    
+    /**
+    * Construtor por omissão de Empresa.
+    */
     public Empresa() {
         super();
         //quando nao declaramos nenhuma função para o comparator ele assume a dele ou usa a nossa funcao se tiver o nome de ->"compare"
@@ -48,7 +51,11 @@ public class Empresa extends Entidade {
         this.artigos = new HashSet<Produto>();
         this.setores = new HashSet<String> ();
     }
-
+    
+    /**
+     * Construtor parametrizado da Empresa.
+     * Aceita como parâmetros os valores para cada variável de instância da sua Entidade.
+     */
     public Empresa(long nif, String nome, String mail, String morada, String telefone) {
         super(new Contacto(nif, nome, mail, morada, telefone));
         this.emissoes_data = new TreeSet<Fatura>();
@@ -62,7 +69,8 @@ public class Empresa extends Entidade {
         this.artigos = new HashSet<Produto>();
         this.setores = new HashSet<String>();
     }
-
+    
+    
     public Empresa(Set<String> setor){
         super();
         this.emissoes_data  =new TreeSet<Fatura>();
@@ -81,7 +89,13 @@ public class Empresa extends Entidade {
            }
         }
     }
-
+    
+    /**
+     * Construtor de cópia da Empresa.
+     * Aceita como parâmetro outra Empresa e utiliza os métodos
+     * de acesso aos valores das variáveis de instância.
+     * As faturas dos clientes ordenadas por data e valor não são copiadas. 
+     */
     public Empresa(Empresa x) {
         super(x);
         this.cliente = x.getCliente();
@@ -120,7 +134,9 @@ public class Empresa extends Entidade {
         }
     }
 
-    //Metodos -----------------------------------------------------------------------------------------------------
+     /**
+     * Métodos de instância-------------------------------------------------------------------------------------------------------
+     */
 
     //Getters!
     public Set<Produto> getArtigos() {return this.artigos.stream().map(Produto::clone).collect(Collectors.toSet());}
@@ -134,29 +150,35 @@ public class Empresa extends Entidade {
 
     public Set<String> getSetores(){ return this.setores.stream().collect(Collectors.toSet());}
 
-    //Método que adiciona e devolve a fatura emitida pela Empresa 
-    public Fatura Fatura_emi(Entidade x, List<Produto> compras) {
-        Fatura f = new Fatura(this.getContacto(), this.setores, compras);
+    //Método que adiciona e devolve a fatura emitida pela Empresa de um determinado Setor
+    public Fatura Fatura_emi(Entidade x, List<Produto> compras , String setor) {
+        
+        if (areas.contains(setor)){
+        Fatura f = new Fatura(this.getContacto(), setor ,x.getContacto().getNif() , compras);
 
-        if (this.artigos.containsAll(compras)) { //estou a verificar se a lista de Produtos corresponde com a lista de produtos da minha empresa
-            this.emissoes_data.add(f);
-            this.emissoes_valor.add(f);
+            if (this.artigos.containsAll(compras)) { //estou a verificar se a lista de Produtos corresponde com a lista de produtos da minha empresa
+                this.emissoes_data.add(f);
+                this.emissoes_valor.add(f);
 
-            if (!this.cliente.containsKey(x.getContacto().getNome())) {
-                TreeSet<Fatura> l = new TreeSet<>(new Comparator<Fatura>() {
-                    public int compare(Fatura x, Fatura y) {
-                        //estamos a fazer (-1) pois o Metodo 8 pede as despesas por ordem decresecente 
-                        return (-1) * x.comparePreco(y);
-                    }
-                });
-                l.add(f);
-                this.cliente.put(x.getContacto().getNome(), l);
-            } else {
-                this.cliente.get(x.getContacto().getNome()).add(f);
+                if (!this.cliente.containsKey(x.getContacto().getNome())) {
+                    TreeSet<Fatura> l = new TreeSet<>(new Comparator<Fatura>() {
+                        public int compare(Fatura x, Fatura y) {
+                            //estamos a fazer (-1) pois o Metodo 8 pede as despesas por ordem decresecente 
+                            return (-1) * x.comparePreco(y);
+                        }
+                    });
+   
+                    l.add(f);
+                    this.cliente.put(x.getContacto().getNome(), l);
+                    
+                } else {
+                    this.cliente.get(x.getContacto().getNome()).add(f);
+                }
+                // private Map<String,Set<Fatura>> cliente;
             }
-            // private Map<String,Set<Fatura>> cliente;
+            return f.clone();
         }
-        return f.clone();
+    return null;  
     }
 
     //Método que remove um Setor
@@ -221,6 +243,7 @@ public class Empresa extends Entidade {
         }
         return false;
     }
+    
     //Método que remove uma Fatura de uma determinada Pessoa
     public boolean RemoveRegisto(Entidade ent, Fatura x) {
         if (this.cliente.containsKey(ent.getContacto().getNome())) {
@@ -234,28 +257,37 @@ public class Empresa extends Entidade {
         }
         return false;
     }
-
+    
     //Metodo toString
     public String toString() {
         return super.toString() + "\nEmpresa\nSetores economico : " + this.setores.toString() + this.artigos.toString()
                 + this.cliente.toString() + "\n";
     }
-
-    //Metodo 6) Devolve as faturas emitidas pela Empresa , ordenadas 
-    public List<Fatura> Faturas_data() { //ordenadas por data de emisssao
-        return this.emissoes_data.stream().map(Fatura::clone).collect(Collectors.toList());
+    
+    //Método que devolve o total fatura pela empresa
+     public double Total_faturado() {
+        return this.emissoes_data.stream().mapToDouble(Fatura::getTotal).sum();
     }
-
+    
+    //Metodo que devolve as faturas que a empresa emitiu entre 2 datas
     public List<Fatura> Faturas_data(LocalDate begin, LocalDate end) { //ordenadas por data de emisssao
         return this.emissoes_data.stream().filter(h -> h.getDate().isAfter(begin) && h.getDate().isBefore(end)).map(Fatura::clone).collect(Collectors.toList());
     }
-
+    
+    //Metodo que devolve as faturas que a empresa emitiu
     public List<Fatura> Faturas_valor() { //ordenadas por valor
         return this.emissoes_valor.stream().map(Fatura::clone).collect(Collectors.toList());
     }
 
     public List<Fatura> Faturas_valor(LocalDate begin, LocalDate end) { //ordenadas por valor
         return this.emissoes_valor.stream().filter(h -> h.getDate().isAfter(begin) && h.getDate().isBefore(end)).map(Fatura::clone).collect(Collectors.toList());
+    }
+    
+   
+    
+     //Metodo 6) Devolve as faturas emitidas pela Empresa , ordenadas 
+    public List<Fatura> Faturas_data() { //ordenadas por data de emisssao
+        return this.emissoes_data.stream().map(Fatura::clone).collect(Collectors.toList());
     }
 
     
@@ -270,7 +302,7 @@ public class Empresa extends Entidade {
         return new ArrayList<Fatura>();
 
     }
-
+     //Devolve todas as Faturas de um cliente ordenadas pela data de emissao
     public List<Fatura> Faturas_tempo( String nome_cliente ) {
         
         if( this.cliente.containsKey(nome_cliente) ) {
@@ -282,7 +314,6 @@ public class Empresa extends Entidade {
     }
     
     //Metodo 8) Lista das faturas por contribuinte ordenadas por valor decrescente da despesa
-    
     public List<Fatura> Faturas_despesa( String nome_cliente ) {
         
         if( this.cliente.containsKey(nome_cliente) ) {
@@ -298,8 +329,9 @@ public class Empresa extends Entidade {
         }
         return new ArrayList<Fatura>();
 
-    }
-
+    } 
+    
+    //Devolve o total de faturas  entre uma respetiva data de um cliente 
     public List<Fatura> Faturas_despesa( LocalDate begin, LocalDate end, String nome_cliente ) {
         
         if( this.cliente.containsKey(nome_cliente) ) {
@@ -316,14 +348,10 @@ public class Empresa extends Entidade {
         return new ArrayList<Fatura>();
 
     }
-    
     //Metodo 9) Indicar o total faturado por uma Empresa num determinado periodo
     public double Total_faturado(LocalDate begin, LocalDate end) {
         return this.emissoes_data.stream().filter(h -> h.getDate().isAfter(begin) && h.getDate().isBefore(end))
                 .mapToDouble(Fatura::getTotal).sum();
     }
-
-    public double Total_faturado() {
-        return this.emissoes_data.stream().mapToDouble(Fatura::getTotal).sum();
-    }
+    
 }
