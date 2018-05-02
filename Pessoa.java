@@ -1,7 +1,6 @@
 import java.util.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 
 
@@ -9,10 +8,11 @@ public class Pessoa extends Entidade{
 
    
     private int nrDAF; // número de dependentes do agregado familiar
-    private ArrayList<Long> nrFAF; // números fiscais do agregado familiar
+    private List<Long> nrFAF; // números fiscais do agregado familiar
     private float cF; // coeficiente fiscal
     private String cAE; // códigos das atividades economicas
-
+    private Set<Faturas> emissoes; //lista de Faturas de uma pessoa ordenadas por data
+   
     public Pessoa(){ // cria uma pessoa do ponto zero(DEFAULT)
         
         super();
@@ -24,23 +24,18 @@ public class Pessoa extends Entidade{
     }
     
     // cria uma pessoa ao receber todos os dados necessários
-
-    public Pessoa(long nif, String nome, String mail, String morada, int nrDAF_P, ArrayList<Long> nrFAF_P, float cF_P, String cAE_P, String number){
-        
-        super(nif, nome, mail, morada, number);
+    public Pessoa(long nif, String nome, String mail, String morada, int nrDAF_P, List<Long> nrFAF_P, float cF_P, String cAE_P, String number){
+        super(new Contacto(nif, nome, mail, morada, number));
         this.nrDAF = nrDAF_P;
-        this.nrFAF = new ArrayList<Long>();
-        for(long s : nrFAF_P){
-            this.nrFAF.add(s);
-        }
+        //clone?
+        this.nrFAF = nrFAF_P.stream().collect(Collectors.toList());
         this.cF = cF_P;
         this.cAE = cAE_P;
     }
 
     // cria uma pessoa a partir de outra
-
     public Pessoa(Pessoa iD){
-        super(iD.getNif(), iD.getNome(), iD.getMail(),iD.getMorada(), iD.getTelefone());
+        super(iD);
         this.nrDAF = iD.getNrDAF();
         this.nrFAF = iD.getNrFAF();
         //ArrayToArrayList(iD.getNrFAF());
@@ -49,41 +44,16 @@ public class Pessoa extends Entidade{
     }
 
     // getters
+    public int getNrDAF(){ return this.nrDAF;}
 
-    public int getNrDAF(){
-        return this.nrDAF;
-    }
+    public List getNrFAF(){return this.nrFAF.strem().collect(Collectors.toList());}
 
-    /*
-    public long[] getNrFAF(){
-        Long[] l= this.nrFAF.toArray(new Long[0]);
-        long[] r= new long[l.length];
-        for(int i=0; i< l.length; i++)
-            r[i]= l[i].longValue();
-        return r;
-    }
-    */
+    public float getCF(){return this.cF;}
 
-    public ArrayList getNrFAF(){
-        
-        ArrayList<Long> nr = new ArrayList();
-        for(long l : this.nrFAF){
-            nr.add(l);
-        }
-        return nr;
-    }
-
-    public float getCF(){
-        return this.cF;
-    }
-
-    public String getCAE(){
-        return this.cAE;
-    }
+    public String getCAE(){return this.cAE;}
 
     //retorna como string toda a informação fiscal disponivel da pessoa
     public String toString(){
-
         return super.toString() +
         "\nNúmero de dependentes do agregado Familiar : " + this.getNrDAF() +
         "\nNúmeros de fiscais do agregado Familiar : " + this.getNrFAF() +
@@ -92,22 +62,13 @@ public class Pessoa extends Entidade{
     }
     
     //setters
+    public void setNrDAF(int x){this.nrDAF = novo;}
     
-    public void setNrDAF(int novo){
-        this.nrDAF = novo;
-    }
+    public void setNrFAF(List x){this.nrDAF = x.stream().collect(Collectors.toList());}
     
-    public void setNrFAF(ArrayList novo){
-        
-    }
+    public void setNrDAF(float novo){this.cF = novo;}
     
-    public void setNrDAF(float novo){
-        this.cF = novo;
-    }
-    
-    public void setNrDAF(String novo){
-        this.cAE = novo;
-    }   
+    public void setNrDAF(String novo){this.cAE = novo;}   
 
     /* 
     private void ArrayToArrayList(long[] b){

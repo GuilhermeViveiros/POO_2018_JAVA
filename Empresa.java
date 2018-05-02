@@ -1,7 +1,5 @@
 
 /**
- *
- *  Guilherme Viveiros -> nao mexer
  *  Classe empresa na qual esta submetida a uma entidade 
  */
 import java.time.LocalDate;
@@ -26,6 +24,7 @@ public class Empresa extends Entidade {
     private static Set<String> areas;
     //Conjunto de aeras que um empresa tem!
     private Set<String> setores;
+
 
     static {
         areas = new HashSet<String>();
@@ -56,23 +55,10 @@ public class Empresa extends Entidade {
      * Construtor parametrizado da Empresa.
      * Aceita como parâmetros os valores para cada variável de instância da sua Entidade.
      */
-    public Empresa(long nif, String nome, String mail, String morada, String telefone) {
+    public Empresa(long nif, String nome, String mail, String morada, String telefone,Set<String> setor) {
         super(new Contacto(nif, nome, mail, morada, telefone));
         this.emissoes_data = new TreeSet<Fatura>();
 
-        this.emissoes_valor = new TreeSet<>(new Comparator<Fatura>() {
-            public int compare(Fatura x, Fatura y) {
-                return x.comparePreco(y);
-            }
-        });
-        this.cliente = new HashMap<String, Set<Fatura>>();
-        this.artigos = new HashSet<Produto>();
-        this.setores = new HashSet<String>();
-    }
-
-    public Empresa(Set<String> setor) {
-        super();
-        this.emissoes_data = new TreeSet<Fatura>();
         this.emissoes_valor = new TreeSet<>(new Comparator<Fatura>() {
             public int compare(Fatura x, Fatura y) {
                 return x.comparePreco(y);
@@ -155,6 +141,7 @@ public class Empresa extends Entidade {
         return this.setores.stream().collect(Collectors.toSet());
     }
 
+
     //Método que adiciona e devolve a fatura emitida pela Empresa de um determinado Setor
     public Fatura Fatura_emi(Entidade x, List<Produto> compras, String setor) {
 
@@ -206,8 +193,8 @@ public class Empresa extends Entidade {
     }
 
     //Método que troca um conjunto de setores
-    public void MudaSetores(Set<String> x) {
-        this.setores = x.stream().filter(l -> this.areas.contains(l)).collect(Collectors.toSet());
+    public void SetSetores(Set<String> x) {
+        this.setores = x.stream().filter(l -> areas.contains(l)).collect(Collectors.toSet());
     }
 
     //Método que remove uma area
@@ -229,15 +216,17 @@ public class Empresa extends Entidade {
     }
 
     //Método estatico que troca um conjunto de areas
-    public static void MudaAreas(Set<String> x) {
+    public static void SetAreas(Set<String> x) {
         areas = x.stream().filter(l -> areas.contains(l)).collect(Collectors.toSet());
     }
 
     //Adiciona um novo Produto ao Map   
-    public void AdicionarArtigo(Produto x) {
-
-        if (!this.artigos.contains(x))
+    public boolean AdicionarArtigo(Produto x) {
+        if (!this.artigos.contains(x)){
             this.artigos.add(x.clone());
+            return true;
+        }
+        return false;
     }
 
     //Método que remove um Produto
@@ -289,6 +278,21 @@ public class Empresa extends Entidade {
     public List<Fatura> Faturas_valor(LocalDate begin, LocalDate end) { //ordenadas por valor
         return this.emissoes_valor.stream().filter(h -> h.getDate().isAfter(begin) && h.getDate().isBefore(end))
                 .map(Fatura::clone).collect(Collectors.toList());
+    }
+
+    //Metodo clone
+    public Empresa clone(){
+        return new Empresa(this);
+    }
+    
+    //Método iguais para as variaveis de instancia
+    
+
+    //Metodo equals
+    public Empresa equals(Empresa x){
+        if (x == this) return true;
+        if (x.getClass() != this.getClass() || x == null ) return false;
+        if (iguais(x)) return true;
     }
 
     //Metodo 6) Devolve as faturas emitidas pela Empresa , ordenadas 
