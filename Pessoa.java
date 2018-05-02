@@ -8,7 +8,7 @@ public class Pessoa extends Entidade {
     private Atividade emprego;
     private long nifEmpregador;
 
-    public Pessoa() { // cria uma pessoa do ponto zero(DEFAULT)
+    public Pessoa() {
 
         super();
         this.agregado = new ArrayList<Long>();
@@ -16,8 +16,7 @@ public class Pessoa extends Entidade {
         this.nifEmpregador = 0;
 
     }
-
-    // cria uma pessoa ao receber todos os dados necessários
+    
     public Pessoa(Contacto cont, List<Long> agr, Atividade emprego, long empregador) {
         super(cont);
         this.emprego = emprego.clone();
@@ -32,7 +31,6 @@ public class Pessoa extends Entidade {
         this.nifEmpregador = 0;
     }
 
-    // cria uma pessoa a partir de outra
     public Pessoa(Pessoa p) {
         super(p);
 
@@ -40,8 +38,6 @@ public class Pessoa extends Entidade {
         this.emprego = p.getEmprego();
         this.nifEmpregador = p.getNifEmpregador();
     }
-
-    // getters
 
     public List<Long> getAgregado() {
         return this.agregado.stream().collect(Collectors.toList());
@@ -59,14 +55,12 @@ public class Pessoa extends Entidade {
         return this.agregado.size();
     }
 
-    // retorna como string toda a informação fiscal disponivel da pessoa
     public String toString() {
         return super.toString() + "\nNúmero de dependentes do agregado Familiar : " + this.agregado.size()
                 + "\nNúmeros de fiscais do agregado Familiar : " + this.agregado.toString()
                 + this.emprego.getCodidigoActividade();
     }
 
-    // setters
     public void setAgregado(List<Long> agregado) {
         this.agregado = agregado.stream().collect(Collectors.toList());
     }
@@ -91,14 +85,6 @@ public class Pessoa extends Entidade {
         this.nifEmpregador = empregador.getContacto().getNif();
     }
 
-    /*
-     * private void ArrayToArrayList(long[] b){
-     * 
-     * this.nrFAF = new ArrayList<Long>();
-     * 
-     * for(int i = 0; i < b.length; i++){ this.nrFAF.add(b[i]); } }
-     */
-
     public Pessoa clone() {
         return (new Pessoa(this));
     }
@@ -118,7 +104,6 @@ public class Pessoa extends Entidade {
                 && (this.getNifEmpregador() == inc.getNifEmpregador()))
             return true;
 
-        // não é neces
 
         return false;
 
