@@ -6,20 +6,24 @@ public class Produto {
 
     private String nome;
     private double preco;
+    private Atividade area;
 
     public Produto() {
         this.nome = "invalido";
         this.preco = 0.0;
+        this.area = null;
     }
 
-    public Produto(String x, int y, double c) {
+    public Produto(String x, Atividade y, double c) {
         this.nome = x;
         this.preco = c;
+        this.area = y.clone();
     }
 
     public Produto(Produto x) {
         this.setNome(x.getNome());
         this.setPreco(x.getPreco());
+        this.area = x.getArea();
 
     }
 
@@ -33,6 +37,9 @@ public class Produto {
         return this.nome;
     }
 
+    public Atividade getArea(){
+        return this.area.clone();
+    }
     //setters!
 
     public void setPreco(double x) {
@@ -41,6 +48,10 @@ public class Produto {
 
     public void setNome(String x) {
         this.nome = x;
+    }
+
+    public void setArea(Atividade x){
+        this.area = x.clone();
     }
 
     //so comparamos o ID e os Nomes , nao os precos

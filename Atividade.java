@@ -7,7 +7,7 @@ public interface Atividade
     public double regraCalculo( Empresa x );
     public double regraCalculo( Pessoa x );
     public Atividade clone();
-    public Atividade equals();
+    public boolean equals(Object o);
   
  
 }
