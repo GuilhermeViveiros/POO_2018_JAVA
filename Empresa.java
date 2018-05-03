@@ -124,22 +124,18 @@ public class Empresa extends Entidade {
     */
 
     //Getters!
-    public Set<Produto> getArtigos() {
-        return this.artigos.stream().map(Produto::clone).collect(Collectors.toSet());
-    }
-
-    public Set<Fatura> getEmissoes() {
-        return this.emissoes_data.stream().map(Fatura::clone).collect(Collectors.toSet());
-    }
-
+    public Set<Produto> getArtigos() {return this.artigos.stream().map(Produto::clone).collect(Collectors.toSet());}
+    
+    public Set<Fatura> getEmissoesD() {return this.emissoes_data.stream().map(Fatura::clone).collect(Collectors.toSet());}
+    
+    public Set<Fatura> getEmissoesV() {return this.emissoes_valor.stream().map(Fatura::clone).collect(Collectors.toSet());}
+    
     public Map<String, Set<Fatura>> getCliente() {
         return this.cliente.entrySet().stream().collect(Collectors.toMap(l -> l.getKey(),
                 l -> l.getValue().stream().map(Fatura::clone).collect(Collectors.toSet())));
     }
 
-    public Set<String> getSetores() {
-        return this.setores.stream().collect(Collectors.toSet());
-    }
+    public Set<String> getSetores() {return this.setores.stream().collect(Collectors.toSet());}
 
 
     //Método que adiciona e devolve a fatura emitida pela Empresa de um determinado Setor
@@ -284,15 +280,15 @@ public class Empresa extends Entidade {
     public Empresa clone(){
         return new Empresa(this);
     }
-    
-    //Método iguais para as variaveis de instancia
-    
 
     //Metodo equals
-    public Empresa equals(Empresa x){
-        if (x == this) return true;
-        if (x.getClass() != this.getClass() || x == null ) return false;
-        if (iguais(x)) return true;
+    public boolean equals(Object y){
+        if (y == this) return true;
+        if (y.getClass() != this.getClass() || y == null ) return false;
+        Empresa x = (Empresa) y;
+        if (super.equals(x) && this.emissoes_data == x.getEmissoesD() && this.emissoes_valor == x.getEmissoesV() && this.cliente == x.getCliente() 
+        && this.artigos == x.getArtigos() &&  this.setores == x.getSetores() ) return true;
+        return false;
     }
 
     //Metodo 6) Devolve as faturas emitidas pela Empresa , ordenadas 
