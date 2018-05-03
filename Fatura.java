@@ -14,7 +14,7 @@ import java.util.*;
 public class Fatura {
     //
     private Contacto servidor;
-    private String area;
+    private Atividade area;
     private long nifcliente;
     private String desc;
     private LocalDate date;
@@ -23,7 +23,7 @@ public class Fatura {
 
     public Fatura() {
         this.servidor = new Contacto();
-        this.area = "campo vazio";
+        this.area = null;
         this.desc = "campo vazio";
         this.total = 0.0;
         this.nifcliente = 0;
@@ -31,9 +31,9 @@ public class Fatura {
         this.compras = new ArrayList<Produto>();
     }
 
-    public Fatura(Contacto x, String area, long nifCliente, List<Produto> compras) {
+    public Fatura(Contacto x, Atividade area, long nifCliente, List<Produto> compras) {
         this.servidor = x.clone();
-        this.area = area;
+        this.area = area.clone();
         this.desc = "campo vazio";
         this.date = LocalDate.now();
         this.nifcliente = nifCliente;
@@ -71,7 +71,7 @@ public class Fatura {
 
         Fatura inc = (Fatura) o;
 
-        if ((this.date == inc.getDate()) && this.servidor.equals(inc.getServidor())
+        if ( this.area.equals(inc.getArea()) && (this.date == inc.getDate()) && this.servidor.equals(inc.getServidor())
                 && this.compras.equals(inc.getCompras()) && this.nifcliente == inc.getCnif())
             return true;
 
@@ -98,8 +98,8 @@ public class Fatura {
         return this.desc;
     }
 
-    public String getArea() {
-        return this.area;
+    public Atividade getArea() {
+        return this.area.clone();
     }
 
     public List<Produto> getCompras() {
@@ -127,8 +127,8 @@ public class Fatura {
         this.desc = com;
     }
 
-    public void setArea(String area) {
-        this.area = area;
+    public void setArea(Atividade area) {
+        this.area = area.clone();
     }
 
     public void addCompra(Produto x) {

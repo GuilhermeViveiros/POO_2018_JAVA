@@ -16,12 +16,12 @@ public class Pessoa extends Entidade {
         this.nifEmpregador = 0;
 
     }
-    
-    public Pessoa(Contacto cont, List<Long> agr, Atividade emprego, long empregador) {
+
+    public Pessoa(Contacto cont, List<Long> agr, Atividade emprego, long empr) {
         super(cont);
         this.emprego = emprego.clone();
         this.agregado = agr.stream().collect(Collectors.toList());
-        this.nifEmpregador = empregador;
+        this.nifEmpregador = empr;
     }
 
     public Pessoa(Contacto cont, List<Long> agr) {
