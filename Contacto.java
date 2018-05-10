@@ -61,7 +61,7 @@ public class Contacto {
         }
     }
 
-    public String getMail() {
+    public String getMail() throws InvalidFieldException{
         if (this.mail.equals("campo vazio")) {
             throw new InvalidFieldException("O campo mail ainda não foi preenchido\n");
 
@@ -70,7 +70,7 @@ public class Contacto {
         }
     }
 
-    public String getMorada() {
+    public String getMorada() throws InvalidFieldException {
         if (this.morada.equals("campo vazio")) {
             throw new InvalidFieldException("O campo morada ainda não foi preenchido\n");
 

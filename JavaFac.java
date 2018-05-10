@@ -1,5 +1,5 @@
 import java.util.stream.Collectors;
-import java.util.Colections.HashSet;
+import java.util.Colections.Set;
 
 public class JavaFac
 {
