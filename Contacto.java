@@ -2,7 +2,7 @@
 /**
  * Escreva a descrição da classe Contacto aqui.
  * 
- * @author (Gonçalo Faria) 
+ * @author (Gonçalo Faria)
  * @version (v1)
  */
 public class Contacto {
@@ -28,7 +28,7 @@ public class Contacto {
         this.telefone = telefone;
     }
 
-    public Contacto(Contacto x) {
+    public Contacto(Contacto x) throws InvalidFieldException {
         this.nif = x.getNif();
         this.nome = x.getNome();
         this.mail = x.getMail();
@@ -37,24 +37,46 @@ public class Contacto {
     }
 
     // ---- Getters --------------------------------
-    public long getNif() {
-        return this.nif;
+    public long getNif() throws InvalidFieldException {
+        if (this.nif == -1) {
+            throw new InvalidFieldException("O campo Nif ainda não foi preenchido\n");
+        } else {
+            return this.nif;
+        }
     }
 
-    public String getTelefone() {
-        return this.telefone;
+    public String getTelefone() throws InvalidFieldException {
+        if (this.telefone.equals("campo vazio")) {
+            throw new InvalidFieldException("O campo telefone ainda não foi preenchido\n");
+        } else {
+            return this.telefone;
+        }
     }
 
-    public String getNome() {
-        return this.nome;
+    public String getNome() throws InvalidFieldException {
+        if (this.nome.equals("campo vazio")) {
+            throw new InvalidFieldException("O campo nome ainda não foi preenchido\n");
+        } else {
+            return this.nome;
+        }
     }
 
     public String getMail() {
-        return this.mail;
+        if (this.mail.equals("campo vazio")) {
+            throw new InvalidFieldException("O campo mail ainda não foi preenchido\n");
+
+        } else {
+            return this.mail;
+        }
     }
 
     public String getMorada() {
-        return this.morada;
+        if (this.morada.equals("campo vazio")) {
+            throw new InvalidFieldException("O campo morada ainda não foi preenchido\n");
+
+        } else {
+            return this.morada;
+        }
     }
 
     public String toString() {
@@ -74,7 +96,6 @@ public class Contacto {
 
         return (text);
     }
-
 
     // ---- Setters --------------------------------
 
@@ -108,9 +129,7 @@ public class Contacto {
 
         Contacto inc = (Contacto) o;
 
-        if ( (this.nif == inc.getNif() ) &&
-                (this.nome.equals( inc.getNome() ) ) &&
-                    (this.morada.equals( inc.getMorada() ) ) )
+        if ((this.nif == inc.getNif()) && (this.nome.equals(inc.getNome())) && (this.morada.equals(inc.getMorada())))
             return true;
 
         return false;

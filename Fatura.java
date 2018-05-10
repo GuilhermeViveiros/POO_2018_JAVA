@@ -7,7 +7,7 @@ import java.util.*;
 /**
  * Escreva a descrição da classe Fatura aqui.
  * 
- * @author (Gonçalo Faria) 
+ * @author (Gonçalo Faria)
  * @version (v1)
  */
 
@@ -26,7 +26,7 @@ public class Fatura {
         this.area = null;
         this.desc = "campo vazio";
         this.total = 0.0;
-        this.nifcliente = 0;
+        this.nifcliente = -1;
         this.date = LocalDate.now();
         this.compras = new ArrayList<Produto>();
     }
@@ -50,7 +50,8 @@ public class Fatura {
         this.compras = x.getCompras();
         this.total = x.getTotal();
     }
-    // se o programa continuar assim vai andar num loop interno -> new fatura -> 2 new entidade -> new fatura -> ....
+    // se o programa continuar assim vai andar num loop interno -> new fatura -> 2
+    // new entidade -> new fatura -> ....
     // condensar pls.
 
     public int compareTo(Fatura b) {
@@ -71,7 +72,7 @@ public class Fatura {
 
         Fatura inc = (Fatura) o;
 
-        if ( this.area.equals(inc.getArea()) && (this.date == inc.getDate()) && this.servidor.equals(inc.getServidor())
+        if (this.area.equals(inc.getArea()) && (this.date == inc.getDate()) && this.servidor.equals(inc.getServidor())
                 && this.compras.equals(inc.getCompras()) && this.nifcliente == inc.getCnif())
             return true;
 
@@ -94,23 +95,35 @@ public class Fatura {
         return this.servidor.clone();
     }
 
-    public String getDescricao() {
-        return this.desc;
+    public String getDescricao() throws InvalidFieldException{
+        if( this.desc.equals("campo vazio") )
+            throw new InvalidFieldException;
+        else
+            return this.desc;
     }
 
-    public Atividade getArea() {
-        return this.area.clone();
+    public Atividade getArea() InvalidActivityException {
+        if( this.area == null)
+            throw new InvalidActivityException;
+        else
+            return this.area.clone();
     }
 
-    public List<Produto> getCompras() {
-        return this.compras.stream().map(Produto::clone).collect(Collectors.toList());
+    public List<Produto> getCompras() throws EmptyListException{
+        if( this.compras.size() == 0 )
+            throw new EmptyListException;
+        else
+            return this.compras.stream().map(Produto::clone).collect(Collectors.toList());
     }
 
-    public long getCnif() {
-        return this.nifcliente;
+    public long getCnif() throws InvalidFieldException{
+        if( this.nifcliente == -1)
+            throw new InvalidFieldException;
+        else
+            return this.nifcliente;
     }
 
-    //------- Setters ---------------------------------
+    // ------- Setters ---------------------------------
     public void setCnif(long nif) {
         this.nifcliente = nif;
     }
