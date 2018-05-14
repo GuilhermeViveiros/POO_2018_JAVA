@@ -1,6 +1,7 @@
 import java.time.LocalDate;
+import java.io.Serializable;
 
-public class Agricultura implements Atividade
+public class Agricultura implements Atividade,Serializable
 {
    
     private String nome; //nome da atividade

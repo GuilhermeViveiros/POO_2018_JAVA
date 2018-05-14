@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Saude implements Atividade
+public class Saude implements Atividade,Serializable
 {
     private String nome; //nome da atividade
     private String codigo; //codigo da atividade

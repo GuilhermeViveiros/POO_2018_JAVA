@@ -1,8 +1,6 @@
-/**
- *
- */
+import java.io.Serializable;
 
-public class Produto {
+public class Produto implements Serializable{
 
     private String nome;
     private double preco;
