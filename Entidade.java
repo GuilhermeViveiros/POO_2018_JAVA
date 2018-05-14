@@ -131,12 +131,12 @@ public class Entidade {
     public List<Fatura> listafaturas_Valor(LocalDate begin, LocalDate end)
             throws EmptySetException, InvalidIntervalException {
 
-        if(this.faturas_val.size() == 0)
+        if (this.faturas_val.size() == 0)
             throw new EmptySetException(" Conjunto de faturas vazio \n");
-                
+
         List<Fatura> l = this.faturas_val.stream().map(Fatura::clone)
                 .filter(p -> p.getDate().isAfter(begin) && p.getDate().isBefore(end)).collect(Collectors.toList());
-        if( l.size() == 0 )
+        if (l.size() == 0)
             throw new InvalidActivityException(" O intervalo é invalido\n");
         else
             return l;
@@ -146,19 +146,27 @@ public class Entidade {
         return this.info.clone();
     }
 
-    public double getDespesa() {
-        return this.faturas_dt.stream().mapToDouble(Fatura::getTotal).sum();
+    public double getDespesa() throws EmptySetException {
+        if (this.faturas_dt.size() == 0) {
+            throw new EmptySetException(" Conjunto de faturas vazio \n");
+        } else {
+            return this.faturas_dt.stream().mapToDouble(Fatura::getTotal).sum();
+        }
     }
 
-    public double getDespesa(LocalDate begin, LocalDate end) {
-        return this.faturas_dt.stream().filter(p -> (p.getDate().isAfter(begin)) && (p.getDate().isBefore(end)))
-                .mapToDouble(Fatura::getTotal).sum();
+    public double getDespesa(LocalDate begin, LocalDate end) throws EmptySetException {
+        if (this.faturas_val.size() == 0) {
+            throw new EmptySetException(" Conjunto de faturas vazio \n");
+        } else {
+            return this.faturas_dt.stream().filter(p -> (p.getDate().isAfter(begin)) && (p.getDate().isBefore(end)))
+                    .mapToDouble(Fatura::getTotal).sum();
+        }
     }
 
     public Map<String, Double> getDespesaArea() throws EmptySetException {
         HashMap<Atividade, Double> hist = new HashMap<>();
         Double count;
-        if( this.faturas_dt.size() == 0 )
+        if (this.faturas_dt.size() == 0)
             throw new EmptySetException("Conjunto de faturas vazio\n");
 
         for (Fatura l : this.faturas_dt) {
