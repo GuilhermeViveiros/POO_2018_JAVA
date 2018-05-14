@@ -1,8 +1,6 @@
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 import java.util.*;
+import java.io.Serializable;
 
 /**
  * Escreva a descrição da classe Fatura aqui.
@@ -11,7 +9,7 @@ import java.util.*;
  * @version (v1)
  */
 
-public class Fatura {
+public class Fatura implements Serializable{
     //
     private Contacto servidor;
     private Atividade area;

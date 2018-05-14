@@ -1,14 +1,13 @@
 import java.util.*;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
+import java.io.Serializable;
 
-public class Pessoa extends Entidade {
+public class Pessoa extends Entidade implements Serializable{
 
     private List<Long> agregado; // números fiscais do agregado familiar
     private Atividade emprego;
     private long nifEmpregador;
 
-    public Pessoa() {
+    public Pessoa(){
 
         super();
         this.agregado = new ArrayList<Long>();

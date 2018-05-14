@@ -1,7 +1,7 @@
-import java.util.TreeSet;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.stream.*;
+import java.io.Serializable;
 
 import javax.activity.InvalidActivityException;
 
@@ -13,7 +13,7 @@ import javax.activity.InvalidActivityException;
  * @version (v1);
  */
 
-public class Entidade {
+public class Entidade implements Serializable{
     // variáveis de instância
     private Contacto info;
     private TreeSet<Fatura> faturas_dt;

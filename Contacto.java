@@ -1,3 +1,4 @@
+import java.io.Serializable;
 
 /**
  * Escreva a descrição da classe Contacto aqui.
@@ -5,7 +6,7 @@
  * @author (Gonçalo Faria)
  * @version (v1)
  */
-public class Contacto {
+public class Contacto implements Serializable{
     private long nif;
     private String nome;
     private String mail;
