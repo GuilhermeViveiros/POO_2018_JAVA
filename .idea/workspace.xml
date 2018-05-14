@@ -2,32 +2,32 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d659bf80-38a6-40b9-8be1-25212d583141" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/Agricultura.java" beforeDir="false" afterPath="$PROJECT_DIR$/Agricultura.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Contacto.java" beforeDir="false" afterPath="$PROJECT_DIR$/Contacto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Educacao.java" beforeDir="false" afterPath="$PROJECT_DIR$/Educacao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Empresa.java" beforeDir="false" afterPath="$PROJECT_DIR$/Empresa.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Entidade.java" beforeDir="false" afterPath="$PROJECT_DIR$/Entidade.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exception/EmptyMapException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exception/EmptyMapException.ctxt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exception/EmptyMapException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exception/EmptySetException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exception/EmptySetException.ctxt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exception/EmptySetException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exception/InvalidActivityException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exception/InvalidActivityException.ctxt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exception/InvalidActivityException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exception/InvalidFieldException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exception/InvalidFieldException.ctxt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exception/InvalidFieldException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exception/InvalidIntervalException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exception/InvalidIntervalException.ctxt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exception/InvalidIntervalException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exception/package.bluej" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Fatura.java" beforeDir="false" afterPath="$PROJECT_DIR$/Fatura.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IndustriaExtrativa.java" beforeDir="false" afterPath="$PROJECT_DIR$/IndustriaExtrativa.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IndustriaTransformadora.java" beforeDir="false" afterPath="$PROJECT_DIR$/IndustriaTransformadora.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pessoa.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pessoa.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Saude.java" beforeDir="false" afterPath="$PROJECT_DIR$/Saude.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Atividade.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Atividade.ctxt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Contacto.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Contacto.ctxt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Empresa$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Empresa$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Empresa$3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Empresa$4.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Empresa$5.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacException/EmptyMapException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacException/EmptyMapException.ctxt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacException/EmptyMapException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacException/EmptySetException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacException/EmptySetException.ctxt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacException/EmptySetException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacException/InvalidActivityException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacException/InvalidActivityException.ctxt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacException/InvalidActivityException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacException/InvalidFieldException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacException/InvalidFieldException.ctxt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacException/InvalidFieldException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacException/InvalidIntervalException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacException/InvalidIntervalException.ctxt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacException/InvalidIntervalException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FacException/package.bluej" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/detalhes_grupo.txt" beforeDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -38,35 +38,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="InvalidActivityException.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/FacException/InvalidActivityException.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="30">
-              <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="InvalidFieldException.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/FacException/InvalidFieldException.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="30">
-              <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="InvalidIntervalException.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/FacException/InvalidIntervalException.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -155,6 +127,16 @@
       </option>
       <patterns />
     </configuration>
+    <configuration default="true" type="JetRunConfigurationType" factoryName="Kotlin">
+      <module name="POO_2018_JAVA" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="WORKING_DIRECTORY" />
+    </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
@@ -206,8 +188,8 @@
       <window_info anchor="bottom" id="Terminal" order="7" weight="0.32963988" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
-      <window_info active="true" anchor="bottom" id="Inspection Results" visible="true" weight="0.32963988" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection Results" visible="true" weight="0.32963988" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -454,6 +436,7 @@
     <states>
       <state key="ProjectJDKs.UI">
         <settings>
+          <last-edited>10</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

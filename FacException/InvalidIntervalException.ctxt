@@ -1,9 +1,0 @@
-#BlueJ class context
-comment0.target=InvalidIntervalException
-comment1.params=
-comment1.target=InvalidIntervalException()
-comment2.params=x
-comment2.target=InvalidIntervalException(java.lang.String)
-comment3.params=x
-comment3.target=InvalidIntervalException(InvalidIntervalException)
-numComments=4
