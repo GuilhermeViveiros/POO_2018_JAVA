@@ -1,3 +1,5 @@
+package Exception;
+
 public class InvalidActivityException extends Exception{
     
     public InvalidActivityException(){

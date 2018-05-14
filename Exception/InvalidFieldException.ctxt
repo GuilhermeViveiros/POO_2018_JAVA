@@ -1,0 +1,9 @@
+#BlueJ class context
+comment0.target=InvalidFieldException
+comment1.params=
+comment1.target=InvalidFieldException()
+comment2.params=x
+comment2.target=InvalidFieldException(java.lang.String)
+comment3.params=x
+comment3.target=InvalidFieldException(InvalidFieldException)
+numComments=4

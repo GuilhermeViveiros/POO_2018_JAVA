@@ -1,4 +1,6 @@
 import java.io.Serializable;
+import Exception.*;
+ 
 
 /**
  * Escreva a descrição da classe Contacto aqui.

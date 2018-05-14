@@ -1,5 +1,6 @@
 import java.util.*;
 import java.io.Serializable;
+import Exception.*;
 
 public class Pessoa extends Entidade implements Serializable{
 

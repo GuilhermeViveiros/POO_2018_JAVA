@@ -1,0 +1,9 @@
+#BlueJ class context
+comment0.target=EmptyMapException
+comment1.params=
+comment1.target=EmptyMapException()
+comment2.params=x
+comment2.target=EmptyMapException(java.lang.String)
+comment3.params=x
+comment3.target=EmptyMapException(EmptyMapException)
+numComments=4

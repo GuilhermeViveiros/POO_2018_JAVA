@@ -1,3 +1,5 @@
+package Exception;
+
 public class InvalidIntervalException extends Exception
 {
     public InvalidIntervalException(){

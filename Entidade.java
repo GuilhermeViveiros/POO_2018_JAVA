@@ -4,6 +4,7 @@ import java.util.stream.*;
 import java.io.Serializable;
 
 import javax.activity.InvalidActivityException;
+import Exception.*;
 
 /**
  * Esta classe implementa uma Entidade. Uma Entidade será a unidade basica à

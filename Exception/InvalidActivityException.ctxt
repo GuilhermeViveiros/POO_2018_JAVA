@@ -1,0 +1,9 @@
+#BlueJ class context
+comment0.target=InvalidActivityException
+comment1.params=
+comment1.target=InvalidActivityException()
+comment2.params=s
+comment2.target=InvalidActivityException(java.lang.String)
+comment3.params=s
+comment3.target=InvalidActivityException(InvalidActivityException)
+numComments=4

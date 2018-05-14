@@ -1,0 +1,9 @@
+#BlueJ class context
+comment0.target=EmptySetException
+comment1.params=
+comment1.target=EmptySetException()
+comment2.params=s
+comment2.target=EmptySetException(java.lang.String)
+comment3.params=x
+comment3.target=EmptySetException(EmptySetException)
+numComments=4

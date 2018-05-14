@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.stream.*;
 import java.lang.String;//string
 import java.io.Serializable;
-import javax.activity.InvalidActivityException;
+import Exception.*;
 
 public class Empresa extends Entidade implements Serializable{
     // Tree associado a cada Fatura (ordenada por data)
