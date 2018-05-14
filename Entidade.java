@@ -73,9 +73,13 @@ public class Entidade {
 
     public Entidade(Entidade inc) {
         this.info = new Contacto(inc.getContacto());
-        this.faturas_val = inc.getfaturas_Valor();
-        this.faturas_dt = this.faturas_val.stream().collect(Collectors.toCollection(TreeSet::new));
-
+        try{
+            this.faturas_val = inc.getfaturas_Valor();
+        } catch(EmptySetException e){
+            this.faturas_val= new TreeSet();
+            this.faturas_dt = new TreeSet();
+        }
+        this.faturas_dt = new TreeSet( this.faturas_val );
         // a password está vazia.
     }
 
@@ -168,17 +172,19 @@ public class Entidade {
         Double count;
         if (this.faturas_dt.size() == 0)
             throw new EmptySetException("Conjunto de faturas vazio\n");
+        else {
 
-        for (Fatura l : this.faturas_dt) {
-            if (hist.containsKey(l.getArea())) {
-                count = hist.get(l.getArea());
+            for (Fatura l : this.faturas_dt) {
+                if (hist.containsKey(l.getArea())) {
+                    count = hist.get(l.getArea());
 
-            } else {
-                count = new Double(0);
+                } else {
+                    count = new Double(0);
+                }
+                hist.put(l.getArea(), new Double(count.doubleValue() + l.getTotal()));
             }
-            hist.put(l.getArea(), new Double(count.doubleValue() + l.getTotal()));
+            return hist;
         }
-        return hist;
     }
 
     public boolean removerFatura(Fatura bh) {
@@ -225,9 +231,17 @@ public class Entidade {
 
         Entidade inc = (Entidade) o;
 
-        if (this.info.equals(inc.getContacto()))
-            return true;
+        try {
+            if (this.info.equals(inc.getContacto()) && this.faturas_val.containsAll(inc.getfaturas_Valor()))
+                return true;
+        } catch (EmptySetException e) {
+            if (this.info.equals(inc.getContacto())) {
+                return true;
+            } else {
+                return false;
+            }
 
+        }
         // não é neces
 
         return false;
