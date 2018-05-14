@@ -38,8 +38,7 @@ public class IndustriaTransformadora implements Atividade
     }
 
     public boolean areaDedusivel(){
-        if (check == 1) return true;
-        return false;
+        return check == 1;
     }
     
     //(Algoritmo improvisado)
@@ -60,8 +59,7 @@ public class IndustriaTransformadora implements Atividade
         if(x == this) return true;
         if (x.getClass() != this.getClass() || x == null) return false;
         IndustriaTransformadora y = (IndustriaTransformadora) x;
-        if ( (y.getNome().equals(this.codigo)) && (y.getCodigo().equals(this.codigo))) return true;
-        return false;
+        return (y.getNome().equals(this.codigo)) && (y.getCodigo().equals(this.codigo));
     }
     
 }

@@ -39,8 +39,7 @@ public class Educacao implements Atividade,Serializable
     }
 
     public boolean areaDedusivel(){
-        if (check == 1) return true;
-        return false;
+        return check == 1;
     }
     
     //(Algoritmo improvisado)
@@ -61,8 +60,7 @@ public class Educacao implements Atividade,Serializable
         if(x == this) return true;
         if (x.getClass() != this.getClass() || x == null) return false;
         Educacao y = (Educacao) x;
-        if ( (y.getNome().equals(this.codigo)) && (y.getCodigo().equals(this.codigo))) return true;
-        return false;
+        return (y.getNome().equals(this.codigo)) && (y.getCodigo().equals(this.codigo));
     }
     
 }

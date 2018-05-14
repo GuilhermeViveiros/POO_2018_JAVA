@@ -39,8 +39,7 @@ public class Saude implements Atividade,Serializable
     }
 
     public boolean areaDedusivel(){
-        if (check == 1) return true;
-        return false;
+        return check == 1;
     }
     
     //(Algoritmo improvisado)
@@ -65,8 +64,7 @@ public class Saude implements Atividade,Serializable
         if(x == this) return true;
         if (x.getClass() != this.getClass() || x == null) return false;
         Saude y = (Saude) x;
-        if ( (y.getNome().equals(this.codigo)) && (y.getCodigo().equals(this.codigo))) return true;
-        return false;
+        return (y.getNome().equals(this.codigo)) && (y.getCodigo().equals(this.codigo));
     }
     
 }

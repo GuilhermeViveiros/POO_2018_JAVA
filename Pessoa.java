@@ -1,7 +1,7 @@
 import java.util.*;
 import java.util.stream.*;
 import java.io.Serializable;
-import Exception.*;
+import FacException.*;
 
 public class Pessoa extends Entidade implements Serializable{
 
@@ -106,8 +106,7 @@ public class Pessoa extends Entidade implements Serializable{
                 && (this.getNifEmpregador() == inc.getNifEmpregador()))
             return true;
         } catch (EmptyListException e) {
-            if(this.numeroDeElementosDoAgregado() == inc.numeroDeElementosDoAgregado()) return true;
-            else return false;
+            return this.numeroDeElementosDoAgregado() == inc.numeroDeElementosDoAgregado();
         }
 
         return false;

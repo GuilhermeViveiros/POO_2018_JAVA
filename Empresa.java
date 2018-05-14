@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.stream.*;
 import java.lang.String;//string
 import java.io.Serializable;
-import Exception.*;
+import FacException.*;
 
 public class Empresa extends Entidade implements Serializable{
     // Tree associado a cada Fatura (ordenada por data)
@@ -315,10 +315,8 @@ public class Empresa extends Entidade implements Serializable{
             && this.artigos.equals( x.getArtigos()) &&  this.areas.equals(x.getAreas())) return true; 
         } 
             catch(EmptySetException e){
-                if(this.emissoes_data.equals(x.getEmissoesD()) && this.emissoes_valor.equals(x.getEmissoesV())
-                && this.artigos.equals( x.getArtigos()) &&  this.areas.equals(x.getAreas())) return true;
-            
-                else return false;
+                return this.emissoes_data.equals(x.getEmissoesD()) && this.emissoes_valor.equals(x.getEmissoesV())
+                        && this.artigos.equals(x.getArtigos()) && this.areas.equals(x.getAreas());
         }
         
        

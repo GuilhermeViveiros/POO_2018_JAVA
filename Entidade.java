@@ -4,7 +4,7 @@ import java.util.stream.*;
 import java.io.Serializable;
 
 import javax.activity.InvalidActivityException;
-import Exception.*;
+import FacException.*;
 
 /**
  * Esta classe implementa uma Entidade. Uma Entidade será a unidade basica à
@@ -134,7 +134,7 @@ public class Entidade implements Serializable{
     }
 
     public List<Fatura> listafaturas_Valor(LocalDate begin, LocalDate end)
-            throws EmptySetException, InvalidIntervalException {
+            throws EmptySetException {
 
         if (this.faturas_val.size() == 0)
             throw new EmptySetException(" Conjunto de faturas vazio \n");
@@ -236,11 +236,7 @@ public class Entidade implements Serializable{
             if (this.info.equals(inc.getContacto()) && this.faturas_val.containsAll(inc.getfaturas_Valor()))
                 return true;
         } catch (EmptySetException e) {
-            if (this.info.equals(inc.getContacto())) {
-                return true;
-            } else {
-                return false;
-            }
+            return this.info.equals(inc.getContacto());
 
         }
         // não é neces

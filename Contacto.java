@@ -1,5 +1,5 @@
 import java.io.Serializable;
-import Exception.*;
+import FacException.*;
  
 
 /**
@@ -132,10 +132,7 @@ public class Contacto implements Serializable{
 
         Contacto inc = (Contacto) o;
 
-        if ((this.nif == inc.getNif()) && (this.nome.equals(inc.getNome())) && (this.morada.equals(inc.getMorada())))
-            return true;
-
-        return false;
+        return (this.nif == inc.getNif()) && (this.nome.equals(inc.getNome())) && (this.morada.equals(inc.getMorada()));
 
     }
 

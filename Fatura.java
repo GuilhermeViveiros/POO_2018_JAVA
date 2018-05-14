@@ -70,11 +70,9 @@ public class Fatura implements Serializable{
 
         Fatura inc = (Fatura) o;
 
-        if (this.area.equals(inc.getArea()) && (this.date == inc.getDate()) && this.servidor.equals(inc.getServidor())
-                && this.compras.equals(inc.getCompras()) && this.nifcliente == inc.getCnif())
-            return true;
+        return this.area.equals(inc.getArea()) && (this.date == inc.getDate()) && this.servidor.equals(inc.getServidor())
+                && this.compras.equals(inc.getCompras()) && this.nifcliente == inc.getCnif();
 
-        return false;
     }
 
     public Fatura clone() {

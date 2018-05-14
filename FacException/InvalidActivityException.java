@@ -1,4 +1,4 @@
-package Exception;
+package FacException;
 
 public class InvalidActivityException extends Exception{
     
