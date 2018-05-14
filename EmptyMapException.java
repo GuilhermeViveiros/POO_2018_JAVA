@@ -1,4 +1,3 @@
-package FacException;
 
 public class EmptyMapException extends Exception
 {

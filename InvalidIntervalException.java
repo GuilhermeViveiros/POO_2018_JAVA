@@ -1,4 +1,3 @@
-package FacException;
 
 public class InvalidIntervalException extends Exception
 {

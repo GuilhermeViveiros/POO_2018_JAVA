@@ -1,7 +1,6 @@
 import java.util.*;
 import java.util.stream.*;
 import java.io.Serializable;
-import FacException.*;
 
 public class Pessoa extends Entidade implements Serializable{
 

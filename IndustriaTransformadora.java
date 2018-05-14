@@ -1,5 +1,4 @@
  
-
 import java.time.LocalDate;
 
 public class IndustriaTransformadora implements Atividade

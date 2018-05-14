@@ -1,4 +1,3 @@
-package FacException;
 
 public class InvalidFieldException extends Exception
 {
