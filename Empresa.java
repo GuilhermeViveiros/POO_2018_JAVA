@@ -276,7 +276,7 @@ public class Empresa extends Entidade implements Serializable{
 
     // Metodo que devolve as faturas que a empresa emitiu entre 2 datas
     public List<Fatura> Faturas_data(LocalDate begin, LocalDate end) throws InvalidIntervalException , EmptySetException { // ordenadas por data de emisssao
-        if(this.emissoes_data.size() == 0) return new EmptySetException("Emissoes de faturas ordenadas por data inválidas");
+        if(this.emissoes_data.size() == 0) throw new EmptySetException("Emissoes de faturas ordenadas por data inválidas");
         List<Fatura> x = this.emissoes_data.stream().filter(h -> h.getDate().isAfter(begin) && h.getDate().isBefore(end))
                 .       map(Fatura::clone).collect(Collectors.toList());
         if (x.size() != 0) return x;

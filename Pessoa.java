@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.stream.*;
 import java.io.Serializable;
 import Exception.*;
 
@@ -33,13 +34,13 @@ public class Pessoa extends Entidade implements Serializable{
 
     public Pessoa(Pessoa p) {
         super(p);
-
         this.agregado = p.getAgregado();
         this.emprego = p.getEmprego();
         this.nifEmpregador = p.getNifEmpregador();
     }
 
-    public List<Long> getAgregado() {
+    public List<Long> getAgregado() throws EmptyListException{
+        if(this.agregado.size() == 0) throw new EmptyListException("Lista de agregados inválida");
         return this.agregado.stream().collect(Collectors.toList());
     }
 
@@ -51,7 +52,8 @@ public class Pessoa extends Entidade implements Serializable{
         return this.nifEmpregador;
     }
 
-    public int numeroDeElementosDoAgregado() {
+    public int numeroDeElementosDoAgregado() throws EmptyListException{
+        if(this.agregado.size() == 0) throw new EmptyListException("Lista de agregados inválida");
         return this.agregado.size();
     }
 
@@ -98,12 +100,15 @@ public class Pessoa extends Entidade implements Serializable{
             return false;
 
         Pessoa inc = (Pessoa) o;
-
+        try{
         if (super.equals(inc) && this.getEmprego().equals(inc.getEmprego())
                 && (this.numeroDeElementosDoAgregado() == inc.numeroDeElementosDoAgregado())
                 && (this.getNifEmpregador() == inc.getNifEmpregador()))
             return true;
-
+        } catch (EmptyListException e) {
+            if(this.numeroDeElementosDoAgregado() == inc.numeroDeElementosDoAgregado()) return true;
+            else return false;
+        }
 
         return false;
 
