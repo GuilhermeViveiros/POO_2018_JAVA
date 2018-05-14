@@ -3,14 +3,13 @@
  *  Classe empresa na qual esta submetida a uma entidade 
  */
 import java.time.LocalDate;
-import java.util.Map;
 import java.util.*;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-import java.util.stream.Collectors;
+import java.util.stream.*;
 import java.lang.String;//string
+import java.io.Serializable;
+import javax.activity.InvalidActivityException;
 
-public class Empresa extends Entidade {
+public class Empresa extends Entidade implements Serializable{
     // Tree associado a cada Fatura (ordenada por data)
     private TreeSet<Fatura> emissoes_data;
     // Tree associado a cada Fatura (ordenada por valor)
@@ -25,7 +24,7 @@ public class Empresa extends Entidade {
     /**
      * Construtor por omissão de Empresa.
      */
-    public Empresa() {
+    public Empresa(){
         super();
         // quando nao declaramos nenhuma função para o comparator ele assume a dele ou
         // usa a nossa funcao se tiver o nome de ->"compare"
@@ -80,6 +79,7 @@ public class Empresa extends Entidade {
     // informacao entre os mesmos
     // atraves do Map criamos um set de Faturas iguais com ordenacao baseada na data
     private void makeClienteData() {
+        
         this.emissoes_data = new TreeSet<>();
         for (Set<Fatura> l : this.cliente.values()) {
 
@@ -144,16 +144,17 @@ public class Empresa extends Entidade {
  
     // Método que adiciona e devolve a fatura emitida pela Empresa de um determinado
     // Setor
-
-    public Fatura Fatura_emi(Entidade x, List<Produto> compras) {
+    public Fatura Fatura_emi(Entidade x, List<Produto> compras) throws EmptySetException {
 
         Fatura f;
+        if(compras.size() == 0) 
         
         if (this.artigos.containsAll(compras)) { // estou a verificar se a lista de Produtos corresponde com a lista de
                                                  // produtos da minha empresa
   
             /* Inicia o histograma */
-
+            if (getAreas().size() == 0) throw new EmptySetException("Setor de areas inválido");
+            
             Map<Atividade, Integer> s = new HashMap<Atividade, Integer>( compras.stream()
                 .collect(Collectors.toMap( p -> p.getArea(), p-> new Integer(0)) ));
             /* cria histograma */
@@ -201,7 +202,8 @@ public class Empresa extends Entidade {
     }
 
     // Método que remove um Setor
-    public boolean RemoverArea(Atividade x) {
+    public boolean RemoverArea(Atividade x) throws EmptySetException {
+        if(this.areas.size() == 0) throw new EmptySetException("Incorreto setor de areas");
         if (this.areas.contains(x)) {
             this.areas.remove(x);
             return true;
@@ -235,7 +237,9 @@ public class Empresa extends Entidade {
     }
 
     // Método que remove um Produto
-    public boolean RemoveArtigo(Produto x) {
+    public boolean RemoveArtigo(Produto x) throws EmptySetException{
+        if(this.artigos.size() == 0) throw new EmptySetException("Incorreto setor de areas");
+        
         if (this.artigos.contains(x)) {
             this.artigos.remove(x);
             return true;
@@ -247,6 +251,7 @@ public class Empresa extends Entidade {
     // Método que remove uma Fatura de uma determinada Pessoa
     public boolean RemoveRegisto(Entidade ent, Fatura x) {
         if (this.cliente.containsKey(ent.getContacto().getNome())) {
+            
             Set<Fatura> fac_set = this.cliente.get(ent.getContacto().getNome());
 
             if (fac_set.contains(x)) {
@@ -270,26 +275,33 @@ public class Empresa extends Entidade {
     }
 
     // Metodo que devolve as faturas que a empresa emitiu entre 2 datas
-    public List<Fatura> Faturas_data(LocalDate begin, LocalDate end) { // ordenadas por data de emisssao
-        return this.emissoes_data.stream().filter(h -> h.getDate().isAfter(begin) && h.getDate().isBefore(end))
-                .map(Fatura::clone).collect(Collectors.toList());
+    public List<Fatura> Faturas_data(LocalDate begin, LocalDate end) throws InvalidIntervalException , EmptySetException { // ordenadas por data de emisssao
+        if(this.emissoes_data.size() == 0) return new EmptySetException("Emissoes de faturas ordenadas por data inválidas");
+        List<Fatura> x = this.emissoes_data.stream().filter(h -> h.getDate().isAfter(begin) && h.getDate().isBefore(end))
+                .       map(Fatura::clone).collect(Collectors.toList());
+        if (x.size() != 0) return x;
+        else throw new InvalidIntervalException("Intervalo inválido");
     }
 
     // Metodo que devolve as faturas que a empresa emitiu
-    public List<Fatura> Faturas_valor() { // ordenadas por valor
+    public List<Fatura> Faturas_valor() throws EmptySetException{// ordenadas por valor
+        if(this.emissoes_valor.size() == 0) throw new EmptySetException("Emissoes de faturas ordenadas por valor inválidas");
         return this.emissoes_valor.stream().map(Fatura::clone).collect(Collectors.toList());
     }
 
-    public List<Fatura> Faturas_valor(LocalDate begin, LocalDate end) { // ordenadas por valor
-        return this.emissoes_valor.stream().filter(h -> h.getDate().isAfter(begin) && h.getDate().isBefore(end))
-                .map(Fatura::clone).collect(Collectors.toList());
+    public List<Fatura> Faturas_valor(LocalDate begin, LocalDate end) throws InvaliIntervalException , EmptySetException { // ordenadas por valor
+        if (this.emissoes_valor.size() == 0) throw new EmptySetException("Emissoes de faturas por valor inválidas");
+        List<Fatura> x = this.emissoes_valor.stream().filter(h -> h.getDate().isAfter(begin) && h.getDate().isBefore(end))
+                        .map(Fatura::clone).collect(Collectors.toList());
+        if (x.size() != 0) return x;
+        else throw InvalidIntervalarException("Intervalo inválido");
     }
 
     // Metodo clone
     public Empresa clone() {
         return new Empresa(this);
     }
-aaa
+
     // Metodo equals
     // Metodo equals
     public boolean equals(Object y) {
@@ -298,35 +310,48 @@ aaa
         if (y.getClass() != this.getClass() || y == null)
             return false;
         Empresa x = (Empresa) y;
-        if (super.equals(x) && 
-        this.emissoes_data.equals(x.getEmissoesD()) 
-        && this.emissoes_valor.equals(x.getEmissoesV())
-        && this.artigos.equals( x.getArtigos()) 
-        &&  this.areas.equals(x.getAreas()); )return true;
-        return false;
+        try{
+        if (super.equals(x) && this.emissoes_data.equals(x.getEmissoesD()) && this.emissoes_valor.equals(x.getEmissoesV())
+            && this.artigos.equals( x.getArtigos()) &&  this.areas.equals(x.getAreas())) return true; 
+        } 
+            catch(EmptySetException e){
+                if(this.emissoes_data.equals(x.getEmissoesD()) && this.emissoes_valor.equals(x.getEmissoesV())
+                && this.artigos.equals( x.getArtigos()) &&  this.areas.equals(x.getAreas())) return true;
+            
+                else return false;
+        }
+        
+       
     }
 
     // Metodo 6) Devolve as faturas emitidas pela Empresa , ordenadas
-    public List<Fatura> Faturas_data() { // ordenadas por data de emisssao
+    public List<Fatura> Faturas_data() throws EmptySetException { // ordenadas por data de emisssao
+        if(this.emissoes_data.size() == 0) throw new EmptySetException("Emissoes de faturas ordendas por data invalidas");  
         return this.emissoes_data.stream().map(Fatura::clone).collect(Collectors.toList());
     }
 
     // Metodo 7) Lista das faturas por contribuinte num determinado intervalo de
     // datas
-    public List<Fatura> Faturas_tempo(LocalDate begin, LocalDate end, String nome_cliente) {
+    public List<Fatura> Faturas_tempo(LocalDate begin, LocalDate end, String nome_cliente) throws InvalidIntervalException , EmptyMapException {
+        
+        if (this.cliente.size() == 0) throw new EmptyMapException("Nao existem clientes nem as respetivas faturas");
+        
         if (this.cliente.containsKey(nome_cliente)) {
             // existe;
-            return this.cliente.get(nome_cliente).stream()
+            List<Fatura> x = this.cliente.get(nome_cliente).stream()
                     .filter(h -> h.getDate().isAfter(begin) && h.getDate().isBefore(end)).map(Fatura::clone)
                     .collect(Collectors.toList());
+            if(x.size()!=0) return x;
+            else throw new InvalidIntervalException("Intervalo inválido");
         }
         return new ArrayList<Fatura>();
 
     }
 
     // Devolve todas as Faturas de um cliente ordenadas pela data de emissao
-    public List<Fatura> Faturas_tempo(String nome_cliente) {
-
+    public List<Fatura> Faturas_tempo(String nome_cliente) throws EmptyMapException {
+        if(this.cliente.size() == 0) throw new EmptyMapException("Nao existem clientes nem as respetivas faturas");
+        
         if (this.cliente.containsKey(nome_cliente)) {
             // existe;
             return this.cliente.get(nome_cliente).stream().map(Fatura::clone).collect(Collectors.toList());
@@ -337,8 +362,9 @@ aaa
 
     // Metodo 8) Lista das faturas por contribuinte ordenadas por valor decrescente
     // da despesa
-    public List<Fatura> Faturas_despesa(String nome_cliente) {
-
+    public List<Fatura> Faturas_despesa(String nome_cliente) throws EmptyMapException {
+        if(this.cliente.size() == 0) throw new EmptyMapException("Nao existem clientes nem as respetivas faturas");
+        
         if (this.cliente.containsKey(nome_cliente)) {
             // existe;
             List<Fatura> l = this.Faturas_tempo(nome_cliente);
@@ -355,8 +381,9 @@ aaa
     }
 
     // Devolve o total de faturas entre uma respetiva data de um cliente
-    public List<Fatura> Faturas_despesa(LocalDate begin, LocalDate end, String nome_cliente) {
-
+    public List<Fatura> Faturas_despesa(LocalDate begin, LocalDate end, String nome_cliente) throws InvalidIntervalException , EmptyMapException {
+        if(this.cliente.size() == 0) throw new EmptyMapException("Nao existem clientes nem as respetivas faturas");
+        
         if (this.cliente.containsKey(nome_cliente)) {
             // existe;
             List<Fatura> l = this.Faturas_tempo(begin, end, nome_cliente);
@@ -366,16 +393,18 @@ aaa
                     return (-1) * x.comparePreco(y);
                 }
             });
-            return l;
+            if(l.size()!=0) return x;
+            else throw new InvalidIntervalException("Intervalo inválido");
         }
         return new ArrayList<Fatura>();
 
     }
 
     // Metodo 9) Indicar o total faturado por uma Empresa num determinado periodo
-    public double Total_faturado(LocalDate begin, LocalDate end) {
+    public double Total_faturado(LocalDate begin, LocalDate end) throws EmptySetException{
+        if(this.emissoes_data.size() == 0) throw new EmptySetException("Emissoes de faturas ordendas por data invalidas"); 
         return this.emissoes_data.stream().filter(h -> h.getDate().isAfter(begin) && h.getDate().isBefore(end))
-                .mapToDouble(Fatura::getTotal).sum();
+                    .mapToDouble(Fatura::getTotal).sum();
     }
 
 }
