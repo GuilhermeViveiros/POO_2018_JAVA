@@ -97,28 +97,28 @@ public class Fatura {
 
     public String getDescricao() throws InvalidFieldException{
         if( this.desc.equals("campo vazio") )
-            throw new InvalidFieldException;
+            throw new InvalidFieldException();
         else
             return this.desc;
     }
 
-    public Atividade getArea() InvalidActivityException {
+    public Atividade getArea() throws InvalidActivityException {
         if( this.area == null)
-            throw new InvalidActivityException;
+            throw new InvalidActivityException("area nao pode ser nula");
         else
             return this.area.clone();
     }
 
     public List<Produto> getCompras() throws EmptyListException{
         if( this.compras.size() == 0 )
-            throw new EmptyListException;
+            throw new EmptyListException("Lista de compras nao pode ser vazia");
         else
             return this.compras.stream().map(Produto::clone).collect(Collectors.toList());
     }
 
     public long getCnif() throws InvalidFieldException{
         if( this.nifcliente == -1)
-            throw new InvalidFieldException;
+            throw new InvalidFieldException("Nif inapropriado");
         else
             return this.nifcliente;
     }

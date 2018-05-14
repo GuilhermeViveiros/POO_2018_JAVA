@@ -10,6 +10,7 @@ public interface Atividade
     public double regraCalculo( Pessoa x);
     public Atividade clone();
     public boolean equals(Object o);
+    public int hashCode();
   
  
 }

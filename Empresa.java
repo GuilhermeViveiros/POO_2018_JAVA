@@ -45,7 +45,7 @@ public class Empresa extends Entidade {
      * Construtor parametrizado da Empresa. Aceita como parâmetros os valores para
      * cada variável de instância da sua Entidade.
      */
-    public Empresa(long nif, String nome, String mail, String morada, String telefone, Set<Atividade> areas) {
+    public Empresa(long nif, String nome, String mail, String morada, String telefone, Set<Atividade> areas){
         super(new Contacto(nif, nome, mail, morada, telefone));
         this.emissoes_data = new TreeSet<Fatura>();
 
@@ -66,13 +66,14 @@ public class Empresa extends Entidade {
      */
     public Empresa(Empresa x) {
         super(x);
-        this.cliente = x.getClientes();
+        this.cliente = this.cliente.entrySet().stream().collect(Collectors.toMap(l -> l.getKey(),
+        l -> l.getValue().stream().map(Fatura::clone).collect(Collectors.toSet())));
 
         this.makeClienteData();
         this.makeClienteValue();
 
-        this.artigos = x.getArtigos();
-        this.areas = x.getAreas();
+        this.artigos = this.artigos.stream().map(Produto::clone).collect(Collectors.toSet());
+        this.areas =  this.areas.stream().map(Atividade::clone).collect(Collectors.toSet());
     }
 
     // Privado -> apenas para os construtores pois nao queres clone da mesma
@@ -108,27 +109,37 @@ public class Empresa extends Entidade {
      * Métodos de
      * instância-------------------------------------------------------------------------------------------------------
      */
-
     // Getters!
-    public Set<Produto> getArtigos() {
+    /*
+    new TreeSet<>(new Comparator<Fatura>() {
+            public int compare(Fatura x, Fatura y) {
+                return x.comparePreco(y);
+            }
+        }); */
+    public Set<Produto> getArtigos() throws EmptySetException{
+        if (this.artigos.size()==0)throw new EmptySetException("Set de artigos ainda nao foi preenchido");
         return this.artigos.stream().map(Produto::clone).collect(Collectors.toSet());
     }
 
-    public Set<Fatura> getEmissoesD() {
+    public Set<Fatura> getEmissoesD() throws EmptySetException{
+        if (this.artigos.size()==0) throw new EmptySetException("Set de Faturas ainda nao preenchido");
         return this.emissoes_data.stream().map(Fatura::clone).collect(Collectors.toSet());
     }
 
-    public Set<Fatura> getEmissoesV() {
+    public Set<Fatura> getEmissoesV() throws EmptySetException {
+        if (this.emissoes_valor.size() ==0) throw new EmptySetException("Set de Faturas ainda nao preenchido");
         return this.emissoes_valor.stream().map(Fatura::clone).collect(Collectors.toSet());
     }
 
-    public Map<String, Set<Fatura>> getClientes() {
+    public Map<String, Set<Fatura>> getClientes() throws EmptyMapException {
+        if (this.cliente.size()==0) throw new EmptyMapException("Map com os respetivos clientes e as suas respetivas faturas ainda nao está preenchido");
         return this.cliente.entrySet().stream().collect(Collectors.toMap(l -> l.getKey(),
                 l -> l.getValue().stream().map(Fatura::clone).collect(Collectors.toSet())));
     }
 
-    public Set<Atividade> getAreas() {
-        return this.areas.stream().collect(Collectors.toSet());
+    public Set<Atividade> getAreas() throws EmptySetException{
+        if (this.areas.size()==0) throw new EmptySetException("Set de atividades ainda nao preenchido");
+        return this.areas.stream().map(Atividade::clone).collect(Collectors.toSet());
     }
  
     // Método que adiciona e devolve a fatura emitida pela Empresa de um determinado
@@ -246,7 +257,7 @@ public class Empresa extends Entidade {
         }
         return false;
     }
-
+    
     // Metodo toString
     public String toString() {
         return super.toString() + "\nEmpresa\nSetores economico : " + this.areas.toString() + this.artigos.toString()
@@ -278,7 +289,8 @@ public class Empresa extends Entidade {
     public Empresa clone() {
         return new Empresa(this);
     }
-
+aaa
+    // Metodo equals
     // Metodo equals
     public boolean equals(Object y) {
         if (y == this)
@@ -286,9 +298,11 @@ public class Empresa extends Entidade {
         if (y.getClass() != this.getClass() || y == null)
             return false;
         Empresa x = (Empresa) y;
-        if (super.equals(x) && this.emissoes_data.equals(x.getEmissoesD()) && this.emissoes_valor.equals(x.getEmissoesV())
-                && this.artigos.equals( x.getArtigos()) && this.areas.equals(x.getAreas()) )
-            return true;
+        if (super.equals(x) && 
+        this.emissoes_data.equals(x.getEmissoesD()) 
+        && this.emissoes_valor.equals(x.getEmissoesV())
+        && this.artigos.equals( x.getArtigos()) 
+        &&  this.areas.equals(x.getAreas()); )return true;
         return false;
     }
 

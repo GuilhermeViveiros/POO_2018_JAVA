@@ -30,6 +30,7 @@ public class Saude implements Atividade
     public String getCodidigoActividade(){
         return getCodigo();
     }
+    
     public String getNomeActividade(){
         return getNome();
     }
@@ -48,7 +49,11 @@ public class Saude implements Atividade
     public double regraCalculo(Pessoa x){
         return (double)(x.getAgregado().size()) * 0.3;
     }
-
+    //(Algoritmo improvisado)
+    public int hashCode(){
+        return this.nome.length() % 2;
+    }
+    
     public Saude clone(){
         return new Saude(this);
     }
