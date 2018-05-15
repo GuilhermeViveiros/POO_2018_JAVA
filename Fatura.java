@@ -1,5 +1,6 @@
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.*;
 import java.io.Serializable;
 
 /**
@@ -105,9 +106,9 @@ public class Fatura implements Serializable{
             return this.area.clone();
     }
 
-    public List<Produto> getCompras() throws EmptyListException{
+    public List<Produto> getCompras() throws EmptySetException{
         if( this.compras.size() == 0 )
-            throw new EmptyListException("Lista de compras nao pode ser vazia");
+            throw new EmptySetException("Lista de compras nao pode ser vazia");
         else
             return this.compras.stream().map(Produto::clone).collect(Collectors.toList());
     }

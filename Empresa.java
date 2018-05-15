@@ -64,14 +64,34 @@ public class Empresa extends Entidade implements Serializable{
      */
     public Empresa(Empresa x) {
         super(x);
-        this.cliente = this.cliente.entrySet().stream().collect(Collectors.toMap(l -> l.getKey(),
-        l -> l.getValue().stream().map(Fatura::clone).collect(Collectors.toSet())));
-
+        try{
+            this.cliente = x.getClientes();
+            this.artigos = x.getArtigos();
+            this.areas =  x.getAreas();
+        }catch (EmptySetException a){
+            this.cliente = new HashMap<String, Set<Fatura>>();
+            this.artigos = new HashSet<Produto>();
+            this.emissoes_data = new TreeSet<Fatura>();
+            this.emissoes_valor = new TreeSet<>(new Comparator<Fatura>() {
+            public int compare(Fatura x, Fatura y) {
+                return x.comparePreco(y);
+            }
+        });
+            this.areas = areas.stream().map(Atividade::clone).collect(Collectors.toSet());
+        }catch (EmptyMapException a){
+            this.cliente = new HashMap<String, Set<Fatura>>();
+            this.artigos = new HashSet<Produto>();
+            this.emissoes_data = new TreeSet<Fatura>();
+            this.emissoes_valor = new TreeSet<>(new Comparator<Fatura>() {
+            public int compare(Fatura x, Fatura y) {
+                return x.comparePreco(y);
+            }
+        });
+            this.areas = areas.stream().map(Atividade::clone).collect(Collectors.toSet());
+        } 
         this.makeClienteData();
-        this.makeClienteValue();
-
-        this.artigos = this.artigos.stream().map(Produto::clone).collect(Collectors.toSet());
-        this.areas =  this.areas.stream().map(Atividade::clone).collect(Collectors.toSet());
+        this.makeClienteValue();     
+    
     }
 
     // Privado -> apenas para os construtores pois nao queres clone da mesma
@@ -143,7 +163,7 @@ public class Empresa extends Entidade implements Serializable{
  
     // Método que adiciona e devolve a fatura emitida pela Empresa de um determinado
     // Setor
-    public Fatura Fatura_emi(Entidade x, List<Produto> compras) throws EmptySetException {
+    public Fatura Fatura_emi(Entidade x, List<Produto> compras) throws EmptySetException , InvalidFieldException {
 
         Fatura f;
         if(compras.size() == 0) 
@@ -248,7 +268,7 @@ public class Empresa extends Entidade implements Serializable{
     }
 
     // Método que remove uma Fatura de uma determinada Pessoa
-    public boolean RemoveRegisto(Entidade ent, Fatura x) {
+    public boolean RemoveRegisto(Entidade ent, Fatura x) throws InvalidFieldException {
         if (this.cliente.containsKey(ent.getContacto().getNome())) {
             
             Set<Fatura> fac_set = this.cliente.get(ent.getContacto().getNome());
@@ -288,12 +308,12 @@ public class Empresa extends Entidade implements Serializable{
         return this.emissoes_valor.stream().map(Fatura::clone).collect(Collectors.toList());
     }
 
-    public List<Fatura> Faturas_valor(LocalDate begin, LocalDate end) throws InvaliIntervalException , EmptySetException { // ordenadas por valor
+    public List<Fatura> Faturas_valor(LocalDate begin, LocalDate end) throws InvalidIntervalException , EmptySetException { // ordenadas por valor
         if (this.emissoes_valor.size() == 0) throw new EmptySetException("Emissoes de faturas por valor inválidas");
         List<Fatura> x = this.emissoes_valor.stream().filter(h -> h.getDate().isAfter(begin) && h.getDate().isBefore(end))
                         .map(Fatura::clone).collect(Collectors.toList());
         if (x.size() != 0) return x;
-        else throw InvalidIntervalarException("Intervalo inválido");
+        else throw new InvalidIntervalException("Intervalo inválido");
     }
 
     // Metodo clone
@@ -314,11 +334,11 @@ public class Empresa extends Entidade implements Serializable{
             && this.artigos.equals( x.getArtigos()) &&  this.areas.equals(x.getAreas())) return true; 
         } 
             catch(EmptySetException e){
-                return this.emissoes_data.equals(x.getEmissoesD()) && this.emissoes_valor.equals(x.getEmissoesV())
-                        && this.artigos.equals(x.getArtigos()) && this.areas.equals(x.getAreas());
-        }
-        
-       
+                return super.equals(x);
+               
+            }
+            
+            return false;
     }
 
     // Metodo 6) Devolve as faturas emitidas pela Empresa , ordenadas
@@ -390,7 +410,7 @@ public class Empresa extends Entidade implements Serializable{
                     return (-1) * x.comparePreco(y);
                 }
             });
-            if(l.size()!=0) return x;
+            if(l.size()!=0) return l;
             else throw new InvalidIntervalException("Intervalo inválido");
         }
         return new ArrayList<Fatura>();

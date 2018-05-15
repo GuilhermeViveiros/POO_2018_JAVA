@@ -38,8 +38,8 @@ public class Pessoa extends Entidade implements Serializable{
         this.nifEmpregador = p.getNifEmpregador();
     }
 
-    public List<Long> getAgregado() throws EmptyListException{
-        if(this.agregado.size() == 0) throw new EmptyListException("Lista de agregados inválida");
+    public List<Long> getAgregado() throws EmptySetException{
+        if(this.agregado.size() == 0) throw new EmptySetException("Lista de agregados inválida");
         return this.agregado.stream().collect(Collectors.toList());
     }
 
@@ -51,8 +51,8 @@ public class Pessoa extends Entidade implements Serializable{
         return this.nifEmpregador;
     }
 
-    public int numeroDeElementosDoAgregado() throws EmptyListException{
-        if(this.agregado.size() == 0) throw new EmptyListException("Lista de agregados inválida");
+    public int numeroDeElementosDoAgregado() throws EmptySetException{
+        if(this.agregado.size() == 0) throw new EmptySetException("Lista de agregados inválida");
         return this.agregado.size();
     }
 
@@ -104,7 +104,7 @@ public class Pessoa extends Entidade implements Serializable{
                 && (this.numeroDeElementosDoAgregado() == inc.numeroDeElementosDoAgregado())
                 && (this.getNifEmpregador() == inc.getNifEmpregador()))
             return true;
-        } catch (EmptyListException e) {
+        } catch (EmptySetException e) {
             return this.numeroDeElementosDoAgregado() == inc.numeroDeElementosDoAgregado();
         }
 

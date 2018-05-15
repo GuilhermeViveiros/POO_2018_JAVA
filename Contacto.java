@@ -30,7 +30,7 @@ public class Contacto implements Serializable{
         this.telefone = telefone;
     }
 
-    public Contacto(Contacto x) throws InvalidFieldException {
+    public Contacto(Contacto x) {
         this.nif = x.getNif();
         this.nome = x.getNome();
         this.mail = x.getMail();

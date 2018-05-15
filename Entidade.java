@@ -167,7 +167,7 @@ public class Entidade implements Serializable{
         }
     }
 
-    public Map<String, Double> getDespesaArea() throws EmptySetException {
+    public Map<Atividade, Double> getDespesaArea() throws EmptySetException , InvalidActivityException{
         HashMap<Atividade, Double> hist = new HashMap<>();
         Double count;
         if (this.faturas_dt.size() == 0)
@@ -207,7 +207,6 @@ public class Entidade implements Serializable{
 
     public void addFatura(Fatura x) {
         this.faturas_dt.add(x.clone());
-        this.despesa += x.getTotal();
     }
 
     public void setContacto(Contacto x) {
@@ -255,8 +254,14 @@ public class Entidade implements Serializable{
         return (new Entidade(this));
     }
 
-    public int hashCode() {
-        long v = this.info.getNif();
+    public int hashCode(){
+        long v ;
+        try {
+            v = this.info.getNif();
+        }
+       catch(InvalidFieldException e){     
+           return -1;
+       }
         return (int) (v ^ (v >>> 32));
     }
 }
