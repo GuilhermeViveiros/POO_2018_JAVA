@@ -43,9 +43,9 @@ public class Empresa extends Entidade implements Serializable {
      * Construtor parametrizado da Empresa. Aceita como parâmetros os valores para
      * cada variável de instância da sua Entidade.
      */
-    public Empresa(long nif, String nome, String password, String mail, String morada, String telefone,
+    public Empresa(Contacto ct, String password,
             Set<Atividade> areas) {
-        super(new Contacto(nif, nome, mail, morada, telefone), password);
+        super(ct , password);
         this.emissoes_data = new TreeSet<Fatura>();
 
         this.emissoes_valor = new TreeSet<>(new Comparator<Fatura>() {

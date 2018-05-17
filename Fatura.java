@@ -19,6 +19,12 @@ public class Fatura implements Serializable {
     private LocalDate date;
     private List<Produto> compras;
     private double total;
+    private Long code;
+    static Long contagem;
+
+    static {
+        contagem.valueOf(0);
+    }
 
     public Fatura() {
         this.servidor = new Contacto();
@@ -28,6 +34,8 @@ public class Fatura implements Serializable {
         this.nifcliente = -1;
         this.date = LocalDate.now();
         this.compras = new ArrayList<Produto>();
+        contagem.valueOf(contagem.longValue() + 1);
+        this.code = contagem;
     }
 
     public Fatura(Contacto x, Atividade area, long nifCliente, List<Produto> compras) {
@@ -38,12 +46,15 @@ public class Fatura implements Serializable {
         this.nifcliente = nifCliente;
         this.compras = compras.stream().map(Produto::clone).collect(Collectors.toList());
         this.total = compras.stream().mapToDouble(Produto::getPreco).sum();
+        contagem.valueOf(contagem.longValue() + 1);
+        this.code = contagem;
     }
 
     public Fatura(Fatura x) {
         this.servidor = x.getServidor();
         this.total = x.getTotal();
         this.date = x.getDate();
+        this.code = getCode();
 
         try {
             this.area = x.getArea();
@@ -93,13 +104,13 @@ public class Fatura implements Serializable {
         boolean r = (this.date == inc.getDate()) && this.servidor.equals(inc.getServidor());
         boolean l;
 
-        try{
+        try {
             l = this.area.equals(inc.getArea());
-        } catch( InvalidActivityException a){
+        } catch (InvalidActivityException a) {
             l = (this.area == null);
         }
         r = r && l;
-        
+
         try {
             l = this.compras.containsAll(inc.getCompras());
         } catch (EmptySetException a) {
@@ -118,6 +129,10 @@ public class Fatura implements Serializable {
 
     public Fatura clone() {
         return new Fatura(this);
+    }
+
+    public Long getCode() {
+        return this.code;
     }
 
     public LocalDate getDate() {

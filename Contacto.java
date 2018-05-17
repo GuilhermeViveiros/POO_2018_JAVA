@@ -7,21 +7,21 @@ import java.io.Serializable;
  * @version (v1)
  */
 public class Contacto implements Serializable {
-    private long nif;
+    private Long nif;
     private String nome;
     private String mail;
     private String morada;
     private String telefone;
 
     public Contacto() {
-        this.nif = -1;
+        this.nif = new Long(-1);
         this.nome = "campo vazio";
         this.mail = "campo vazio";
         this.morada = "campo vazio";
         this.telefone = "campo vazio";
     }
 
-    public Contacto(long ni_p, String nom_p, String mai_p, String morad_p, String telefone) {
+    public Contacto(Long ni_p, String nom_p, String mai_p, String morad_p, String telefone) {
         this.nif = ni_p;
         this.nome = nom_p;
         this.mail = mai_p;
@@ -34,7 +34,7 @@ public class Contacto implements Serializable {
         try {
             this.nif = x.getNif();
         } catch (InvalidFieldException a) {
-            this.nif = -1;
+            this.nif = new Long(-1);
         }
         try {
             this.nome = x.getNome();
@@ -59,8 +59,8 @@ public class Contacto implements Serializable {
     }
 
     // ---- Getters --------------------------------
-    public long getNif() throws InvalidFieldException {
-        if (this.nif == -1) {
+    public Long getNif() throws InvalidFieldException {
+        if (this.nif.longValue() == -1) {
             throw new InvalidFieldException("O campo Nif ainda não foi preenchido\n");
         } else {
             return this.nif;
@@ -107,7 +107,7 @@ public class Contacto implements Serializable {
 
         text = space;
         text += "nome: " + this.nome + "\n\n";
-        text += "nif: " + this.nif + "\n";
+        text += "nif: " + this.nif.toString() + "\n";
         text += space;
 
         text += "morada: " + this.morada + "\n";
@@ -121,7 +121,7 @@ public class Contacto implements Serializable {
 
     // ---- Setters --------------------------------
 
-    public void setNif(long n) {
+    public void setNif(Long n) {
         this.nif = n;
     }
 
@@ -155,9 +155,9 @@ public class Contacto implements Serializable {
         boolean l;
 
         try {
-            l = (this.nif == inc.getNif());
+            l = (this.nif.longValue() == inc.getNif().longValue());
         } catch (InvalidFieldException a) {
-            l = (this.nif == -1);
+            l = (this.nif.longValue() == -1);
         }
         r = r && l;
 
