@@ -64,34 +64,32 @@ public class Empresa extends Entidade implements Serializable{
      */
     public Empresa(Empresa x) {
         super(x);
+
         try{
             this.cliente = x.getClientes();
-            this.artigos = x.getArtigos();
-            this.areas =  x.getAreas();
-        }catch (EmptySetException a){
-            this.cliente = new HashMap<String, Set<Fatura>>();
-            this.artigos = new HashSet<Produto>();
-            this.emissoes_data = new TreeSet<Fatura>();
-            this.emissoes_valor = new TreeSet<>(new Comparator<Fatura>() {
-            public int compare(Fatura x, Fatura y) {
-                return x.comparePreco(y);
-            }
-        });
-            this.areas = areas.stream().map(Atividade::clone).collect(Collectors.toSet());
+            this.makeClienteData();
+            this.makeClienteValue();
         }catch (EmptyMapException a){
-            this.cliente = new HashMap<String, Set<Fatura>>();
-            this.artigos = new HashSet<Produto>();
+            this.cliente = new HashMap<String,Set<Fatura>>();
             this.emissoes_data = new TreeSet<Fatura>();
             this.emissoes_valor = new TreeSet<>(new Comparator<Fatura>() {
-            public int compare(Fatura x, Fatura y) {
-                return x.comparePreco(y);
-            }
-        });
-            this.areas = areas.stream().map(Atividade::clone).collect(Collectors.toSet());
-        } 
-        this.makeClienteData();
-        this.makeClienteValue();     
-    
+                public int compare(Fatura x, Fatura y) {
+                    return x.comparePreco(y);
+                }
+            });
+        }
+
+        try{ 
+            this.artigos = x.getArtigos();
+        } catch ( EmptySetException a ){
+            this.artigos = new HashSet<>();
+        }
+
+        try{
+            this.areas = x.getAreas();
+        } catch ( EmptySetException a){
+            this.areas = new HashSet<>();
+        }
     }
 
     // Privado -> apenas para os construtores pois nao queres clone da mesma
@@ -329,16 +327,30 @@ public class Empresa extends Entidade implements Serializable{
         if (y.getClass() != this.getClass() || y == null)
             return false;
         Empresa x = (Empresa) y;
+
+        boolean r = super.equals(x);
+        boolean l;
+
         try{
-        if (super.equals(x) && this.emissoes_data.equals(x.getEmissoesD()) && this.emissoes_valor.equals(x.getEmissoesV())
-            && this.artigos.equals( x.getArtigos()) &&  this.areas.equals(x.getAreas())) return true; 
-        } 
-            catch(EmptySetException e){
-                return super.equals(x);
-               
-            }
-            
-            return false;
+            l = this.emissoes_data.containsAll(x.getEmissoesD());
+        } catch(EmptySetException e){
+            l = (this.emissoes_data.size()==0);
+        }
+        r = r && l;
+
+        try{
+            l = this.artigos.containsAll( x.getArtigos());
+        }catch(EmptySetException e){
+            l = ( this.artigos.size()==0);
+        }
+        r = r && l;
+        
+        try{
+            l = this.areas.containsAll(x.getAreas());
+        } catch(EmptySetException e){
+            l = (this.areas.size() == 0);
+        }
+        return r && l;
     }
 
     // Metodo 6) Devolve as faturas emitidas pela Empresa , ordenadas

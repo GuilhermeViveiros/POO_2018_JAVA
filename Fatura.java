@@ -42,12 +42,27 @@ public class Fatura implements Serializable{
 
     public Fatura(Fatura x) {
         this.servidor = x.getServidor();
-        this.area = x.getArea();
-        this.desc = x.getDescricao();
-        this.date = x.getDate();
-        this.nifcliente = x.getCnif();
-        this.compras = x.getCompras();
         this.total = x.getTotal();
+        this.area = x.getArea();
+        this.date = x.getDate();
+        
+        try{
+            this.nifcliente = x.getCnif();
+        }catch (InvalidFieldException a){
+            this.nifcliente = -1;
+        }
+            
+        try {
+            this.desc = x.getDescricao();
+        } catch(InvalidFieldException a){
+            this.desc = "campo vazio";
+        }
+        
+        try{
+            this.compras = x.getCompras();        
+        }catch ( EmptySetException b ){
+            this.compras = new ArrayList<Produto>();
+        }
     }
     // se o programa continuar assim vai andar num loop interno -> new fatura -> 2
     // new entidade -> new fatura -> ....
@@ -70,10 +85,23 @@ public class Fatura implements Serializable{
             return false;
 
         Fatura inc = (Fatura) o;
+        boolean r = this.area.equals(inc.getArea()) && (this.date == inc.getDate()) && this.servidor.equals(inc.getServidor());
+        boolean l;
 
-        return this.area.equals(inc.getArea()) && (this.date == inc.getDate()) && this.servidor.equals(inc.getServidor())
-                && this.compras.equals(inc.getCompras()) && this.nifcliente == inc.getCnif();
+        try{
+            l = this.compras.containsAll(inc.getCompras());
+        } catch( EmptySetException a ){
+            l = ( this.compras.size() == 0 );
+        }
+        r = r && l;
+        
+        try{
+            l = (this.nifcliente == inc.getCnif()); 
+        } catch( InvalidFieldException b){
+            l =( this.nifcliente == -1 );
+        }
 
+        return r && l;
     }
 
     public Fatura clone() {
@@ -99,9 +127,9 @@ public class Fatura implements Serializable{
             return this.desc;
     }
 
-    public Atividade getArea() throws InvalidActivityException {
+    public Atividade getArea(){
         if( this.area == null)
-            throw new InvalidActivityException("area nao pode ser nula");
+            return null;
         else
             return this.area.clone();
     }

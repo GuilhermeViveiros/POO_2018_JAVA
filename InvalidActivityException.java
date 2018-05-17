@@ -5,10 +5,10 @@ public class InvalidActivityException extends Exception{
     }
     
     public  InvalidActivityException(String s){
-        super();
+        super(s);
     }
     
-    public  InvalidActivityException (  InvalidActivityException s){
+    public  InvalidActivityException ( InvalidActivityException s){
         super(s);
     }
      

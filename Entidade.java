@@ -3,8 +3,6 @@ import java.util.*;
 import java.util.stream.*;
 import java.io.Serializable;
 
-import javax.activity.InvalidActivityException;
-
 /**
  * Esta classe implementa uma Entidade. Uma Entidade será a unidade basica à
  * qual será aplicada tributação fiscal.
@@ -77,7 +75,6 @@ public class Entidade implements Serializable{
             this.faturas_val = inc.getfaturas_Valor();
         } catch(EmptySetException e){
             this.faturas_val= new TreeSet();
-            this.faturas_dt = new TreeSet();
         }
         this.faturas_dt = new TreeSet( this.faturas_val );
         // a password está vazia.
@@ -133,15 +130,16 @@ public class Entidade implements Serializable{
     }
 
     public List<Fatura> listafaturas_Valor(LocalDate begin, LocalDate end)
-            throws EmptySetException {
+            throws EmptySetException,InvalidIntervalException{
 
         if (this.faturas_val.size() == 0)
             throw new EmptySetException(" Conjunto de faturas vazio \n");
 
         List<Fatura> l = this.faturas_val.stream().map(Fatura::clone)
                 .filter(p -> p.getDate().isAfter(begin) && p.getDate().isBefore(end)).collect(Collectors.toList());
+        
         if (l.size() == 0)
-            throw new InvalidActivityException(" O intervalo é invalido\n");
+            throw new InvalidIntervalException(" O intervalo é invalido\n");
         else
             return l;
     }
@@ -167,21 +165,26 @@ public class Entidade implements Serializable{
         }
     }
 
-    public Map<Atividade, Double> getDespesaArea() throws EmptySetException , InvalidActivityException{
+    public Map<Atividade, Double> getDespesaArea() throws EmptySetException {
         HashMap<Atividade, Double> hist = new HashMap<>();
         Double count;
+        Atividade a;
         if (this.faturas_dt.size() == 0)
             throw new EmptySetException("Conjunto de faturas vazio\n");
         else {
 
             for (Fatura l : this.faturas_dt) {
-                if (hist.containsKey(l.getArea())) {
-                    count = hist.get(l.getArea());
+                a = l.getArea();
+                
+                if(a != null){
+                    if (hist.containsKey(a)) {
+                       count = hist.get(a);
 
-                } else {
-                    count = new Double(0);
+                    } else {
+                       count = new Double(0);
+                    }
+                    hist.put(a, new Double(count.doubleValue() + l.getTotal()));
                 }
-                hist.put(l.getArea(), new Double(count.doubleValue() + l.getTotal()));
             }
             return hist;
         }
@@ -229,18 +232,18 @@ public class Entidade implements Serializable{
             return false;
 
         Entidade inc = (Entidade) o;
-
+        
+        boolean r = this.info.equals(inc.getContacto());
+        boolean l;
         try {
-            if (this.info.equals(inc.getContacto()) && this.faturas_val.containsAll(inc.getfaturas_Valor()))
-                return true;
-        } catch (EmptySetException e) {
-            return this.info.equals(inc.getContacto());
+            l = this.faturas_val.containsAll(inc.getfaturas_Valor());
 
+        } catch (EmptySetException e) {
+            l = ( this.faturas_val.size()==0 );
         }
         // não é neces
 
-        return false;
-
+        return r && l;
     }
 
     /**

@@ -31,11 +31,12 @@ public class Contacto implements Serializable{
     }
 
     public Contacto(Contacto x) {
-        this.nif = x.getNif();
-        this.nome = x.getNome();
-        this.mail = x.getMail();
-        this.morada = x.getMorada();
-        this.telefone = x.getTelefone();
+        
+        try{this.nif = x.getNif();}catch (InvalidFieldException a){this.nif = -1;}
+        try{ this.nome = x.getNome(); }catch (InvalidFieldException a){this.nome ="campo vazio";}
+        try{ this.mail = x.getMail(); }catch (InvalidFieldException a){this.mail ="campo vazio";}
+        try{ this.morada = x.getMorada(); }catch (InvalidFieldException a){this.morada ="campo vazio";}
+        try{ this.telefone = x.getTelefone(); }catch (InvalidFieldException a){this.telefone ="campo vazio";}
     }
 
     // ---- Getters --------------------------------
@@ -131,8 +132,21 @@ public class Contacto implements Serializable{
 
         Contacto inc = (Contacto) o;
 
-        return (this.nif == inc.getNif()) && (this.nome.equals(inc.getNome())) && (this.morada.equals(inc.getMorada()));
+        boolean r = true;
+        boolean l;
 
+        try{ l = (this.nif == inc.getNif());} catch (InvalidFieldException a){ l =(this.nif == -1);}
+        r = r && l;
+
+        try{ l = this.nome.equals(inc.getNome()); }catch (InvalidFieldException a){ l = this.nome.equals("campo vazio");}
+        r = r && l;
+
+        try{ l = this.morada.equals(inc.getMorada()); }catch (InvalidFieldException a){ l = this.morada.equals("campo vazio");}
+        r = r && l;
+
+        try{ l = this.telefone.equals(inc.getTelefone()); }catch (InvalidFieldException a){ l = this.telefone.equals("campo vazio");}
+
+        return r && l;
     }
 
     public Contacto clone() {
