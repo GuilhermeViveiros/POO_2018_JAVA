@@ -16,14 +16,14 @@ public class Pessoa extends Entidade implements Serializable {
 
     }
 
-    public Pessoa(Contacto cont, String password,List<Long> agr, Atividade emprego, long empr) {
+    public Pessoa(Contacto cont,String password, List<Long> agr, Atividade emprego, long empr) {
         super(cont,password);
         this.emprego = emprego.clone();
         this.agregado = new ArrayList(agr);
         this.nifEmpregador = empr;
     }
 
-    public Pessoa(Contacto cont, String password ,List<Long> agr) {
+    public Pessoa(Contacto cont,String password, List<Long> agr) {
         super(cont,password);
         this.agregado = new ArrayList(agr);
         this.emprego = null;
@@ -77,9 +77,16 @@ public class Pessoa extends Entidade implements Serializable {
     }
 
     public String toString() {
-        return super.toString() + "\nNúmero de dependentes do agregado Familiar : " + this.agregado.size()
-                + "\nNúmeros de fiscais do agregado Familiar : " + this.agregado.toString()
-                + this.emprego.getCodidigoActividade();
+        String x = super.toString() + "\nNúmero de dependentes do agregado Familiar : " + this.agregado.size()
+                + "\nNúmeros de fiscais do agregado Familiar : " + this.agregado.toString();
+        String y;
+
+        try {
+            y = this.emprego.getCodidigoActividade();
+        } catch (InvalidFieldException a) {
+            y = "";
+        }
+        return x + y;
     }
 
     public void setAgregado(List<Long> agregado) {
@@ -104,9 +111,9 @@ public class Pessoa extends Entidade implements Serializable {
 
     public void setNifEmpregador(Empresa empregador) {
 
-        try{
+        try {
             this.nifEmpregador = empregador.getContacto().getNif();
-        }catch( InvalidFieldException a){
+        } catch (InvalidFieldException a) {
             this.nifEmpregador = -1;
         }
     }

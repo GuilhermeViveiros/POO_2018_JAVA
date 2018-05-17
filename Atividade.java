@@ -3,14 +3,10 @@ import java.time.LocalDate;
 public interface Atividade
 {
 
-    public String getCodidigoActividade();
-    public String getNomeActividade();
+    public String getCodidigoActividade()throws InvalidFieldException;
+    public String getNomeActividade()throws InvalidFieldException;
     public boolean areaDedusivel();
     public double regraCalculo( Empresa x  ,LocalDate begin , LocalDate end);
-    public double regraCalculo( Pessoa x);
+    public double regraCalculo( Pessoa x ,LocalDate begin , LocalDate end);
     public Atividade clone();
-    public boolean equals(Object o);
-    public int hashCode();
-  
- 
 }

@@ -1,66 +1,153 @@
  
-
 import java.time.LocalDate;
-import java.io.Serializable;
 
-public class Agricultura implements Atividade,Serializable
+public class Agricultura implements Atividade
 {
    
     private String nome; //nome da atividade
     private String codigo; //codigo da atividade
-    static int check = 0; //estou a assumir que nao irá contar para as despesas
-   
+    private boolean check; //estou a assumir que nao irá contar para as despesas
+    
+    private double a;
+    private double b;
     
     public Agricultura(){
         this.nome = "nenhum";
         this.codigo = "nenhum";  
+        this.check = false;
+        this.a = 1;
+        this.b = 1;
     }
 
-    public Agricultura(String nome , String codigo){
+    public Agricultura(String nome , String codigo, boolean check,double a,double b){
         this.nome = nome;
         this.codigo = codigo;
+        this.check = check;
+        this.a = 1;
+        this.b = 1;
     }
 
     public Agricultura(Agricultura x){
-        this.nome = x.getNome();
-        this.codigo = x.getCodigo();
+        try {
+            this.nome = x.getNomeActividade();
+        } catch (InvalidFieldException e) {
+            this.nome = "nenhum";
+        }
+
+        try {
+            this.codigo = x.getCodidigoActividade();
+        } catch (InvalidFieldException e) {
+            this.codigo = "nenhum";
+        }
+        this.check = x.areaDedusivel();
+        this.a = getParamA();
+        this.b = getParamB();
     }
 
-    //Getters!
-    public String getNome(){return this.nome;}
-    public String getCodigo(){return this.codigo;}
-
-    //Metodos
-    public String getCodidigoActividade(){
-        return getCodigo();
+    public double getParamA(){
+        return this.a;
     }
-    public String getNomeActividade(){
-        return getNome();
+
+    public double getParamB(){
+        return this.b;
+    }
+
+    public double setParamA( double a){
+        return this.a = a;
+    }
+
+    public double setParamB( double b){
+        return this.b = b;
+    }
+
+    public String getCodidigoActividade() throws InvalidFieldException {
+        if (this.codigo.equals("nenhum")) {
+            throw new InvalidFieldException(" Código de Atividade não indicado ");
+        }
+        return this.codigo;
+    }
+
+    public String getNomeActividade() throws InvalidFieldException {
+        if (this.nome.equals("nenhum")) {
+            throw new InvalidFieldException(" Nome da Atividade não indicado ");
+        }
+
+        return this.nome;
     }
 
     public boolean areaDedusivel(){
-        return check == 1;
+        return check;
     }
     
     //(Algoritmo improvisado)
-    public double regraCalculo( Empresa x , LocalDate begin , LocalDate end ){
-        double valor = x.Total_faturado(begin,end);
-        return valor* 0.4;
-    }
-    //(Algoritmo improvisado)
-    public double regraCalculo(Pessoa x){
-        return (double)(x.getAgregado().size()) * 0.3;
+    public double regraCalculo(Empresa x, LocalDate begin, LocalDate end) {
+        double valor;
+
+        if (check) {
+            try {
+                valor = x.totalFaturado(begin, end)*this.a;
+            } catch (EmptySetException a) {
+                valor = 0;
+            }
+
+            try {
+                valor += x.getDespesa(begin, end) * this.b;
+            } catch (EmptySetException a) {
+
+            }
+            return valor;
+        }
+        return 0;
     }
 
-    public Agricultura clone(){
-        return new Agricultura(this);
+    // (Algoritmo improvisado)
+    public double regraCalculo(Pessoa x, LocalDate begin, LocalDate end) {
+        double valor;
+
+        if (this.check) {
+
+            try {
+                valor = x.getDespesa(begin, end);
+            } catch (EmptySetException e) {
+                valor = 0;
+            }
+            return valor * this.b;
+        }
+        return 0;
+    }
+
+    public Atividade clone(){
+        return (Atividade) (new Agricultura(this));
     }
         
-    public boolean equals(Object x){
-        if(x == this) return true;
-        if (x.getClass() != this.getClass() || x == null) return false;
-        Agricultura y = (Agricultura) x;
-        return (y.getNome().equals(this.codigo)) && (y.getCodigo().equals(this.codigo));
+    public boolean equals(Object x) {
+        if (x == this)
+            return true;
+        if (x.getClass() != this.getClass() || x == null)
+            return false;
+        Agricultura y= (Agricultura) x;
+        
+        boolean r = (this.check == y.areaDedusivel()) 
+                        && (this.a == y.getParamA()) && (this.b == y.getParamB());
+        boolean l;
+
+        try {
+            l = (this.nome == y.getNomeActividade());
+        } catch (InvalidFieldException e) {
+            l = (this.nome ==  "nenhum");
+        }
+        r = r && l;
+        try {
+            l = ( this.codigo == y.getCodidigoActividade());
+        } catch (InvalidFieldException e) {
+            l = ( this.codigo == "nenhum");
+        }
+        return (r && l);
+    }
+
+    public int hashCode() {
+        String word = this.nome + this.codigo;
+        return word.hashCode();
     }
     
 }
