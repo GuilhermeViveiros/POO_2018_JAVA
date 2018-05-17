@@ -2,57 +2,77 @@ import java.util.*;
 import java.util.stream.*;
 import java.io.Serializable;
 
-public class Pessoa extends Entidade implements Serializable{
+public class Pessoa extends Entidade implements Serializable {
 
     private List<Long> agregado; // números fiscais do agregado familiar
     private Atividade emprego;
     private long nifEmpregador;
 
-    public Pessoa(){
-
+    public Pessoa() {
         super();
         this.agregado = new ArrayList<Long>();
         this.emprego = null;
-        this.nifEmpregador = 0;
+        this.nifEmpregador = -1;
 
     }
 
     public Pessoa(Contacto cont, List<Long> agr, Atividade emprego, long empr) {
         super(cont);
         this.emprego = emprego.clone();
-        this.agregado = agr.stream().collect(Collectors.toList());
+        this.agregado = new ArrayList(agr);
         this.nifEmpregador = empr;
     }
 
     public Pessoa(Contacto cont, List<Long> agr) {
         super(cont);
-        this.agregado = agr.stream().collect(Collectors.toList());
+        this.agregado = new ArrayList(agr);
         this.emprego = null;
-        this.nifEmpregador = 0;
+        this.nifEmpregador = -1;
     }
 
     public Pessoa(Pessoa p) {
         super(p);
-        this.agregado = p.getAgregado();
-        this.emprego = p.getEmprego();
-        this.nifEmpregador = p.getNifEmpregador();
+
+        try {
+            this.agregado = p.getAgregado();
+        } catch (EmptySetException a) {
+            this.agregado = new ArrayList<Long>();
+        }
+
+        try {
+            this.emprego = p.getEmprego();
+        } catch (InvalidActivityException a) {
+            this.emprego = null;
+        }
+
+        try {
+            this.nifEmpregador = p.getNifEmpregador();
+        } catch (InvalidFieldException a) {
+            this.nifEmpregador = -1;
+        }
     }
 
-    public List<Long> getAgregado() throws EmptySetException{
-        if(this.agregado.size() == 0) throw new EmptySetException("Lista de agregados inválida");
+    public List<Long> getAgregado() throws EmptySetException {
+        if (this.agregado.size() == 0)
+            throw new EmptySetException("Lista de agregados inválida");
         return this.agregado.stream().collect(Collectors.toList());
     }
 
-    public Atividade getEmprego() {
+    public Atividade getEmprego() throws InvalidActivityException {
+        if (this.emprego == null)
+            throw new InvalidActivityException(" É Desempregado ");
+
         return this.emprego.clone();
     }
 
-    public long getNifEmpregador() {
+    public long getNifEmpregador() throws InvalidFieldException {
+        if (this.nifEmpregador == -1)
+            throw new InvalidFieldException(" Campo de nif invalido");
+
         return this.nifEmpregador;
     }
 
-    public int numeroDeElementosDoAgregado() throws EmptySetException{
-        if(this.agregado.size() == 0) throw new EmptySetException("Lista de agregados inválida");
+    public int numeroDeElementosDoAgregado() {
         return this.agregado.size();
     }
 
@@ -83,7 +103,12 @@ public class Pessoa extends Entidade implements Serializable{
     }
 
     public void setNifEmpregador(Empresa empregador) {
-        this.nifEmpregador = empregador.getContacto().getNif();
+
+        try{
+            this.nifEmpregador = empregador.getContacto().getNif();
+        }catch( InvalidFieldException a){
+            this.nifEmpregador = -1;
+        }
     }
 
     public Pessoa clone() {
@@ -99,17 +124,25 @@ public class Pessoa extends Entidade implements Serializable{
             return false;
 
         Pessoa inc = (Pessoa) o;
-        try{
-        if (super.equals(inc) && this.getEmprego().equals(inc.getEmprego())
-                && (this.numeroDeElementosDoAgregado() == inc.numeroDeElementosDoAgregado())
-                && (this.getNifEmpregador() == inc.getNifEmpregador()))
-            return true;
-        } catch (EmptySetException e) {
-            return this.numeroDeElementosDoAgregado() == inc.numeroDeElementosDoAgregado();
+
+        boolean r = super.equals(inc) && (this.numeroDeElementosDoAgregado() == inc.numeroDeElementosDoAgregado());
+        boolean l;
+
+        // && (this.getNifEmpregador() == inc.getNifEmpregador()))
+        try {
+            l = this.emprego.equals(inc.getEmprego());
+        } catch (InvalidActivityException e) {
+            l = (this.emprego == null);
+        }
+        r = r && l;
+
+        try {
+            l = (this.nifEmpregador == inc.getNifEmpregador());
+        } catch (InvalidFieldException e) {
+            l = (this.nifEmpregador == -1);
         }
 
-        return false;
-
+        return r && l;
     }
 
 }
