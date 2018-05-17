@@ -16,6 +16,7 @@ public class Entidade implements Serializable {
     private Contacto info;
     private TreeSet<Fatura> faturas_dt;
     private TreeSet<Fatura> faturas_val;
+    private String password;
 
     /**
      * Construtor por omissão de Entidade.
@@ -29,6 +30,7 @@ public class Entidade implements Serializable {
                 return x.comparePreco(y);
             }
         });
+        this.password = "invalido";
     }
 
     /**
@@ -36,7 +38,7 @@ public class Entidade implements Serializable {
      * cada variável de instância.
      */
 
-    public Entidade(Contacto x) {
+    public Entidade(Contacto x, String pw) {
         this.info = x.clone();
         this.faturas_dt = new TreeSet<Fatura>();
         this.faturas_val = new TreeSet<Fatura>(new Comparator<Fatura>() {
@@ -44,9 +46,10 @@ public class Entidade implements Serializable {
                 return x.comparePreco(y);
             }
         });
+        this.password = pw;
     }
 
-    public Entidade(Contacto x, Set<Fatura> fat) {
+    public Entidade(Contacto x, String pw, Set<Fatura> fat) {
 
         this.info = x.clone();
         this.faturas_dt = new TreeSet<Fatura>();
@@ -55,6 +58,8 @@ public class Entidade implements Serializable {
                 return x.comparePreco(y);
             }
         });
+        this.password = pw;
+
         Fatura j;
         for (Fatura l : fat) {
             j = l.clone();
@@ -76,6 +81,13 @@ public class Entidade implements Serializable {
         } catch (EmptySetException e) {
             this.faturas_val = new TreeSet();
         }
+
+        try {
+            this.password = inc.getPassword();
+        } catch (InvalidFieldException a) {
+            this.password = "invalido";
+        }
+
         this.faturas_dt = new TreeSet(this.faturas_val);
         // a password está vazia.
     }
@@ -148,6 +160,13 @@ public class Entidade implements Serializable {
         return this.info.clone();
     }
 
+    public String getPassword() throws InvalidFieldException{
+        if(this.password=="invalido")
+            throw new InvalidFieldException(" Ainda não foi inserida uma password ");
+        
+        return this.password;
+    }
+
     public double getDespesa() throws EmptySetException {
         if (this.faturas_dt.size() == 0) {
             throw new EmptySetException(" Conjunto de faturas vazio \n");
@@ -170,7 +189,7 @@ public class Entidade implements Serializable {
         Double count;
         if (this.faturas_dt.size() == 0)
             throw new EmptySetException("Conjunto de faturas vazio\n");
-        
+
         Atividade a;
         for (Fatura l : this.faturas_dt) {
 
@@ -219,6 +238,9 @@ public class Entidade implements Serializable {
         this.info = x.clone();
     }
 
+    public void setPassword( String pw ){
+        this.password = pw;
+    }
     /**
      * Método que determina se 2 Entidades são iguais. Apenas é necessário o mesmo
      * nif. Esta função é deterministica, reflexiva, transitiva e simétrica.

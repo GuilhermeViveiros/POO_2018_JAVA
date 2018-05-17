@@ -16,15 +16,15 @@ public class Pessoa extends Entidade implements Serializable {
 
     }
 
-    public Pessoa(Contacto cont, List<Long> agr, Atividade emprego, long empr) {
-        super(cont);
+    public Pessoa(Contacto cont, String password,List<Long> agr, Atividade emprego, long empr) {
+        super(cont,password);
         this.emprego = emprego.clone();
         this.agregado = new ArrayList(agr);
         this.nifEmpregador = empr;
     }
 
-    public Pessoa(Contacto cont, List<Long> agr) {
-        super(cont);
+    public Pessoa(Contacto cont, String password ,List<Long> agr) {
+        super(cont,password);
         this.agregado = new ArrayList(agr);
         this.emprego = null;
         this.nifEmpregador = -1;
