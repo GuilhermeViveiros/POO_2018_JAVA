@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @version (v1)
  */
 
-public class Fatura implements Serializable{
+public class Fatura implements Serializable {
     //
     private Contacto servidor;
     private Atividade area;
@@ -43,24 +43,29 @@ public class Fatura implements Serializable{
     public Fatura(Fatura x) {
         this.servidor = x.getServidor();
         this.total = x.getTotal();
-        this.area = x.getArea();
         this.date = x.getDate();
-        
-        try{
+
+        try {
+            this.area = x.getArea();
+        } catch (InvalidActivityException a) {
+            this.area = null;
+        }
+
+        try {
             this.nifcliente = x.getCnif();
-        }catch (InvalidFieldException a){
+        } catch (InvalidFieldException a) {
             this.nifcliente = -1;
         }
-            
+
         try {
             this.desc = x.getDescricao();
-        } catch(InvalidFieldException a){
+        } catch (InvalidFieldException a) {
             this.desc = "campo vazio";
         }
-        
-        try{
-            this.compras = x.getCompras();        
-        }catch ( EmptySetException b ){
+
+        try {
+            this.compras = x.getCompras();
+        } catch (EmptySetException b) {
             this.compras = new ArrayList<Produto>();
         }
     }
@@ -85,20 +90,27 @@ public class Fatura implements Serializable{
             return false;
 
         Fatura inc = (Fatura) o;
-        boolean r = this.area.equals(inc.getArea()) && (this.date == inc.getDate()) && this.servidor.equals(inc.getServidor());
+        boolean r = (this.date == inc.getDate()) && this.servidor.equals(inc.getServidor());
         boolean l;
 
         try{
-            l = this.compras.containsAll(inc.getCompras());
-        } catch( EmptySetException a ){
-            l = ( this.compras.size() == 0 );
+            l = this.area.equals(inc.getArea());
+        } catch( InvalidActivityException a){
+            l = (this.area == null);
         }
         r = r && l;
         
-        try{
-            l = (this.nifcliente == inc.getCnif()); 
-        } catch( InvalidFieldException b){
-            l =( this.nifcliente == -1 );
+        try {
+            l = this.compras.containsAll(inc.getCompras());
+        } catch (EmptySetException a) {
+            l = (this.compras.size() == 0);
+        }
+        r = r && l;
+
+        try {
+            l = (this.nifcliente == inc.getCnif());
+        } catch (InvalidFieldException b) {
+            l = (this.nifcliente == -1);
         }
 
         return r && l;
@@ -120,29 +132,29 @@ public class Fatura implements Serializable{
         return this.servidor.clone();
     }
 
-    public String getDescricao() throws InvalidFieldException{
-        if( this.desc.equals("campo vazio") )
+    public String getDescricao() throws InvalidFieldException {
+        if (this.desc.equals("campo vazio"))
             throw new InvalidFieldException();
         else
             return this.desc;
     }
 
-    public Atividade getArea(){
-        if( this.area == null)
-            return null;
+    public Atividade getArea() throws InvalidActivityException {
+        if (this.area == null)
+            throw new InvalidActivityException(" Nenhuma Atividade foi Indicada");
         else
             return this.area.clone();
     }
 
-    public List<Produto> getCompras() throws EmptySetException{
-        if( this.compras.size() == 0 )
+    public List<Produto> getCompras() throws EmptySetException {
+        if (this.compras.size() == 0)
             throw new EmptySetException("Lista de compras nao pode ser vazia");
         else
             return this.compras.stream().map(Produto::clone).collect(Collectors.toList());
     }
 
-    public long getCnif() throws InvalidFieldException{
-        if( this.nifcliente == -1)
+    public long getCnif() throws InvalidFieldException {
+        if (this.nifcliente == -1)
             throw new InvalidFieldException("Nif inapropriado");
         else
             return this.nifcliente;

@@ -1,5 +1,4 @@
 import java.io.Serializable;
- 
 
 /**
  * Escreva a descrição da classe Contacto aqui.
@@ -7,7 +6,7 @@ import java.io.Serializable;
  * @author (Gonçalo Faria)
  * @version (v1)
  */
-public class Contacto implements Serializable{
+public class Contacto implements Serializable {
     private long nif;
     private String nome;
     private String mail;
@@ -31,12 +30,32 @@ public class Contacto implements Serializable{
     }
 
     public Contacto(Contacto x) {
-        
-        try{this.nif = x.getNif();}catch (InvalidFieldException a){this.nif = -1;}
-        try{ this.nome = x.getNome(); }catch (InvalidFieldException a){this.nome ="campo vazio";}
-        try{ this.mail = x.getMail(); }catch (InvalidFieldException a){this.mail ="campo vazio";}
-        try{ this.morada = x.getMorada(); }catch (InvalidFieldException a){this.morada ="campo vazio";}
-        try{ this.telefone = x.getTelefone(); }catch (InvalidFieldException a){this.telefone ="campo vazio";}
+
+        try {
+            this.nif = x.getNif();
+        } catch (InvalidFieldException a) {
+            this.nif = -1;
+        }
+        try {
+            this.nome = x.getNome();
+        } catch (InvalidFieldException a) {
+            this.nome = "campo vazio";
+        }
+        try {
+            this.mail = x.getMail();
+        } catch (InvalidFieldException a) {
+            this.mail = "campo vazio";
+        }
+        try {
+            this.morada = x.getMorada();
+        } catch (InvalidFieldException a) {
+            this.morada = "campo vazio";
+        }
+        try {
+            this.telefone = x.getTelefone();
+        } catch (InvalidFieldException a) {
+            this.telefone = "campo vazio";
+        }
     }
 
     // ---- Getters --------------------------------
@@ -64,7 +83,7 @@ public class Contacto implements Serializable{
         }
     }
 
-    public String getMail() throws InvalidFieldException{
+    public String getMail() throws InvalidFieldException {
         if (this.mail.equals("campo vazio")) {
             throw new InvalidFieldException("O campo mail ainda não foi preenchido\n");
 
@@ -135,16 +154,32 @@ public class Contacto implements Serializable{
         boolean r = true;
         boolean l;
 
-        try{ l = (this.nif == inc.getNif());} catch (InvalidFieldException a){ l =(this.nif == -1);}
+        try {
+            l = (this.nif == inc.getNif());
+        } catch (InvalidFieldException a) {
+            l = (this.nif == -1);
+        }
         r = r && l;
 
-        try{ l = this.nome.equals(inc.getNome()); }catch (InvalidFieldException a){ l = this.nome.equals("campo vazio");}
+        try {
+            l = this.nome.equals(inc.getNome());
+        } catch (InvalidFieldException a) {
+            l = this.nome.equals("campo vazio");
+        }
         r = r && l;
 
-        try{ l = this.morada.equals(inc.getMorada()); }catch (InvalidFieldException a){ l = this.morada.equals("campo vazio");}
+        try {
+            l = this.morada.equals(inc.getMorada());
+        } catch (InvalidFieldException a) {
+            l = this.morada.equals("campo vazio");
+        }
         r = r && l;
 
-        try{ l = this.telefone.equals(inc.getTelefone()); }catch (InvalidFieldException a){ l = this.telefone.equals("campo vazio");}
+        try {
+            l = this.telefone.equals(inc.getTelefone());
+        } catch (InvalidFieldException a) {
+            l = this.telefone.equals("campo vazio");
+        }
 
         return r && l;
     }

@@ -134,7 +134,7 @@ public class Empresa extends Entidade implements Serializable{
             }
         }); */
     public Set<Produto> getArtigos() throws EmptySetException{
-        if (this.artigos.size()==0)throw new EmptySetException("Set de artigos ainda nao foi preenchido");
+        if (this.artigos.size()==0) throw new EmptySetException("Set de artigos ainda nao foi preenchido");
         return this.artigos.stream().map(Produto::clone).collect(Collectors.toSet());
     }
 
@@ -171,14 +171,28 @@ public class Empresa extends Entidade implements Serializable{
   
             /* Inicia o histograma */
             if (getAreas().size() == 0) throw new EmptySetException("Setor de areas inválido");
-            
-            Map<Atividade, Integer> s = new HashMap<Atividade, Integer>( compras.stream()
-                .collect(Collectors.toMap( p -> p.getArea(), p-> new Integer(0)) ));
-            /* cria histograma */
-            
+    
+            /* cria histograma */        
+            Map<Atividade, Integer> s = new HashMap<Atividade, Integer>();
+            Atividade active;
+            for ( Produto th: compras){
+                try{
+                    active = th.getArea();
+                }catch(InvalidActivityException a){
+                    continue;
+                }
+                s.put(active, new Integer(0));
+            }
+
             /* Preenche o histograma */
-            for (Produto pd : compras)
-                s.put(pd.getArea(), new Integer(s.get(pd.getArea()).intValue() + 1));
+            for (Produto pd : compras){
+                try{
+                    active = pd.getArea();
+                }catch ( InvalidActivityException a){
+                    continue;
+                }
+                s.put(active, new Integer(s.get(active).intValue() + 1));
+            }
             
             int max=0, current;
             Atividade maxim=null;

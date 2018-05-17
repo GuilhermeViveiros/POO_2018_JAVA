@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @version (v1);
  */
 
-public class Entidade implements Serializable{
+public class Entidade implements Serializable {
     // variáveis de instância
     private Contacto info;
     private TreeSet<Fatura> faturas_dt;
@@ -46,7 +46,7 @@ public class Entidade implements Serializable{
         });
     }
 
-    public Entidade(Contacto x, TreeSet<Fatura> fat) {
+    public Entidade(Contacto x, Set<Fatura> fat) {
 
         this.info = x.clone();
         this.faturas_dt = new TreeSet<Fatura>();
@@ -71,12 +71,12 @@ public class Entidade implements Serializable{
 
     public Entidade(Entidade inc) {
         this.info = new Contacto(inc.getContacto());
-        try{
+        try {
             this.faturas_val = inc.getfaturas_Valor();
-        } catch(EmptySetException e){
-            this.faturas_val= new TreeSet();
+        } catch (EmptySetException e) {
+            this.faturas_val = new TreeSet();
         }
-        this.faturas_dt = new TreeSet( this.faturas_val );
+        this.faturas_dt = new TreeSet(this.faturas_val);
         // a password está vazia.
     }
 
@@ -130,14 +130,14 @@ public class Entidade implements Serializable{
     }
 
     public List<Fatura> listafaturas_Valor(LocalDate begin, LocalDate end)
-            throws EmptySetException,InvalidIntervalException{
+            throws EmptySetException, InvalidIntervalException {
 
         if (this.faturas_val.size() == 0)
             throw new EmptySetException(" Conjunto de faturas vazio \n");
 
         List<Fatura> l = this.faturas_val.stream().map(Fatura::clone)
                 .filter(p -> p.getDate().isAfter(begin) && p.getDate().isBefore(end)).collect(Collectors.toList());
-        
+
         if (l.size() == 0)
             throw new InvalidIntervalException(" O intervalo é invalido\n");
         else
@@ -168,26 +168,29 @@ public class Entidade implements Serializable{
     public Map<Atividade, Double> getDespesaArea() throws EmptySetException {
         HashMap<Atividade, Double> hist = new HashMap<>();
         Double count;
-        Atividade a;
         if (this.faturas_dt.size() == 0)
             throw new EmptySetException("Conjunto de faturas vazio\n");
-        else {
+        
+        Atividade a;
+        for (Fatura l : this.faturas_dt) {
 
-            for (Fatura l : this.faturas_dt) {
+            try {
                 a = l.getArea();
-                
-                if(a != null){
-                    if (hist.containsKey(a)) {
-                       count = hist.get(a);
-
-                    } else {
-                       count = new Double(0);
-                    }
-                    hist.put(a, new Double(count.doubleValue() + l.getTotal()));
-                }
+            } catch (InvalidActivityException b) {
+                continue;
             }
-            return hist;
+
+            if (hist.containsKey(a)) {
+                count = hist.get(a);
+
+            } else {
+                count = new Double(0);
+            }
+            hist.put(a, new Double(count.doubleValue() + l.getTotal()));
+
         }
+        return hist;
+
     }
 
     public boolean removerFatura(Fatura bh) {
@@ -232,14 +235,14 @@ public class Entidade implements Serializable{
             return false;
 
         Entidade inc = (Entidade) o;
-        
+
         boolean r = this.info.equals(inc.getContacto());
         boolean l;
         try {
             l = this.faturas_val.containsAll(inc.getfaturas_Valor());
 
         } catch (EmptySetException e) {
-            l = ( this.faturas_val.size()==0 );
+            l = (this.faturas_val.size() == 0);
         }
         // não é neces
 
@@ -257,14 +260,13 @@ public class Entidade implements Serializable{
         return (new Entidade(this));
     }
 
-    public int hashCode(){
-        long v ;
+    public int hashCode() {
+        long v;
         try {
             v = this.info.getNif();
+        } catch (InvalidFieldException e) {
+            return -1;
         }
-       catch(InvalidFieldException e){     
-           return -1;
-       }
         return (int) (v ^ (v >>> 32));
     }
 }

@@ -19,24 +19,40 @@ public class Produto implements Serializable{
     }
 
     public Produto(Produto x) {
-        this.setNome(x.getNome());
-        this.setPreco(x.getPreco());
-        this.area = x.getArea();
+        this.preco = x.getPreco();
+
+        try{
+            this.nome  = x.getNome();
+        } catch (InvalidFieldException e ){
+            this.nome = "invalido";
+        }
+
+        try{
+            this.area = x.getArea();
+        } catch( InvalidActivityException e){
+            this.area = null;
+        }
 
     }
 
     //Getters!
-
     public double getPreco() {
         return this.preco;
     }
 
-    public String getNome() {
-        return this.nome;
+    public String getNome() throws InvalidFieldException {
+        if( this.nome.equals("invalido") )
+            throw new InvalidFieldException("Ainda não foi indicado nenhum nome");
+        else
+            return this.nome;
+
     }
 
-    public Atividade getArea(){
-        return this.area.clone();
+    public Atividade getArea() throws InvalidActivityException {
+        if(this.area == null)
+            throw new InvalidActivityException(" Não foi indicada nenhuma atividade");
+        else
+            return this.area.clone();
     }
     //setters!
 
@@ -57,7 +73,21 @@ public class Produto implements Serializable{
         if(obj==this) return true;
         if(obj==null || obj.getClass()!=this.getClass()) return false;
         Produto p = /*(Produto)*/ obj;
-        return (this.nome.equals( p.getNome()) );
+
+        boolean r = false;
+        boolean l;
+
+        try{
+            l = this.nome.equals( p.getNome());
+        }catch (InvalidFieldException e ){
+            l = (this.nome == "invalido");
+            r = true;
+        }
+
+        if( r )
+            l = l & (p.getPreco() == this.preco);
+        
+        return l;
     }
 
     public Produto clone() {
