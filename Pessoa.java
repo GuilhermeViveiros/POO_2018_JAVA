@@ -72,6 +72,31 @@ public class Pessoa extends Entidade implements Serializable {
         return this.nifEmpregador;
     }
 
+    public Set<String> codigosdeAtividadesDeduziveis() throws EmptySetException{
+        
+        Set<String> x = new HashSet<String>(); 
+        for( Fatura f: this.getfaturas_Valor()){
+            Atividade g;
+            try{
+                g = f.getArea();
+            }catch (InvalidActivityException aaa){
+                continue;
+            }
+
+            if( g.areaDedusivel() && (!x.contains(g)) ){
+                try{ 
+                    x.add(g.getCodidigoActividade());
+                }catch (InvalidFieldException aaa){
+                    continue;
+                }
+            }
+        } 
+        if( x.size() == 0 )
+            throw new EmptySetException();
+
+        return x;
+    }
+
     public int numeroDeElementosDoAgregado() {
         return this.agregado.size();
     }

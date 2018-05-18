@@ -239,6 +239,10 @@ public class Empresa extends Entidade implements Serializable {
 
     }
 
+    public int numeroDeFaturasEmitidas(){
+        return emissoes_data.size();
+    }
+
     // Método que remove um Setor
     public boolean removerArea(Atividade x) throws EmptySetException {
         if (this.areas.size() == 0)

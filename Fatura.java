@@ -11,7 +11,7 @@ import java.io.Serializable;
  */
 
 public class Fatura implements Serializable {
-    //
+    
     private Contacto servidor;
     private Atividade area;
     private long nifcliente;
