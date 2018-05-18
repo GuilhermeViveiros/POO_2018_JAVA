@@ -43,8 +43,7 @@ public class Empresa extends Entidade implements Serializable {
      * Construtor parametrizado da Empresa. Aceita como parâmetros os valores para
      * cada variável de instância da sua Entidade.
      */
-    public Empresa(Contacto ct, String password,
-            Set<Atividade> areas) {
+    public Empresa(Contacto ct, String password,Set<Atividade> areas) {
         super(ct , password);
         this.emissoes_data = new TreeSet<Fatura>();
 
@@ -107,8 +106,7 @@ public class Empresa extends Entidade implements Serializable {
         }
     }
 
-    // atraves do Map criamos um set de Faturas iguais com ordenacao baseada no
-    // valor
+    // atraves do Map criamos um set de Faturas iguais com ordenacao baseada no valor
     private void makeClienteValue() {
         this.emissoes_valor = new TreeSet<>(new Comparator<Fatura>() {
             public int compare(Fatura x, Fatura y) {
@@ -129,8 +127,6 @@ public class Empresa extends Entidade implements Serializable {
      */
     // Getters!
     /*
-     * new TreeSet<>(new Comparator<Fatura>() { public int compare(Fatura x, Fatura
-     * y) { return x.comparePreco(y); } });
      */
     public Set<Produto> getArtigos() throws EmptySetException {
         if (this.artigos.size() == 0)
@@ -355,7 +351,8 @@ public class Empresa extends Entidade implements Serializable {
     public Empresa clone() {
         return new Empresa(this);
     }
-
+    
+    //Metodo Equals
     public boolean equals(Object y) {
         if (y == this)
             return true;

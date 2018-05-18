@@ -4,7 +4,6 @@ import java.io.*;
 
 public class JavaFac implements Serializable {
     private Map<Long, Entidade> contribuintes;
-
     private String adminstrador;
 
     public JavaFac() {
@@ -73,14 +72,14 @@ public class JavaFac implements Serializable {
     }
 
     public Entidade getContribuinte(Long nif, String password)
-            throws IncorrectPasswordException, NonExistentEntityException, InvalidFieldException{
+            throws IncorrectPasswordException,NonExistentEntityException, InvalidFieldException{
         if (!this.contribuintes.containsKey(nif))
             throw new NonExistentEntityException(" Esse nif não se encontra na base de dados");
 
         Entidade x = this.contribuintes.get(nif);
         
         if (!x.getPassword().equals(password)) {
-            throw new IncorrectPasswordException(" A Palavra-passe indica está errado ");
+            throw new IncorrectPasswordException(" A Palavra-passe indica está errada");
         }
 
         return x.clone();
