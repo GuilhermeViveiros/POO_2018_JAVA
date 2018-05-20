@@ -274,14 +274,23 @@ public class Entidade implements Serializable {
         return text;
     }
 
+    /**
+     * Adiciona uma fatura
+     */
     public void addFatura(Fatura x) {
         this.faturas_dt.add(x.clone());
     }
 
+    /**
+     * Modifica o contacto da Entidade para outro Contacto
+     */
     public void setContacto(Contacto x) {
         this.info = x.clone();
     }
-
+    
+    /**
+     * Modifica a password da Entidade
+     */
     public void setPassword( String pw ){
         this.password = pw;
     }
