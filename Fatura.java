@@ -14,6 +14,7 @@ public class Fatura implements Serializable {
     
     private Contacto servidor;
     private Atividade area;
+    private Stack<Atividade> history;
     private long nifcliente;
     private String desc;
     private LocalDate date;
@@ -23,7 +24,7 @@ public class Fatura implements Serializable {
     static Long contagem;
 
     static {
-        contagem.valueOf(0);
+        Fatura.contagem.valueOf(0);
     }
 
     public Fatura() {
@@ -34,8 +35,10 @@ public class Fatura implements Serializable {
         this.nifcliente = -1;
         this.date = LocalDate.now();
         this.compras = new ArrayList<Produto>();
-        contagem.valueOf(contagem.longValue() + 1);
-        this.code = contagem;
+        this.history = new Stack<Atividade>();
+
+        Fatura.contagem.valueOf(contagem.longValue() + 1);
+        this.code = Fatura.contagem;
     }
 
     public Fatura(Contacto x, Atividade area, long nifCliente, List<Produto> compras) {
@@ -46,8 +49,12 @@ public class Fatura implements Serializable {
         this.nifcliente = nifCliente;
         this.compras = compras.stream().map(Produto::clone).collect(Collectors.toList());
         this.total = compras.stream().mapToDouble(Produto::getPreco).sum();
-        contagem.valueOf(contagem.longValue() + 1);
-        this.code = contagem;
+        
+        this.history = new Stack<Atividade>();
+        this.history.push(area.clone());
+
+        Fatura.contagem.valueOf(contagem.longValue() + 1);
+        this.code = Fatura.contagem;
     }
 
     public Fatura(Fatura x) {
@@ -78,6 +85,12 @@ public class Fatura implements Serializable {
             this.compras = x.getCompras();
         } catch (EmptySetException b) {
             this.compras = new ArrayList<Produto>();
+        }
+
+        try{
+            this.history = x.getHistory(); 
+        }catch (EmptyStackException b){
+            this.history = new Stack<Atividade>();
         }
     }
     // se o programa continuar assim vai andar num loop interno -> new fatura -> 2
@@ -159,6 +172,13 @@ public class Fatura implements Serializable {
             throw new InvalidActivityException(" Nenhuma Atividade foi Indicada");
         else
             return this.area.clone();
+    }
+
+    public Stack<Atividade> getHistory() throws EmptyStackException {
+        if(this.history.size() == 0)
+            throw new EmptyStackException();
+
+        return this.history.stream().map(Atividade::clone).collect(Collectors.toCollection(Stack::new));
     }
 
     public List<Produto> getCompras() throws EmptySetException {
