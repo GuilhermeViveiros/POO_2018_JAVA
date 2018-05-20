@@ -43,7 +43,7 @@ public class Fatura implements Serializable {
         Fatura.contagem.valueOf(0);
     }
 
-     /**
+    /**
     * Construtor por omissão de Fatura.
     */
     public Fatura() {
@@ -60,7 +60,7 @@ public class Fatura implements Serializable {
         this.code = Fatura.contagem;
     }
 
-     /**
+    /**
      * Construtor parametrizado de Fatura.
      * @param Contacto
      * @param Area
@@ -124,9 +124,6 @@ public class Fatura implements Serializable {
             this.history = new Stack<Atividade>();
         }
     }
-    // se o programa continuar assim vai andar num loop interno -> new fatura -> 2
-    // new entidade -> new fatura -> ....
-    // condensar pls.
 
     /**
      * Obtem a comparacao entre duas faturas através da data
@@ -142,7 +139,7 @@ public class Fatura implements Serializable {
         return (int) (b.getTotal() - this.total);
     }
 
-     /**
+    /**
      * Método que determina se 2 Faturas são iguais.
      * Esta função é deterministica, reflexiva, transitiva e simétrica.
      * 
@@ -184,7 +181,7 @@ public class Fatura implements Serializable {
         return r && l;
     }
 
-     /**
+    /**
      * Método que faz o clone do objeto receptor da mensagem. Para tal invoca o
      * construtor de cópia.
      * 
@@ -194,21 +191,21 @@ public class Fatura implements Serializable {
         return new Fatura(this);
     }
 
-     /**
+    /**
      * Obtem o code da Fatura
      */
     public Long getCode() {
         return this.code;
     }
 
-     /**
+    /**
      * Obtem a data da Fatura
      */
     public LocalDate getDate() {
         return this.date;
     }
 
-     /**
+    /**
      * Obtem o total faturado da fatura
      */
     public double getTotal() {
@@ -232,7 +229,7 @@ public class Fatura implements Serializable {
             return this.desc;
     }
 
-     /**
+    /**
      * Obtem a area da Fatura
      */
     public Atividade getArea() throws InvalidActivityException {
@@ -249,7 +246,7 @@ public class Fatura implements Serializable {
         return this.history.stream().map(Atividade::clone).collect(Collectors.toCollection(Stack::new));
     }
 
-     /**
+    /**
      * Obtem a lista de compras da Fatura
      */
     public List<Produto> getCompras() throws EmptySetException {
@@ -259,7 +256,7 @@ public class Fatura implements Serializable {
             return this.compras.stream().map(Produto::clone).collect(Collectors.toList());
     }
 
-     /**
+    /**
      * Obtem o nif da Fatura
      */
     public long getCnif() throws InvalidFieldException {
