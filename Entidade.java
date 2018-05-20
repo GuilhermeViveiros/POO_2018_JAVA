@@ -207,9 +207,9 @@ public abstract class Entidade implements Serializable {
     /**
      * Obter as despesas totais do conjunto de Faturas da Entidade
      */
-    public double getDespesa() throws EmptySetException {
+    public double getDespesa(){
         if (this.faturas_dt.size() == 0) {
-            throw new EmptySetException(" Conjunto de faturas vazio \n");
+            return 0;
         } else {
             return this.faturas_dt.stream().mapToDouble(Fatura::getTotal).sum();
         }

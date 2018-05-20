@@ -343,9 +343,10 @@ public class Empresa extends Entidade implements Serializable {
     /**
      * Obtem o total faturado pela Empresa
      */
-    public double totalFaturado() throws EmptySetException {
+    public double totalFaturado(){
         if (this.emissoes_data.size() == 0)
-            throw new EmptySetException("Nao existem faturas na base de dados");
+            return 0.0;
+
         return this.emissoes_data.stream().mapToDouble(Fatura::getTotal).sum();
     }
 
@@ -543,10 +544,10 @@ public class Empresa extends Entidade implements Serializable {
     /**
      * Obtem o total faturado por uma Empresa num determinado periodo
      */
-    public double totalFaturado(LocalDate begin, LocalDate end) throws EmptySetException {
+    public double totalFaturado(LocalDate begin, LocalDate end) {
         if (this.emissoes_data.size() == 0)
-            throw new EmptySetException("Emissoes de faturas ordendas por data invalidas");
-
+            return 0;
+        
         return this.emissoes_data.stream().filter(h -> h.getDate().isAfter(begin) && h.getDate().isBefore(end))
                 .mapToDouble(Fatura::getTotal).sum();
     }

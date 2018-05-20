@@ -1,41 +1,44 @@
 import java.util.stream.Collectors;
 import java.util.*;
 import java.io.*;
+import java.time.LocalDate;
 
 public class JavaFac implements Serializable {
     private Map<Long, Entidade> contribuintes;
+    private Map<Long, Empresa> empresas;
     private String adminstrador;
 
     public JavaFac() {
         this.contribuintes = new HashMap<Long, Entidade>();
+        this.empresas = new HashMap<Long, Empresa>();
         this.adminstrador = "@@invalid";
     }
 
     public JavaFac(Collection<Entidade> x, String admin) {
         this.contribuintes = new HashMap<Long, Entidade>();
+        this.empresas = new HashMap<Long, Empresa>();
 
         for (Entidade e : x) {
             try {
+                
+                Entidade k = e.clone();
                 this.contribuintes.put(e.getContacto().getNif(), e.clone());
+                
+                if( e instanceof Empresa){
+                    this.empresas.put(e.getContacto().getNif(), (Empresa)e.clone());
+                }
+                
             } catch (InvalidFieldException a) {
                 continue;
             }
         }
         this.adminstrador = admin;
-
     }
 
     public JavaFac(JavaFac o) {
 
         try {
-            this.contribuintes = new HashMap<Long, Entidade>();
-            for (Entidade e : o.getConjuntoContribuintes()) {
-                try {
-                    this.contribuintes.put(e.getContacto().getNif(), e.clone());
-                } catch (InvalidFieldException a) {
-                    continue;
-                }
-            }
+            this.contibuintes = o.getConjuntoContribuintes();
         } catch (EmptySetException a) {
             this.contribuintes = new HashMap<Long, Entidade>();
         }
@@ -44,6 +47,22 @@ public class JavaFac implements Serializable {
             this.adminstrador = o.getAdminPassword();
         } catch (InvalidFieldException aa) {
             this.adminstrador = "@@invalid";
+        }
+        this.extractEmpresas();
+    }
+
+    private void extractEmpresas(){
+        this.empresas = new HashMap<Long,Empresa>();
+
+        for( Map.Entry<Long,Entidade> e : this.contribuintes().entrySet() ){
+
+            if( e.getValue() instanceof Empresa){
+                try{
+                    this.empresas.put(e.getKey(), e.getValue());
+                } catch(InvalidFieldException aa){
+                    continue;
+                }
+            }
         }
     }
 
@@ -97,6 +116,55 @@ public class JavaFac implements Serializable {
         } else {
             this.contribuintes.put(x.getContacto().getNif(), x.clone());
         }
+    }
+
+    public Collection<Entidade> maisGasta(){
+
+        Priority pq = new PriorityQueue<Entidade>(new Comparator<Entidade>() {
+            public int compare(Entidade x, Entidade y) {
+                return x.getDespesa() - y.getDespesa();
+            }
+        });
+
+        for( Entidade o  : this.contribuintes.values()){
+            if( (pq.size()< 10 ){
+                pq.add(o);
+            }
+            else{
+                if ( pq.peek().getDespesa() < o.getDespesa() ){
+                    pq.pool();
+                    pq.add(o);
+                }
+            }
+        }
+
+        return pq.stream().map(Entidade::clone).collect(Collection.toCollection());
+    }
+
+    public Collection<Empresa> maisFaturam(int n){
+        Priority pq = new PriorityQueue<Empresa>(new Comparator<Empresa>() {
+            public int compare(Empresa x, Empresa y) {
+                return x.totalFaturado() - y.totalFaturado();
+            }
+        });
+
+        for( Empresa o  : this.empresas.values()){
+            if( (pq.size()< n ){
+                pq.add(o);
+            }
+            else{
+                if ( pq.peek().totalFaturado() < o.totalFaturado() ){
+                    pq.pool();
+                    pq.add(o);
+                }
+            }
+        }
+
+        return pq.stream().map(Entidade::clone).collect(Collection.toCollection());
+    }
+
+    public double deducaoMaisFaturam( int n ,LocalDate begin, LocalDate end){
+        return this.maisFaturam(n).stream().mapToDouble(l -> l.calculoDeducao(begin,end)).sum();
     }
 
     public void gravarEstado(String filename) throws IOException {
