@@ -154,7 +154,7 @@ public class Pessoa extends Entidade implements Serializable {
 
     /**
      * Método que devolve a representação em String de toda a Pessoa. 
-     * @return String com tudas as variáveis de instâncias.
+     * @return String com todas as variáveis de instâncias.
      */
     public String toString() {
         String x = super.toString() + "\nNúmero de dependentes do agregado Familiar : " + this.agregado.size()
@@ -230,8 +230,8 @@ public class Pessoa extends Entidade implements Serializable {
     }
 
     /**
-     * Método que determina se 2 Pessoas são iguais. Apenas é necessário o mesmo
-     * nif. Esta função é deterministica, reflexiva, transitiva e simétrica.
+     * Método que determina se 2 Pessoas são iguais.
+     * Esta função é deterministica, reflexiva, transitiva e simétrica.
      * 
      * @return booleano que é verdadeiro caso as Pessoas sejam iguais e falso caso
      *         contrário.

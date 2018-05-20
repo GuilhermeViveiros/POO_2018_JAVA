@@ -264,7 +264,7 @@ public class Entidade implements Serializable {
 
     /**
      * Método que devolve a representação em String de toda a Entidade. 
-     * @return String com tudas as variáveis de instâncias(exceto password).
+     * @return String com todas as variáveis de instâncias(exceto password).
      */
     public String toString() {
         String text, space;

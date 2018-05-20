@@ -1,23 +1,33 @@
-
-/**
- *  Classe empresa na qual esta submetida a uma entidade 
- */
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.*;
 import java.lang.String;//string
 import java.io.Serializable;
 
+/**
+ * Esta classe implementa uma Entidade. Uma Entidade será a unidade basica à
+ * qual será aplicada tributação fiscal.
+ * 
+ * @author (Gonçalo Faria);
+ * @version (v1);
+ * 
+ * @author (Guilherme Viveiros);
+ * @version (v1);
+ * 
+ * @author (Angelo Andre);
+ * @version (v1);
+ */
+
 public class Empresa extends Entidade implements Serializable {
-    // Tree associado a cada Fatura (ordenada por data)
+    /** Conjunto de faturas ordenadas por ordem cronologica da Empresa */
     private TreeSet<Fatura> emissoes_data;
-    // Tree associado a cada Fatura (ordenada por valor)
+    /** Conjunto de faturas ordenadas por valor referidos nas faturas da Empresa */
     private TreeSet<Fatura> emissoes_valor;
-    // Map associados a uma Pessoa e todas as suas Faturas
+    /** Conjunto que associa um Utilizador a todas as suas faturas */
     private Map<String, Set<Fatura>> cliente;
-    // Set com todos os produtos de uma empresa
+    /** Os produtos da Empresa */
     private Set<Produto> artigos;
-    // Conjunto de areas que uma empresa tem!
+    /** As areas da Empresa */
     private Set<Atividade> areas;
 
     /**
@@ -27,7 +37,7 @@ public class Empresa extends Entidade implements Serializable {
         super();
         // quando nao declaramos nenhuma função para o comparator ele assume a dele ou
         // usa a nossa funcao se tiver o nome de ->"compare"
-        // neste caso ja temos , em que a comparaçao é feita a partir da data
+        // neste caso já temos , a comparaçao é feita a partir da data
         this.emissoes_data = new TreeSet<Fatura>();
         this.emissoes_valor = new TreeSet<>(new Comparator<Fatura>() {
             public int compare(Fatura x, Fatura y) {
@@ -40,8 +50,10 @@ public class Empresa extends Entidade implements Serializable {
     }
 
     /**
-     * Construtor parametrizado da Empresa. Aceita como parâmetros os valores para
-     * cada variável de instância da sua Entidade.
+     * Construtor parametrizado da Empresa. 
+     * @param Contacto
+     * @param Password
+     * @param Areas
      */
     public Empresa(Contacto ct, String password,Set<Atividade> areas) {
         super(ct , password);
@@ -60,7 +72,8 @@ public class Empresa extends Entidade implements Serializable {
     /**
      * Construtor de cópia da Empresa. Aceita como parâmetro outra Empresa e utiliza
      * os métodos de acesso aos valores das variáveis de instância. As faturas dos
-     * clientes ordenadas por data e valor não são copiadas.
+     * clientes ordenadas por data e valor não são copiadas. 
+     * @param Empresa
      */
     public Empresa(Empresa x) {
         super(x);
@@ -92,9 +105,10 @@ public class Empresa extends Entidade implements Serializable {
         }
     }
 
-    // Privado -> apenas para os construtores pois nao queres clone da mesma
-    // informacao entre os mesmos
-    // atraves do Map criamos um set de Faturas iguais com ordenacao baseada na data
+    /**
+     *  Privado -> apenas para os construtores pois nao queremos estar a repetir clones
+     *  Atraves do Map clientes criamos um set de Faturas iguais com ordenacao baseada na data
+     * */
     private void makeClienteData() {
 
         this.emissoes_data = new TreeSet<>();
@@ -106,7 +120,10 @@ public class Empresa extends Entidade implements Serializable {
         }
     }
 
-    // atraves do Map criamos um set de Faturas iguais com ordenacao baseada no valor
+    /**
+     * Privado -> apenas para os construtores pois nao queremos estar a repetir clones
+     * Atraves do Map clientes criamos um set de Faturas iguais com ordenacao baseada na data
+     */
     private void makeClienteValue() {
         this.emissoes_valor = new TreeSet<>(new Comparator<Fatura>() {
             public int compare(Fatura x, Fatura y) {
@@ -123,10 +140,11 @@ public class Empresa extends Entidade implements Serializable {
 
     /**
      * Métodos de
-     * instância-------------------------------------------------------------------------------------------------------
+     * instância
      */
-    // Getters!
-    /*
+
+    /**
+     * Obtem o conjunto de artigos da Empresa
      */
     public Set<Produto> getArtigos() throws EmptySetException {
         if (this.artigos.size() == 0)
@@ -134,18 +152,27 @@ public class Empresa extends Entidade implements Serializable {
         return this.artigos.stream().map(Produto::clone).collect(Collectors.toSet());
     }
 
+    /**
+     * Obtem conjunto de Faturas ordenadas por ordem cronológica da Empresa
+     */
     public Set<Fatura> getEmissoesD() throws EmptySetException {
         if (this.artigos.size() == 0)
             throw new EmptySetException("Set de Faturas ainda nao preenchido");
         return this.emissoes_data.stream().map(Fatura::clone).collect(Collectors.toSet());
     }
 
+    /**
+     * Obtem o conjunto de Faturas ordenadas por valor referidos nas Faturas da Empresa
+     */
     public Set<Fatura> getEmissoesV() throws EmptySetException {
         if (this.emissoes_valor.size() == 0)
             throw new EmptySetException("Set de Faturas ainda nao preenchido");
         return this.emissoes_valor.stream().map(Fatura::clone).collect(Collectors.toSet());
     }
 
+    /**
+     * Obtem o conjuntos de clientes tais como as suas faturas referentes ha Empresa
+     */
     public Map<String, Set<Fatura>> getClientes() throws EmptyMapException {
         if (this.cliente.size() == 0)
             throw new EmptyMapException(
@@ -154,14 +181,21 @@ public class Empresa extends Entidade implements Serializable {
                 l -> l.getValue().stream().map(Fatura::clone).collect(Collectors.toSet())));
     }
 
+    /**
+     * Obtem o conjunto de areas da Empresa
+     */
     public Set<Atividade> getAreas() throws EmptySetException {
         if (this.areas.size() == 0)
             throw new EmptySetException("Set de atividades ainda nao preenchido");
         return this.areas.stream().map(Atividade::clone).collect(Collectors.toSet());
     }
 
-    // Método que adiciona e devolve a fatura emitida pela Empresa de um determinado
-    // Setor
+    /**
+     * Método que adiciona uma determinado fatura no sistema
+     * Devolve a fatura emitida pela Empresa de um determinado utilizador que comprou algo na Empresa
+     * @param Entidade
+     * @param Compras
+    */
     public Fatura faturaEmi(Entidade x, List<Produto> compras) throws EmptySetException, InvalidFieldException {
 
         Fatura f;
@@ -232,14 +266,18 @@ public class Empresa extends Entidade implements Serializable {
                 return f.clone();
             }
         return null;
-
     }
 
+    /**
+     * Obtem o numero de Faturas emitidas da Empresa
+     */
     public int numeroDeFaturasEmitidas(){
         return emissoes_data.size();
     }
 
-    // Método que remove um Setor
+    /**
+     * Remove uma determinada area da Empresa
+     */
     public boolean removerArea(Atividade x) throws EmptySetException {
         if (this.areas.size() == 0)
             throw new EmptySetException("Incorreto setor de areas");
@@ -250,7 +288,9 @@ public class Empresa extends Entidade implements Serializable {
         return false;
     }
 
-    // Método que adiciona um Setor
+    /**
+     * Adiciona uma area na Empresa
+     */
     public boolean adicionaArea(Atividade x) {
         if (this.areas.contains(x)) {
             this.areas.add(x);
@@ -259,14 +299,18 @@ public class Empresa extends Entidade implements Serializable {
         return false;
     }
 
-    // Método que troca um conjunto de setores
+    /**
+     * Redefine o conjunto de areas da Empresa para outro conjunto de areas
+     */
     public void setAreas(Set<Atividade> x) {
         for (Atividade act : x)
             this.areas.add(act);
 
     }
 
-    // Adiciona um novo Produto ao Map
+    /**
+     * Adiciona um novo artigo na Empresa
+     */
     public boolean adicionarArtigo(Produto x) {
         if (!this.artigos.contains(x)) {
             this.artigos.add(x.clone());
@@ -275,21 +319,28 @@ public class Empresa extends Entidade implements Serializable {
         return false;
     }
 
-    // Método que remove um Produto
+    /**
+     * Remove um determinado artigo da Empresa
+     */
     public boolean removeArtigo(Produto x) throws EmptySetException {
         if (this.artigos.size() == 0)
-            throw new EmptySetException("Incorreto setor de areas");
+            throw new EmptySetException("Nao existe nenhum produto disponivel");
 
         if (this.artigos.contains(x)) {
             this.artigos.remove(x);
             return true;
-
         }
+
         return false;
     }
 
-    // Método que remove uma Fatura de uma determinada Pessoa
-    public boolean removeRegisto(Entidade ent, Fatura x) throws InvalidFieldException {
+    /**
+     * Remove uma fatura de um determinado Utilizador
+     * @param Entidade
+     * @param Fatura
+     */
+    public boolean removeRegisto(Entidade ent, Fatura x) throws InvalidFieldException , EmptyMapException{
+        if(this.cliente.size() == 0) throw new EmptyMapException("Nao existem clientes/faturas na base de dados");
         if (this.cliente.containsKey(ent.getContacto().getNome())) {
 
             Set<Fatura> fac_set = this.cliente.get(ent.getContacto().getNome());
@@ -303,18 +354,25 @@ public class Empresa extends Entidade implements Serializable {
         return false;
     }
 
-    // Metodo toString
+    /**
+     * Método que devolve a representação em String de toda a Empresa. 
+     */
     public String toString() {
         return super.toString() + "\nEmpresa\nSetores economico : " + this.areas.toString() + this.artigos.toString()
                 + this.cliente.toString() + "\n";
     }
 
-    // Método que devolve o total fatura pela empresa
-    public double totalFaturado() {
+    /**
+    * Obtem o total faturado pela Empresa
+    */
+    public double totalFaturado() throws EmptySetException{
+        if(this.emissoes_data.size() == 0) throw new EmptyMapException("Nao existem faturas na base de dados");
         return this.emissoes_data.stream().mapToDouble(Fatura::getTotal).sum();
     }
 
-    // Metodo que devolve as faturas que a empresa emitiu entre 2 datas
+    /**
+     * Obtem as faturas que a Empresa emitiu ordenadas por ordem cronológica entre 2 datas
+     */
     public List<Fatura> faturasData(LocalDate begin, LocalDate end) throws InvalidIntervalException, EmptySetException {
         if (this.emissoes_data.size() == 0)
             throw new EmptySetException("Emissoes de faturas ordenadas por data inválidas");
@@ -327,13 +385,18 @@ public class Empresa extends Entidade implements Serializable {
             throw new InvalidIntervalException("Intervalo inválido");
     }
 
-    // Metodo que devolve as faturas que a empresa emitiu
+    /**
+     * Obtem todas as faturas que a Empresa emitiu ordenadas por valor
+     */
     public List<Fatura> faturasValor() throws EmptySetException {// ordenadas por valor
         if (this.emissoes_valor.size() == 0)
             throw new EmptySetException("Emissoes de faturas ordenadas por valor inválidas");
         return this.emissoes_valor.stream().map(Fatura::clone).collect(Collectors.toList());
     }
 
+    /**
+     * Obtem a lista de faturas que a empresa emitiu ordenadas por valor entre 2 datas
+     */
     public List<Fatura> faturasValor(LocalDate begin, LocalDate end)
             throws InvalidIntervalException, EmptySetException { // ordenadas por valor
         if (this.emissoes_valor.size() == 0)
@@ -347,12 +410,23 @@ public class Empresa extends Entidade implements Serializable {
             throw new InvalidIntervalException("Intervalo inválido");
     }
 
-    // Metodo clone
+     /**
+     * Método que faz o clone do objeto receptor da mensagem. Para tal invoca o
+     * construtor de cópia.
+     * 
+     * @return objecto clone do objeto que recebe mensagem.
+     */
     public Empresa clone() {
         return new Empresa(this);
     }
     
-    //Metodo Equals
+     /**
+     * Método que determina se 2 Empresas são iguais. 
+     * Esta função é deterministica, reflexiva, transitiva e simétrica.
+     * 
+     * @return booleano que é verdadeiro caso as Entidades sejam iguais e falso caso
+     *         contrário.
+     */
     public boolean equals(Object y) {
         if (y == this)
             return true;
@@ -385,15 +459,20 @@ public class Empresa extends Entidade implements Serializable {
         return r && l;
     }
 
-    // Metodo 6) Devolve as faturas emitidas pela Empresa , ordenadas
+    /**
+     * Obtem a lista de faturas emitidas pela Empresa , ordenadas por ordem cronologica
+     */
     public List<Fatura> faturasData() throws EmptySetException { // ordenadas por data de emisssao
         if (this.emissoes_data.size() == 0)
             throw new EmptySetException("Emissoes de faturas ordendas por data invalidas");
         return this.emissoes_data.stream().map(Fatura::clone).collect(Collectors.toList());
     }
 
-    // Metodo 7) Lista das faturas por contribuinte num determinado intervalo de
-    // datas
+    /**
+     * Obtem a lista das faturas por ordem cronologica de um dado Utilizador
+     * @param Datas
+     * @param String
+    * */
     public List<Fatura> faturasTempo(LocalDate begin, LocalDate end, String nome_cliente)
             throws InvalidIntervalException, EmptyMapException {
 
@@ -414,7 +493,9 @@ public class Empresa extends Entidade implements Serializable {
 
     }
 
-    // Devolve todas as Faturas de um cliente ordenadas pela data de emissao
+    /**
+     * Obtem todas as Faturas de um cliente ordenadas por ordem cronologica
+     * */
     public List<Fatura> faturasTempo(String nome_cliente) throws EmptyMapException {
         if (this.cliente.size() == 0)
             throw new EmptyMapException("Nao existem clientes nem as respetivas faturas");
@@ -427,8 +508,9 @@ public class Empresa extends Entidade implements Serializable {
 
     }
 
-    // Metodo 8) Lista das faturas por contribuinte ordenadas por valor decrescente
-    // da despesa
+    /**
+     * Obtem a lista das faturas ordenadas em ordem decrescente da despesa
+    * */
     public List<Fatura> faturasDespesa(String nome_cliente) throws EmptyMapException {
         if (this.cliente.size() == 0)
             throw new EmptyMapException("Nao existem clientes nem as respetivas faturas");
@@ -448,7 +530,9 @@ public class Empresa extends Entidade implements Serializable {
 
     }
 
-    // Devolve o total de faturas entre uma respetiva data de um cliente
+    /** 
+     * Obtem a Lista de faturas entre uma respetiva data de um cliente em ordem da despesa
+     * */
     public List<Fatura> faturasDespesa(LocalDate begin, LocalDate end, String nome_cliente)
             throws InvalidIntervalException, EmptyMapException {
         if (this.cliente.size() == 0)
@@ -472,8 +556,10 @@ public class Empresa extends Entidade implements Serializable {
 
     }
 
-    // Metodo 9) Indicar o total faturado por uma Empresa num determinado periodo
-    public double totalFaturado(LocalDate begin, LocalDate end) throws EmptySetException {
+    /**
+    * Obtem o total faturado por uma Empresa num determinado periodo
+    * */
+     public double totalFaturado(LocalDate begin, LocalDate end) throws EmptySetException {
         if (this.emissoes_data.size() == 0)
             throw new EmptySetException("Emissoes de faturas ordendas por data invalidas");
 
