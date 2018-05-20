@@ -224,7 +224,7 @@ public class Empresa extends Entidade implements Serializable {
             throw new InvalidFieldException(" Pelo menos uma das compras indicadas nao sao vendidadas na empresa");
 
         if (this.areas.size() == 1) {
-            f = new Fatura(this.getContacto(), (Atividade)this.areas.toArray()[0], x.getContacto().getNif(), compras);
+            f = new Fatura(this.getContacto(), (Atividade) this.areas.toArray()[0], x.getContacto().getNif(), compras);
 
         } else {
             f = new Fatura(this.getContacto(), x.getContacto().getNif(), compras);
@@ -234,14 +234,14 @@ public class Empresa extends Entidade implements Serializable {
         this.emissoes_valor.add(f);
 
         if (!this.cliente.containsKey(x.getContacto().getNome())) {
-                TreeSet<Fatura> l = new TreeSet<>(new Comparator<Fatura>() {
-                    public int compare(Fatura x, Fatura y) {
-                        return (-1) * x.comparePreco(y);
-                    }
-                });
+            TreeSet<Fatura> l = new TreeSet<>(new Comparator<Fatura>() {
+                public int compare(Fatura x, Fatura y) {
+                    return (-1) * x.comparePreco(y);
+                }
+            });
 
-                l.add(f);
-                this.cliente.put(x.getContacto().getNome(), l);
+            l.add(f);
+            this.cliente.put(x.getContacto().getNome(), l);
 
         } else {
             this.cliente.get(x.getContacto().getNome()).add(f);
@@ -349,7 +349,7 @@ public class Empresa extends Entidade implements Serializable {
     /**
      * Obtem o total faturado pela Empresa
      */
-    public double totalFaturado(){
+    public double totalFaturado() {
         return this.faturado;
     }
 
@@ -550,7 +550,7 @@ public class Empresa extends Entidade implements Serializable {
     public double totalFaturado(LocalDate begin, LocalDate end) {
         if (this.emissoes_data.size() == 0)
             return 0;
-        
+
         return this.emissoes_data.stream().filter(h -> h.getDate().isAfter(begin) && h.getDate().isBefore(end))
                 .mapToDouble(Fatura::getTotal).sum();
     }

@@ -6,8 +6,8 @@ public class IndustriaExtrativa implements Atividade, Serializable {
     private String nome; // nome da atividade
     private String codigo; // codigo da atividade
     static boolean check; // estou a assumir que nao irá contar para as despesas
-    
-    static{
+
+    static {
         check = false;
     }
 
@@ -22,22 +22,21 @@ public class IndustriaExtrativa implements Atividade, Serializable {
     }
 
     public IndustriaExtrativa(IndustriaExtrativa x) {
-        
-        try{
+
+        try {
             this.nome = x.getNomeActividade();
-        } catch (InvalidFieldException e){
-            this.nome = "nenhum" ;
+        } catch (InvalidFieldException e) {
+            this.nome = "nenhum";
         }
 
-        try{
+        try {
             this.codigo = x.getCodidigoActividade();
-        } catch (InvalidFieldException e){
-            this.codigo = "nenhum" ;
+        } catch (InvalidFieldException e) {
+            this.codigo = "nenhum";
         }
     }
-    
 
-    public String setNomeActividade(String nome){
+    public String setNomeActividade(String nome) {
         return this.nome = nome;
     }
 
@@ -47,18 +46,18 @@ public class IndustriaExtrativa implements Atividade, Serializable {
 
     // Metodos
     public String getCodidigoActividade() throws InvalidFieldException {
-        if( this.codigo.equals("nenhum") ){
+        if (this.codigo.equals("nenhum")) {
             throw new InvalidFieldException(" Código de Atividade não indicado ");
         }
-        
+
         return this.codigo;
     }
 
-    public String getNomeActividade() throws InvalidFieldException{
-        if( this.nome.equals("nenhum") ){
+    public String getNomeActividade() throws InvalidFieldException {
+        if (this.nome.equals("nenhum")) {
             throw new InvalidFieldException(" Nome da Atividade não indicado ");
         }
-        
+
         return this.nome;
     }
 
@@ -77,7 +76,7 @@ public class IndustriaExtrativa implements Atividade, Serializable {
     }
 
     public Atividade clone() {
-        return (Atividade)(new IndustriaExtrativa(this));
+        return (Atividade) (new IndustriaExtrativa(this));
     }
 
     public boolean equals(Object x) {
@@ -86,20 +85,20 @@ public class IndustriaExtrativa implements Atividade, Serializable {
         if (x.getClass() != this.getClass() || x == null)
             return false;
         Saude y = (Saude) x;
-        
+
         boolean r = true;
         boolean l;
 
         try {
             l = (this.nome == y.getNomeActividade());
         } catch (InvalidFieldException e) {
-            l = (this.nome ==  "nenhum");
+            l = (this.nome == "nenhum");
         }
         r = r && l;
         try {
-            l = ( this.codigo == y.getCodidigoActividade());
+            l = (this.codigo == y.getCodidigoActividade());
         } catch (InvalidFieldException e) {
-            l = ( this.codigo == "nenhum");
+            l = (this.codigo == "nenhum");
         }
         return (r && l);
     }

@@ -20,7 +20,7 @@ import java.io.Serializable;
 public abstract class Entidade implements Serializable {
     /** O contacto da entidade */
     private Contacto info;
-    /** As faturas da entidade ordendas por data   */
+    /** As faturas da entidade ordendas por data */
     private TreeSet<Fatura> faturas_dt;
     /** As faturas da entidade ordenadas por valor */
     private TreeSet<Fatura> faturas_val;
@@ -30,8 +30,9 @@ public abstract class Entidade implements Serializable {
     private double despesa;
 
     public abstract double calculoDeducao(LocalDate begin, LocalDate end);
+
     public abstract Entidade clone();
-    
+
     /**
      * Construtor por omissão de Entidade.
      */
@@ -50,6 +51,7 @@ public abstract class Entidade implements Serializable {
     /**
      * Construtor parametrizado de Entidade. Aceita como parâmetros os valores para
      * cada variável de instância.
+     * 
      * @param Contacto
      * @param Password
      */
@@ -62,10 +64,12 @@ public abstract class Entidade implements Serializable {
             }
         });
         this.password = pw;
-        this.despesa=0;
+        this.despesa = 0;
     }
+
     /**
      * Construtor parametrizado de Entidade.
+     * 
      * @param Contacto
      * @param Password
      * @param Faturas
@@ -95,6 +99,7 @@ public abstract class Entidade implements Serializable {
      * Construtor de cópia de Entidade. Aceita como parâmetro outra Entidade e
      * utiliza os métodos de acesso aos valores das variáveis de instância. A
      * password não é copiada. É iniciada por omissão.
+     * 
      * @param Entidade
      */
     public Entidade(Entidade inc) {
@@ -112,14 +117,14 @@ public abstract class Entidade implements Serializable {
         }
 
         this.faturas_dt = new TreeSet(this.faturas_val);
-        //a password está vazia.
+        // a password está vazia.
         this.despesa = inc.getDespesa();
     }
 
     /**
      * Métodos de instância
      */
-    
+
     /**
      * Obter um set de faturas por ordem cronológica
      */
@@ -129,6 +134,7 @@ public abstract class Entidade implements Serializable {
         else
             return this.faturas_dt.stream().map(Fatura::clone).collect(Collectors.toCollection(TreeSet::new));
     }
+
     /**
      * Obter um set de faturas ordenadas por valor
      */
@@ -138,6 +144,7 @@ public abstract class Entidade implements Serializable {
         else
             return this.faturas_val.stream().map(Fatura::clone).collect(Collectors.toCollection(TreeSet::new));
     }
+
     /**
      * Obter uma lista de faturas ordenadas por ordem cronológica
      */
@@ -147,6 +154,7 @@ public abstract class Entidade implements Serializable {
         else
             return this.faturas_dt.stream().map(Fatura::clone).collect(Collectors.toList());
     }
+
     /**
      * Obter uma lista de faturas ordenadas por ordem cronológica entre duas datas
      */
@@ -205,8 +213,8 @@ public abstract class Entidade implements Serializable {
     /**
      * Obter a password
      */
-    public String getPassword() throws InvalidFieldException{
-        if(this.password=="invalido")
+    public String getPassword() throws InvalidFieldException {
+        if (this.password == "invalido")
             throw new InvalidFieldException(" Ainda não foi inserida uma password ");
         return this.password;
     }
@@ -214,14 +222,14 @@ public abstract class Entidade implements Serializable {
     /**
      * Obter as despesas totais do conjunto de Faturas da Entidade
      */
-    public double getDespesa(){
+    public double getDespesa() {
         return this.despesa;
     }
 
     /**
-     * Obter as despesas totais do conjunto de Faturas da Entidade entre duas datas 
+     * Obter as despesas totais do conjunto de Faturas da Entidade entre duas datas
      */
-    public double getDespesa(LocalDate begin, LocalDate end){
+    public double getDespesa(LocalDate begin, LocalDate end) {
         if (this.faturas_val.size() == 0) {
             return 0;
         } else {
@@ -231,9 +239,10 @@ public abstract class Entidade implements Serializable {
     }
 
     /**
-     * Obter um Map que associa as despesas totais a uma dada Atividade(area)
-     * Cria se um histograma , se a atividade ainda na estiver no histograma sua Despesa é inicializada a 0
-     * Se a atividade já estiver contida no histograma entao soma se o valor atual + a despesa associada ha atual Fatura
+     * Obter um Map que associa as despesas totais a uma dada Atividade(area) Cria
+     * se um histograma , se a atividade ainda na estiver no histograma sua Despesa
+     * é inicializada a 0 Se a atividade já estiver contida no histograma entao soma
+     * se o valor atual + a despesa associada ha atual Fatura
      */
     public Map<Atividade, Double> getDespesaArea() throws EmptySetException {
         HashMap<Atividade, Double> hist = new HashMap<>();
@@ -262,15 +271,17 @@ public abstract class Entidade implements Serializable {
         return hist;
 
     }
+
     /**
-     * Remove uma determinada fatura 
+     * Remove uma determinada fatura
      */
     public boolean removerFatura(Fatura bh) {
         return this.faturas_dt.remove(bh);
     }
 
     /**
-     * Método que devolve a representação em String de toda a Entidade. 
+     * Método que devolve a representação em String de toda a Entidade.
+     * 
      * @return String com todas as variáveis de instâncias(exceto password).
      */
     public String toString() {
@@ -286,7 +297,7 @@ public abstract class Entidade implements Serializable {
      */
     public void addFatura(Fatura x) {
         this.faturas_dt.add(x.clone());
-        this.despesa+=x.getTotal();
+        this.despesa += x.getTotal();
     }
 
     /**
@@ -295,11 +306,11 @@ public abstract class Entidade implements Serializable {
     public void setContacto(Contacto x) {
         this.info = x.clone();
     }
-    
+
     /**
      * Modifica a password da Entidade
      */
-    public void setPassword( String pw ){
+    public void setPassword(String pw) {
         this.password = pw;
     }
 

@@ -1,25 +1,24 @@
- 
+
 import java.time.LocalDate;
 
-public class IndustriaTransformadora implements Atividade
-{
-   
-    private String nome; //nome da atividade
-    private String codigo; //codigo da atividade
-    private boolean check; //estou a assumir que nao irá contar para as despesas
-    
+public class IndustriaTransformadora implements Atividade {
+
+    private String nome; // nome da atividade
+    private String codigo; // codigo da atividade
+    private boolean check; // estou a assumir que nao irá contar para as despesas
+
     private double a;
     private double b;
-    
-    public IndustriaTransformadora(){
+
+    public IndustriaTransformadora() {
         this.nome = "nenhum";
-        this.codigo = "nenhum";  
+        this.codigo = "nenhum";
         this.check = false;
         this.a = 1;
         this.b = 1;
     }
 
-    public IndustriaTransformadora(String nome , String codigo, boolean check,double a,double b){
+    public IndustriaTransformadora(String nome, String codigo, boolean check, double a, double b) {
         this.nome = nome;
         this.codigo = codigo;
         this.check = check;
@@ -27,7 +26,7 @@ public class IndustriaTransformadora implements Atividade
         this.b = 1;
     }
 
-    public IndustriaTransformadora(IndustriaTransformadora x){
+    public IndustriaTransformadora(IndustriaTransformadora x) {
         try {
             this.nome = x.getNomeActividade();
         } catch (InvalidFieldException e) {
@@ -44,19 +43,19 @@ public class IndustriaTransformadora implements Atividade
         this.b = getParamB();
     }
 
-    public double getParamA(){
+    public double getParamA() {
         return this.a;
     }
 
-    public double getParamB(){
+    public double getParamB() {
         return this.b;
     }
 
-    public double setParamA( double a){
+    public double setParamA(double a) {
         return this.a = a;
     }
 
-    public double setParamB( double b){
+    public double setParamB(double b) {
         return this.b = b;
     }
 
@@ -75,26 +74,20 @@ public class IndustriaTransformadora implements Atividade
         return this.nome;
     }
 
-    public boolean areaDedusivel(){
+    public boolean areaDedusivel() {
         return check;
     }
-    
-    //(Algoritmo improvisado)
+
+    // (Algoritmo improvisado)
     public double regraCalculo(Empresa x, LocalDate begin, LocalDate end) {
         double valor;
 
         if (check) {
-            try {
-                valor = x.totalFaturado(begin, end)*this.a;
-            } catch (EmptySetException a) {
-                valor = 0;
-            }
 
-            try {
-                valor += x.getDespesa(begin, end) * this.b;
-            } catch (EmptySetException a) {
+            valor = x.totalFaturado(begin, end) * this.a;
 
-            }
+            valor += x.getDespesa(begin, end) * this.b;
+
             return valor;
         }
         return 0;
@@ -106,41 +99,39 @@ public class IndustriaTransformadora implements Atividade
 
         if (this.check) {
 
-            try {
-                valor = x.getDespesa(begin, end);
-            } catch (EmptySetException e) {
-                valor = 0;
-            }
+            valor = x.getDespesa(begin, end);
+
+            valor = 0;
+
             return valor * this.b;
         }
         return 0;
     }
 
-    public Atividade clone(){
-        return (Atividade)(new IndustriaTransformadora(this));
+    public Atividade clone() {
+        return (Atividade) (new IndustriaTransformadora(this));
     }
-        
+
     public boolean equals(Object x) {
         if (x == this)
             return true;
         if (x.getClass() != this.getClass() || x == null)
             return false;
-        IndustriaTransformadora y= (IndustriaTransformadora) x;
-        
-        boolean r = (this.check == y.areaDedusivel()) 
-                        && (this.a == y.getParamA()) && (this.b == y.getParamB());
+        IndustriaTransformadora y = (IndustriaTransformadora) x;
+
+        boolean r = (this.check == y.areaDedusivel()) && (this.a == y.getParamA()) && (this.b == y.getParamB());
         boolean l;
 
         try {
             l = (this.nome == y.getNomeActividade());
         } catch (InvalidFieldException e) {
-            l = (this.nome ==  "nenhum");
+            l = (this.nome == "nenhum");
         }
         r = r && l;
         try {
-            l = ( this.codigo == y.getCodidigoActividade());
+            l = (this.codigo == y.getCodidigoActividade());
         } catch (InvalidFieldException e) {
-            l = ( this.codigo == "nenhum");
+            l = (this.codigo == "nenhum");
         }
         return (r && l);
     }
@@ -149,5 +140,5 @@ public class IndustriaTransformadora implements Atividade
         String word = this.nome + this.codigo;
         return word.hashCode();
     }
-    
+
 }

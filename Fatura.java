@@ -39,7 +39,7 @@ public class Fatura implements Serializable {
     /** Numero da fatura (contador) */
     static Long contagem;
     private Stack<Atividade> history;
-    private boolean pendente;
+     private boolean pendente;
 
     static {
         Fatura.contagem.valueOf(0);
@@ -342,7 +342,7 @@ public class Fatura implements Serializable {
     public void setMostLikelyAtivity() {
 
         if (this.isPendente()) {
-            
+
             Map<Atividade, Integer> s = new HashMap<Atividade, Integer>();
             Atividade active;
 

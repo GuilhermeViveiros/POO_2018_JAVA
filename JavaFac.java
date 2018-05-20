@@ -20,14 +20,14 @@ public class JavaFac implements Serializable {
 
         for (Entidade e : x) {
             try {
-                
+
                 Entidade k = e.clone();
                 this.contribuintes.put(e.getContacto().getNif(), e.clone());
-                
-                if( e instanceof Empresa){
-                    this.empresas.put(e.getContacto().getNif(), (Empresa)e.clone());
+
+                if (e instanceof Empresa) {
+                    this.empresas.put(e.getContacto().getNif(), (Empresa) e.clone());
                 }
-                
+
             } catch (InvalidFieldException a) {
                 continue;
             }
@@ -36,18 +36,18 @@ public class JavaFac implements Serializable {
     }
 
     public JavaFac(JavaFac o) {
-        
+
         this.contribuintes = new HashMap<Long, Entidade>();
-        
+
         try {
-            for( Entidade e : o.getConjuntoContribuintes()){
-                try{
-                    this.contribuintes.put( e.getContacto().getNif(), e );
-                } catch (InvalidFieldException aaA){
-                   continue;
+            for (Entidade e : o.getConjuntoContribuintes()) {
+                try {
+                    this.contribuintes.put(e.getContacto().getNif(), e);
+                } catch (InvalidFieldException aaA) {
+                    continue;
                 }
             }
-            
+
         } catch (EmptySetException a) {
             this.contribuintes = new HashMap<Long, Entidade>();
         }
@@ -60,14 +60,14 @@ public class JavaFac implements Serializable {
         this.extractEmpresas();
     }
 
-    private void extractEmpresas(){
-        this.empresas = new HashMap<Long,Empresa>();
+    private void extractEmpresas() {
+        this.empresas = new HashMap<Long, Empresa>();
 
-        for( Map.Entry<Long,Entidade> e : this.contribuintes.entrySet() ){
+        for (Map.Entry<Long, Entidade> e : this.contribuintes.entrySet()) {
 
-            if( e.getValue() instanceof Empresa){
-                 this.empresas.put(e.getKey(), (Empresa)e.getValue());
-                
+            if (e.getValue() instanceof Empresa) {
+                this.empresas.put(e.getKey(), (Empresa) e.getValue());
+
             }
         }
     }
@@ -97,12 +97,12 @@ public class JavaFac implements Serializable {
     }
 
     public Entidade getContribuinte(Long nif, String password)
-            throws IncorrectPasswordException,NonExistentEntityException, InvalidFieldException{
+            throws IncorrectPasswordException, NonExistentEntityException, InvalidFieldException {
         if (!this.contribuintes.containsKey(nif))
             throw new NonExistentEntityException(" Esse nif não se encontra na base de dados");
 
         Entidade x = this.contribuintes.get(nif);
-        
+
         if (!x.getPassword().equals(password)) {
             throw new IncorrectPasswordException(" A Palavra-passe indica está errada");
         }
@@ -124,21 +124,20 @@ public class JavaFac implements Serializable {
         }
     }
 
-    public Collection<Entidade> maisGasta(){
+    public Collection<Entidade> maisGasta() {
 
         PriorityQueue<Entidade> pq = new PriorityQueue<Entidade>(new Comparator<Entidade>() {
             public int compare(Entidade x, Entidade y) {
-                return (int)(x.getDespesa() - y.getDespesa());
+                return (int) (x.getDespesa() - y.getDespesa());
             }
         });
 
-        for( Entidade o  : this.contribuintes.values()){
-            if( pq.size()< 10 ){
+        for (Entidade o : this.contribuintes.values()) {
+            if (pq.size() < 10) {
                 pq.add(o);
-            }
-            else{
-                Empresa x = (Empresa)pq.peek();
-                if ( x.getDespesa() < o.getDespesa() ){
+            } else {
+                Empresa x = (Empresa) pq.peek();
+                if (x.getDespesa() < o.getDespesa()) {
                     pq.poll();
                     pq.add(o);
                 }
@@ -148,20 +147,19 @@ public class JavaFac implements Serializable {
         return pq.stream().map(Entidade::clone).collect(Collectors.toSet());
     }
 
-    public Collection<Empresa> maisFaturam(int n){
+    public Collection<Empresa> maisFaturam(int n) {
         PriorityQueue<Empresa> pq = new PriorityQueue<Empresa>(new Comparator<Empresa>() {
             public int compare(Empresa x, Empresa y) {
-                return (int)(x.totalFaturado() - y.totalFaturado());
+                return (int) (x.totalFaturado() - y.totalFaturado());
             }
         });
 
-        for( Empresa o  : this.empresas.values()){
-            if( pq.size()< n ){
+        for (Empresa o : this.empresas.values()) {
+            if (pq.size() < n) {
                 pq.add(o);
-            }
-            else{
-                Empresa x = (Empresa)pq.peek();
-                if ( x.totalFaturado() < o.totalFaturado() ){
+            } else {
+                Empresa x = (Empresa) pq.peek();
+                if (x.totalFaturado() < o.totalFaturado()) {
                     pq.poll();
                     pq.add(o);
                 }
@@ -171,8 +169,8 @@ public class JavaFac implements Serializable {
         return pq.stream().map(Empresa::clone).collect(Collectors.toSet());
     }
 
-    public double deducaoMaisFaturam( int n ,LocalDate begin, LocalDate end){
-        return this.maisFaturam(n).stream().mapToDouble(l -> l.calculoDeducao(begin,end)).sum();
+    public double deducaoMaisFaturam(int n, LocalDate begin, LocalDate end) {
+        return this.maisFaturam(n).stream().mapToDouble(l -> l.calculoDeducao(begin, end)).sum();
     }
 
     public void gravarEstado(String filename) throws IOException {

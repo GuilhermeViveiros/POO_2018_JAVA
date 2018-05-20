@@ -18,7 +18,7 @@ import java.time.LocalDate;
 
 public class Pessoa extends Entidade implements Serializable, Reducao {
     /** Números fiscais do agregado familiar da Pessoa */
-    private List<Long> agregado; 
+    private List<Long> agregado;
     /** Emprego da Pessoa */
     private Atividade emprego;
     /** Nif da Pessoa */
@@ -39,15 +39,16 @@ public class Pessoa extends Entidade implements Serializable, Reducao {
     }
 
     /**
-     * Construtor parametrizado de Pessoa. 
+     * Construtor parametrizado de Pessoa.
+     * 
      * @param Contacto
      * @param Password
      * @param Agregado
      * @param Emprego
      * @param Nif
      */
-    public Pessoa(Contacto cont,String password, List<Long> agr, Atividade emprego, long empr, double coe) {
-        super(cont,password);
+    public Pessoa(Contacto cont, String password, List<Long> agr, Atividade emprego, long empr, double coe) {
+        super(cont, password);
         this.emprego = emprego.clone();
         this.agregado = new ArrayList(agr);
         this.nifEmpregador = empr;
@@ -57,14 +58,15 @@ public class Pessoa extends Entidade implements Serializable, Reducao {
     }
 
     /**
-     * Construtor parametrizado de Pessoa. 
+     * Construtor parametrizado de Pessoa.
+     * 
      * @param Contacto
      * @param Password
      * @param Agregado
      */
-    
-    public Pessoa(Contacto cont,String password, List<Long> agr, double coe) {
-        super(cont,password);
+
+    public Pessoa(Contacto cont, String password, List<Long> agr, double coe) {
+        super(cont, password);
         this.agregado = new ArrayList(agr);
         this.emprego = null;
         this.nifEmpregador = -1;
@@ -73,9 +75,10 @@ public class Pessoa extends Entidade implements Serializable, Reducao {
         this.refNumerosa();
     }
 
-     /**
-     * Construtor de cópia da Pessoa. Aceita como parâmetro outra Pessoa e
-     * utiliza os métodos de acesso aos valores das variáveis de instância. A
+    /**
+     * Construtor de cópia da Pessoa. Aceita como parâmetro outra Pessoa e utiliza
+     * os métodos de acesso aos valores das variáveis de instância. A
+     * 
      * @param Pessoa
      */
     public Pessoa(Pessoa p) {
@@ -101,22 +104,22 @@ public class Pessoa extends Entidade implements Serializable, Reducao {
         }
 
         this.refNumerosa();
-        
+
     }
 
-    public double reducaoImposto(){
-        if( this.numerosa ){
+    public double reducaoImposto() {
+        if (this.numerosa) {
             return (this.agregado.size() - 4) * 0.05;
-        }
-        else return 0.0;
+        } else
+            return 0.0;
     }
 
-    public double calculoDeducao(LocalDate begin, LocalDate end){
+    public double calculoDeducao(LocalDate begin, LocalDate end) {
         return this.emprego.regraCalculo(this, begin, end);
     }
 
     /**
-     * Obtem uma lista do agregado familiar 
+     * Obtem uma lista do agregado familiar
      */
     public List<Long> getAgregado() throws EmptySetException {
         if (this.agregado.size() == 0)
@@ -124,12 +127,12 @@ public class Pessoa extends Entidade implements Serializable, Reducao {
         return this.agregado.stream().collect(Collectors.toList());
     }
 
-    public double getCoeficiente(){
+    public double getCoeficiente() {
         return this.coeficiente;
     }
-    
+
     /**
-     * Obtem uma Atividade relacionada ao emprego da Pessoa 
+     * Obtem uma Atividade relacionada ao emprego da Pessoa
      */
     public Atividade getEmprego() throws InvalidActivityException {
         if (this.emprego == null)
@@ -151,10 +154,10 @@ public class Pessoa extends Entidade implements Serializable, Reducao {
     /**
      * Obtem um Set com todas as Atividades associadas ás faturas da Pessoa
      */
-    public Set<String> codigosdeAtividadesDeduziveis() throws EmptySetException{
-        
-        Set<String> x = new HashSet<String>(); 
-        for( Fatura f: this.getfaturas_Valor()){
+    public Set<String> codigosdeAtividadesDeduziveis() throws EmptySetException {
+
+        Set<String> x = new HashSet<String>();
+        for (Fatura f : this.getfaturas_Valor()) {
             Atividade g;
             try {
                 g = f.getArea();
@@ -175,6 +178,7 @@ public class Pessoa extends Entidade implements Serializable, Reducao {
 
         return x;
     }
+
     /**
      * Obtem o numero de pessoas do agregado familiar
      */
@@ -183,7 +187,8 @@ public class Pessoa extends Entidade implements Serializable, Reducao {
     }
 
     /**
-     * Método que devolve a representação em String de toda a Pessoa. 
+     * Método que devolve a representação em String de toda a Pessoa.
+     * 
      * @return String com todas as variáveis de instâncias.
      */
     public String toString() {
@@ -200,7 +205,7 @@ public class Pessoa extends Entidade implements Serializable, Reducao {
     }
 
     /**
-     * Redefine uma nova lista de numeros fiscais do agregado familiar 
+     * Redefine uma nova lista de numeros fiscais do agregado familiar
      */
     public void setAgregado(List<Long> agregado) {
         this.agregado = agregado.stream().collect(Collectors.toList());
@@ -209,8 +214,8 @@ public class Pessoa extends Entidade implements Serializable, Reducao {
 
     }
 
-    public void setCoeficiente(double coe){
-       this.coeficiente = coe; 
+    public void setCoeficiente(double coe) {
+        this.coeficiente = coe;
     }
 
     private void refNumerosa() {
@@ -224,6 +229,7 @@ public class Pessoa extends Entidade implements Serializable, Reducao {
 
     /**
      * Adiciona uma novo membro ao agregado familiar
+     * 
      * @param Long
      */
     public void addAgregado(Long membro) {
@@ -232,7 +238,8 @@ public class Pessoa extends Entidade implements Serializable, Reducao {
     }
 
     /**
-     * Adiciona um novo membro ao agregado familiar 
+     * Adiciona um novo membro ao agregado familiar
+     * 
      * @param long
      */
     public void addAgregado(long membro) {
@@ -247,9 +254,10 @@ public class Pessoa extends Entidade implements Serializable, Reducao {
     public void setEmprego(Atividade emprego) {
         this.emprego = emprego.clone();
     }
-    
+
     /**
      * Redefine o nif da Pessoa
+     * 
      * @param Empregador
      */
     public void setNifEmpregador(long empregador) {
@@ -258,6 +266,7 @@ public class Pessoa extends Entidade implements Serializable, Reducao {
 
     /**
      * Redefine o nif da Pessoa
+     * 
      * @param Empresa
      */
     public void setNifEmpregador(Empresa empregador) {
@@ -279,8 +288,8 @@ public class Pessoa extends Entidade implements Serializable, Reducao {
     }
 
     /**
-     * Método que determina se 2 Pessoas são iguais.
-     * Esta função é deterministica, reflexiva, transitiva e simétrica.
+     * Método que determina se 2 Pessoas são iguais. Esta função é deterministica,
+     * reflexiva, transitiva e simétrica.
      * 
      * @return booleano que é verdadeiro caso as Pessoas sejam iguais e falso caso
      *         contrário.

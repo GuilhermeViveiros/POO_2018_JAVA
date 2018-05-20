@@ -1,11 +1,9 @@
- 
 
 import java.time.LocalDate;
 import java.io.Serializable;
 
-public class Educacao implements Atividade,Serializable
-{
-    
+public class Educacao implements Atividade, Serializable {
+
     private String nome; // nome da atividade
     private String codigo; // codigo da atividade
     private boolean check;
@@ -62,17 +60,11 @@ public class Educacao implements Atividade,Serializable
         double valor;
 
         if (check) {
-            try {
-                valor = x.totalFaturado(begin, end);
-            } catch (EmptySetException a) {
-                valor = 0;
-            }
 
-            try {
-                valor += x.getDespesa(begin, end);
-            } catch (EmptySetException a) {
+            valor = x.totalFaturado(begin, end);
 
-            }
+            valor += x.getDespesa(begin, end);
+
             return valor * 0.3;
         }
         return 0;
@@ -84,11 +76,8 @@ public class Educacao implements Atividade,Serializable
 
         if (this.check) {
 
-            try {
-                valor = x.getDespesa(begin, end);
-            } catch (EmptySetException e) {
-                valor = 0;
-            }
+            valor = x.getDespesa(begin, end);
+
             return valor * 0.3;
         }
         return 0;
@@ -101,7 +90,7 @@ public class Educacao implements Atividade,Serializable
     }
 
     public Atividade clone() {
-        return (Atividade)(new Educacao(this));
+        return (Atividade) (new Educacao(this));
     }
 
     public boolean equals(Object x) {
@@ -110,22 +99,22 @@ public class Educacao implements Atividade,Serializable
         if (x.getClass() != this.getClass() || x == null)
             return false;
         Educacao y = (Educacao) x;
-        
+
         boolean r = (this.check == y.areaDedusivel());
         boolean l;
 
         try {
             l = (this.nome == y.getNomeActividade());
         } catch (InvalidFieldException e) {
-            l = (this.nome ==  "nenhum");
+            l = (this.nome == "nenhum");
         }
         r = r && l;
         try {
-            l = ( this.codigo == y.getCodidigoActividade());
+            l = (this.codigo == y.getCodidigoActividade());
         } catch (InvalidFieldException e) {
-            l = ( this.codigo == "nenhum");
+            l = (this.codigo == "nenhum");
         }
         return (r && l);
     }
-    
+
 }

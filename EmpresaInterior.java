@@ -31,9 +31,9 @@ public class EmpresaInterior extends Empresa implements Serializable, Reducao {
 
     public EmpresaInterior(EmpresaInterior a) {
         super(a);
-        try{
+        try {
             this.conselho = a.getConselho();
-        } catch (InvalidFieldException b){
+        } catch (InvalidFieldException b) {
             this.conselho = "nenhum";
         }
     }
@@ -42,7 +42,6 @@ public class EmpresaInterior extends Empresa implements Serializable, Reducao {
         if (this.conselho.equals("nenhum")) {
             return 0.0;
         }
-
 
         Double x = EmpresaInterior.conselhos.get(this.conselho);
         return x.doubleValue();
@@ -63,16 +62,14 @@ public class EmpresaInterior extends Empresa implements Serializable, Reducao {
         else
             this.conselho = "nenhum";
     }
-    
+
     @Override
-    public double calculoDeducao(LocalDate begin, LocalDate end){
-        
+    public double calculoDeducao(LocalDate begin, LocalDate end) {
+
         try {
-            return this.getAreas().stream().
-                    mapToDouble( l -> l.regraCalculo(this, begin, end) ).
-                        sum() * (1 - this.reducaoImposto());
-        }
-        catch ( EmptySetException aa){
+            return this.getAreas().stream().mapToDouble(l -> l.regraCalculo(this, begin, end)).sum()
+                    * (1 - this.reducaoImposto());
+        } catch (EmptySetException aa) {
             return 0.0;
         }
     }
