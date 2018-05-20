@@ -5,8 +5,8 @@ import java.util.stream.*;
 import java.io.Serializable;
 
 /**
- * Esta classe implementa uma Fatura.
- * Uma Fatura é uma classe que faz parte de uma Entidade.
+ * Esta classe implementa uma Fatura. Uma Fatura é uma classe que faz parte de
+ * uma Entidade.
  * 
  * @author (Gonçalo Faria);
  * @version (v1);
@@ -19,33 +19,35 @@ import java.io.Serializable;
  */
 
 public class Fatura implements Serializable {
-    
-     /** O contacto da Fatura */
-     private Contacto servidor;
-     /** A area da Fatura */
-     private Atividade area;
-     /** O nif da Fatura */
-     private long nifcliente;
-     /** A descricao da Fatura */
-     private String desc;
-     /** A data da fatura */
-     private LocalDate date;
-     /** A Lista de Compras da Fatura*/
-     private List<Produto> compras;
-     /** O total faturado */
-     private double total;
-     /** O codigo da fatura */
-     private Long code;
-     /** Numero da fatura (contador) */
-     static Long contagem;
+
+    /** O contacto da Fatura */
+    private Contacto servidor;
+    /** A area da Fatura */
+    private Atividade area;
+    /** O nif da Fatura */
+    private long nifcliente;
+    /** A descricao da Fatura */
+    private String desc;
+    /** A data da fatura */
+    private LocalDate date;
+    /** A Lista de Compras da Fatura */
+    private List<Produto> compras;
+    /** O total faturado */
+    private double total;
+    /** O codigo da fatura */
+    private Long code;
+    /** Numero da fatura (contador) */
+    static Long contagem;
+
+    private boolean pendente;
 
     static {
         Fatura.contagem.valueOf(0);
     }
 
     /**
-    * Construtor por omissão de Fatura.
-    */
+     * Construtor por omissão de Fatura.
+     */
     public Fatura() {
         this.servidor = new Contacto();
         this.area = null;
@@ -55,13 +57,14 @@ public class Fatura implements Serializable {
         this.date = LocalDate.now();
         this.compras = new ArrayList<Produto>();
         this.history = new Stack<Atividade>();
-
+        this.pendente = true;
         Fatura.contagem.valueOf(contagem.longValue() + 1);
         this.code = Fatura.contagem;
     }
 
     /**
      * Construtor parametrizado de Fatura.
+     * 
      * @param Contacto
      * @param Area
      * @param Nif
@@ -75,10 +78,10 @@ public class Fatura implements Serializable {
         this.nifcliente = nifCliente;
         this.compras = compras.stream().map(Produto::clone).collect(Collectors.toList());
         this.total = compras.stream().mapToDouble(Produto::getPreco).sum();
-        
+
         this.history = new Stack<Atividade>();
         this.history.push(area.clone());
-
+        this.pendente = false;
         Fatura.contagem.valueOf(contagem.longValue() + 1);
         this.code = Fatura.contagem;
     }
@@ -91,24 +94,26 @@ public class Fatura implements Serializable {
         this.nifcliente = nifCliente;
         this.compras = compras.stream().map(Produto::clone).collect(Collectors.toList());
         this.total = compras.stream().mapToDouble(Produto::getPreco).sum();
-        
+
         this.history = new Stack<Atividade>();
         this.history.push(area.clone());
-
+        this.pendente = true;
         Fatura.contagem.valueOf(contagem.longValue() + 1);
         this.code = Fatura.contagem;
     }
 
     /**
      * Construtor de cópia de Contacto. Aceita como parâmetro outro Contacto e
-     * utiliza os métodos de acesso aos valores das variáveis de instância. 
+     * utiliza os métodos de acesso aos valores das variáveis de instância.
+     * 
      * @param Contacto
      */
     public Fatura(Fatura x) {
         this.servidor = x.getServidor();
         this.total = x.getTotal();
         this.date = x.getDate();
-        this.code = getCode();
+        this.code = x.getCode();
+        this.pendente = x.isPendente();
 
         try {
             this.area = x.getArea();
@@ -134,9 +139,9 @@ public class Fatura implements Serializable {
             this.compras = new ArrayList<Produto>();
         }
 
-        try{
-            this.history = x.getHistory(); 
-        }catch (EmptyStackException b){
+        try {
+            this.history = x.getHistory();
+        } catch (EmptyStackException b) {
             this.history = new Stack<Atividade>();
         }
     }
@@ -156,12 +161,12 @@ public class Fatura implements Serializable {
     }
 
     /**
-     * Método que determina se 2 Faturas são iguais.
-     * Esta função é deterministica, reflexiva, transitiva e simétrica.
+     * Método que determina se 2 Faturas são iguais. Esta função é deterministica,
+     * reflexiva, transitiva e simétrica.
      * 
      * @return booleano que é verdadeiro caso as Faturas sejam iguais e falso caso
      *         contrário.
-     * */
+     */
     public boolean equals(Object o) {
 
         if (this == o)
@@ -205,6 +210,13 @@ public class Fatura implements Serializable {
      */
     public Fatura clone() {
         return new Fatura(this);
+    }
+
+    /**
+     * @return the pendente
+     */
+    public boolean isPendente() {
+        return pendente;
     }
 
     /**
@@ -254,9 +266,9 @@ public class Fatura implements Serializable {
         else
             return this.area.clone();
     }
-    
+
     public Stack<Atividade> getHistory() throws EmptyStackException {
-        if(this.history.size() == 0)
+        if (this.history.size() == 0)
             throw new EmptyStackException();
 
         return this.history.stream().map(Atividade::clone).collect(Collectors.toCollection(Stack::new));
@@ -296,26 +308,27 @@ public class Fatura implements Serializable {
         this.date = newd;
     }
 
-     /**
+    /**
      * Redefine o contacto da Fatura
      */
     public void setServidor(Contacto serv) {
         this.servidor = serv.clone();
     }
 
-     /**
+    /**
      * Redefine a descricao da Fatura
      */
     public void setDesricao(String com) {
         this.desc = com;
     }
 
-     /**
+    /**
      * Redefine a area da Fatura
      */
     public void setArea(Atividade area) {
         this.area = area.clone();
         this.history.push(area.clone());
+        this.pendente = false;
     }
 
     /**
@@ -326,42 +339,43 @@ public class Fatura implements Serializable {
         this.total += x.getPreco();
     }
 
-    public void setMostLikelyAtivity(){
-        
-        Map<Atividade, Integer> s = new HashMap<Atividade, Integer>();
-        Atividade active;
+    public void setMostLikelyAtivity() {
 
-        for (Produto th : compras) {
-
-            try {
-                active = th.getArea();
-            } catch (InvalidActivityException a) {
-                continue;
-            }
+        if (this.isPendente()) {
             
-            if( s.containsKey(active)){
-                s.put(active, new Integer(s.get(active).intValue() + 1));
-            }else{
-                s.put(active, new Integer(0));
+            Map<Atividade, Integer> s = new HashMap<Atividade, Integer>();
+            Atividade active;
+
+            for (Produto th : compras) {
+
+                try {
+                    active = th.getArea();
+                } catch (InvalidActivityException a) {
+                    continue;
+                }
+
+                if (s.containsKey(active)) {
+                    s.put(active, new Integer(s.get(active).intValue() + 1));
+                } else {
+                    s.put(active, new Integer(0));
+                }
+
             }
-            
-        }
 
-        int max = 0, current;
-        Atividade maxim = null;
+            int max = 0, current;
+            Atividade maxim = null;
 
-        for (Map.Entry<Atividade, Integer> k : s.entrySet()) {
+            for (Map.Entry<Atividade, Integer> k : s.entrySet()) {
                 current = k.getValue().intValue();
                 if (current >= max) {
                     max = current;
                     maxim = k.getKey();
                 }
+            }
+
+            if (maxim != null)
+                this.setArea(maxim);
         }
-        
-        if( maxim != null)
-            this.setArea(maxim);         
     }
-        
-    
-    
+
 }
