@@ -20,16 +20,21 @@ public class Applicacao {
         
         if(estado == null) return 0;
         
+       
+        return menuModos(estado);
+    }
+
+    public int menuModos( JavaFac estado){
         switch (menuUser()) {
-        case 0:
-            return main();
-        case 1:
-            return menuAdmnistrador(estado);
-        case 2:
-            return menuContribuinte(estado);
-        case 3:
-            return menuEmpresa(estado);
-        }
+            case 0:
+                return main();
+            case 1:
+                return menuAdmnistrador(estado);
+            case 2:
+                return menuContribuinte(estado);
+            case 3:
+                return menuEmpresa(estado);
+            }
         return 1;
     }
 
@@ -104,7 +109,7 @@ public class Applicacao {
             try{
                 pss = !menuPassword().equals(estado.getAdminPassword());
             } catch(InvalidFieldException aa){
-                return menuUser();
+                return menuModos(estado);
             }
             
             if (pss) {
@@ -113,7 +118,7 @@ public class Applicacao {
                 System.out.println(" 0 - Menu anterior");
                 value = sc.nextInt();
                 if (value == 0)
-                    return menuUser();
+                    return menuModos(estado);
                 else
                     b = true;
             } else {
@@ -153,7 +158,7 @@ public class Applicacao {
         float coe;
         switch (value) {
         case 0:
-            return menuUser();
+            return menuModos(estado);
         case 1:
             c = menuCriarContacto();
             pw = menuPassword();
@@ -192,12 +197,17 @@ public class Applicacao {
             return 1;
         case 4: return 1;
         case 5:
+            s = new Scanner(System.in);
             System.out.println(" Indique o nome do ficheiro onde pretende guardar");
+            String filename = s.nextLine();
+            System.out.println( " Bros " + filename);
+
             try {
-                estado.gravarEstado(s.nextLine());
+                estado.gravarEstado(filename);
             } catch (IOException aa) {
-                System.out.println(" Ocorreu um erro. Tente outra ve");
+                System.out.println(" Ocorreu um erro. Tente outra vez");
             }
+
             return menuContribuinte(estado);
         }
         return 0;
