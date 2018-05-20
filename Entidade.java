@@ -27,6 +27,8 @@ public abstract class Entidade implements Serializable {
     /** A password da entidade */
     private String password;
 
+    private double despesa;
+
     public abstract double calculoDeducao(LocalDate begin, LocalDate end);
     public abstract Entidade clone();
     
@@ -42,6 +44,7 @@ public abstract class Entidade implements Serializable {
             }
         });
         this.password = "invalido";
+        this.despesa = 0;
     }
 
     /**
@@ -59,6 +62,7 @@ public abstract class Entidade implements Serializable {
             }
         });
         this.password = pw;
+        this.despesa=0;
     }
     /**
      * Construtor parametrizado de Entidade.
@@ -83,6 +87,8 @@ public abstract class Entidade implements Serializable {
             this.faturas_dt.add(j);
             this.faturas_val.add(j);
         }
+
+        this.despesa = fat.stream().mapToDouble(Fatura::getTotal).sum();
     }
 
     /**
@@ -107,6 +113,7 @@ public abstract class Entidade implements Serializable {
 
         this.faturas_dt = new TreeSet(this.faturas_val);
         //a password está vazia.
+        this.despesa = inc.getDespesa();
     }
 
     /**
@@ -208,19 +215,15 @@ public abstract class Entidade implements Serializable {
      * Obter as despesas totais do conjunto de Faturas da Entidade
      */
     public double getDespesa(){
-        if (this.faturas_dt.size() == 0) {
-            return 0;
-        } else {
-            return this.faturas_dt.stream().mapToDouble(Fatura::getTotal).sum();
-        }
+        return this.despesa;
     }
 
     /**
      * Obter as despesas totais do conjunto de Faturas da Entidade entre duas datas 
      */
-    public double getDespesa(LocalDate begin, LocalDate end) throws EmptySetException {
+    public double getDespesa(LocalDate begin, LocalDate end){
         if (this.faturas_val.size() == 0) {
-            throw new EmptySetException(" Conjunto de faturas vazio \n");
+            return 0;
         } else {
             return this.faturas_dt.stream().filter(p -> (p.getDate().isAfter(begin)) && (p.getDate().isBefore(end)))
                     .mapToDouble(Fatura::getTotal).sum();
@@ -283,6 +286,7 @@ public abstract class Entidade implements Serializable {
      */
     public void addFatura(Fatura x) {
         this.faturas_dt.add(x.clone());
+        this.despesa+=x.getTotal();
     }
 
     /**

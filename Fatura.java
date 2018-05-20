@@ -38,7 +38,7 @@ public class Fatura implements Serializable {
     private Long code;
     /** Numero da fatura (contador) */
     static Long contagem;
-
+    private Stack<Atividade> history;
     private boolean pendente;
 
     static {

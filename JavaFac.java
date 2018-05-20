@@ -36,9 +36,18 @@ public class JavaFac implements Serializable {
     }
 
     public JavaFac(JavaFac o) {
-
+        
+        this.contribuintes = new HashMap<Long, Entidade>();
+        
         try {
-            this.contibuintes = o.getConjuntoContribuintes();
+            for( Entidade e : o.getConjuntoContribuintes()){
+                try{
+                    this.contribuintes.put( e.getContacto().getNif(), e );
+                } catch (InvalidFieldException aaA){
+                   continue;
+                }
+            }
+            
         } catch (EmptySetException a) {
             this.contribuintes = new HashMap<Long, Entidade>();
         }
@@ -54,14 +63,11 @@ public class JavaFac implements Serializable {
     private void extractEmpresas(){
         this.empresas = new HashMap<Long,Empresa>();
 
-        for( Map.Entry<Long,Entidade> e : this.contribuintes().entrySet() ){
+        for( Map.Entry<Long,Entidade> e : this.contribuintes.entrySet() ){
 
             if( e.getValue() instanceof Empresa){
-                try{
-                    this.empresas.put(e.getKey(), e.getValue());
-                } catch(InvalidFieldException aa){
-                    continue;
-                }
+                 this.empresas.put(e.getKey(), (Empresa)e.getValue());
+                
             }
         }
     }
@@ -120,47 +126,49 @@ public class JavaFac implements Serializable {
 
     public Collection<Entidade> maisGasta(){
 
-        Priority pq = new PriorityQueue<Entidade>(new Comparator<Entidade>() {
+        PriorityQueue<Entidade> pq = new PriorityQueue<Entidade>(new Comparator<Entidade>() {
             public int compare(Entidade x, Entidade y) {
-                return x.getDespesa() - y.getDespesa();
+                return (int)(x.getDespesa() - y.getDespesa());
             }
         });
 
         for( Entidade o  : this.contribuintes.values()){
-            if( (pq.size()< 10 ){
+            if( pq.size()< 10 ){
                 pq.add(o);
             }
             else{
-                if ( pq.peek().getDespesa() < o.getDespesa() ){
-                    pq.pool();
+                Empresa x = (Empresa)pq.peek();
+                if ( x.getDespesa() < o.getDespesa() ){
+                    pq.poll();
                     pq.add(o);
                 }
             }
         }
 
-        return pq.stream().map(Entidade::clone).collect(Collection.toCollection());
+        return pq.stream().map(Entidade::clone).collect(Collectors.toSet());
     }
 
     public Collection<Empresa> maisFaturam(int n){
-        Priority pq = new PriorityQueue<Empresa>(new Comparator<Empresa>() {
+        PriorityQueue<Empresa> pq = new PriorityQueue<Empresa>(new Comparator<Empresa>() {
             public int compare(Empresa x, Empresa y) {
-                return x.totalFaturado() - y.totalFaturado();
+                return (int)(x.totalFaturado() - y.totalFaturado());
             }
         });
 
         for( Empresa o  : this.empresas.values()){
-            if( (pq.size()< n ){
+            if( pq.size()< n ){
                 pq.add(o);
             }
             else{
-                if ( pq.peek().totalFaturado() < o.totalFaturado() ){
-                    pq.pool();
+                Empresa x = (Empresa)pq.peek();
+                if ( x.totalFaturado() < o.totalFaturado() ){
+                    pq.poll();
                     pq.add(o);
                 }
             }
         }
 
-        return pq.stream().map(Entidade::clone).collect(Collection.toCollection());
+        return pq.stream().map(Empresa::clone).collect(Collectors.toSet());
     }
 
     public double deducaoMaisFaturam( int n ,LocalDate begin, LocalDate end){

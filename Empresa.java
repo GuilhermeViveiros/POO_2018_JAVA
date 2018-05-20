@@ -29,6 +29,8 @@ public class Empresa extends Entidade implements Serializable {
     /** As areas da Empresa */
     private Set<Atividade> areas;
 
+    private double faturado;
+
     /**
      * Construtor por omissão de Empresa.
      */
@@ -46,6 +48,7 @@ public class Empresa extends Entidade implements Serializable {
         this.cliente = new HashMap<String, Set<Fatura>>();
         this.artigos = new HashSet<Produto>();
         this.areas = new HashSet<Atividade>();
+        this.faturado = 0;
     }
 
     /**
@@ -67,6 +70,7 @@ public class Empresa extends Entidade implements Serializable {
         this.cliente = new HashMap<String, Set<Fatura>>();
         this.artigos = new HashSet<Produto>();
         this.areas = areas.stream().map(Atividade::clone).collect(Collectors.toSet());
+        this.faturado = 0;
     }
 
     /**
@@ -104,6 +108,8 @@ public class Empresa extends Entidade implements Serializable {
         } catch (EmptySetException a) {
             this.areas = new HashSet<>();
         }
+
+        this.faturado = this.emissoes_data.stream().mapToDouble(Fatura::getTotal).sum();
     }
 
     /**
@@ -240,7 +246,7 @@ public class Empresa extends Entidade implements Serializable {
         } else {
             this.cliente.get(x.getContacto().getNome()).add(f);
         }
-
+        this.faturado += f.getTotal();
         return f.clone();
     }
 
@@ -344,10 +350,7 @@ public class Empresa extends Entidade implements Serializable {
      * Obtem o total faturado pela Empresa
      */
     public double totalFaturado(){
-        if (this.emissoes_data.size() == 0)
-            return 0.0;
-
-        return this.emissoes_data.stream().mapToDouble(Fatura::getTotal).sum();
+        return this.faturado;
     }
 
     /**
