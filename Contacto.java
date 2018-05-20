@@ -1,18 +1,34 @@
 import java.io.Serializable;
 
 /**
- * Escreva a descrição da classe Contacto aqui.
+ * Esta classe implementa um Contacto.
+ * Um Contacto é uma classe que faz parte de uma Entidade
  * 
- * @author (Gonçalo Faria)
- * @version (v1)
+ * @author (Gonçalo Faria);
+ * @version (v1);
+ * 
+ * @author (Guilherme Viveiros);
+ * @version (v1);
+ * 
+ * @author (Angelo Andre);
+ * @version (v1);
  */
+
 public class Contacto implements Serializable {
+    /** O nif do Contacto */
     private Long nif;
+    /** O nome de Contacto*/
     private String nome;
+    /** O mail do Contacto */
     private String mail;
+    /** A morada do Contacto */
     private String morada;
+    /** O telefone do Contacto */
     private String telefone;
 
+    /**
+    * Construtor por omissão de Contacto.
+    */
     public Contacto() {
         this.nif = new Long(-1);
         this.nome = "campo vazio";
@@ -21,6 +37,15 @@ public class Contacto implements Serializable {
         this.telefone = "campo vazio";
     }
 
+    /**
+     * Construtor parametrizado de Entidade. Aceita como parâmetros os valores para
+     * cada variável de instância.
+     * @param Nif
+     * @param Nome
+     * @param Mail
+     * @param Morada
+     * @param Telefone
+     */
     public Contacto(Long ni_p, String nom_p, String mai_p, String morad_p, String telefone) {
         this.nif = ni_p;
         this.nome = nom_p;
@@ -29,6 +54,11 @@ public class Contacto implements Serializable {
         this.telefone = telefone;
     }
 
+     /**
+     * Construtor de cópia de Contacto. Aceita como parâmetro outro Contacto e
+     * utiliza os métodos de acesso aos valores das variáveis de instância. 
+     * @param Contacto
+     */
     public Contacto(Contacto x) {
 
         try {
@@ -58,7 +88,13 @@ public class Contacto implements Serializable {
         }
     }
 
-    // ---- Getters --------------------------------
+    /**
+     * Métodos de instância
+     */
+
+     /**
+      * Obtem o nif do Contacto
+      */
     public Long getNif() throws InvalidFieldException {
         if (this.nif.longValue() == -1) {
             throw new InvalidFieldException("O campo Nif ainda não foi preenchido\n");
@@ -67,6 +103,9 @@ public class Contacto implements Serializable {
         }
     }
 
+    /**
+     * Obtem o numero de telefone do contacto
+     */
     public String getTelefone() throws InvalidFieldException {
         if (this.telefone.equals("campo vazio")) {
             throw new InvalidFieldException("O campo telefone ainda não foi preenchido\n");
@@ -75,6 +114,9 @@ public class Contacto implements Serializable {
         }
     }
 
+    /**
+     * Obtem o nome do Contacto
+     */
     public String getNome() throws InvalidFieldException {
         if (this.nome.equals("campo vazio")) {
             throw new InvalidFieldException("O campo nome ainda não foi preenchido\n");
@@ -83,6 +125,9 @@ public class Contacto implements Serializable {
         }
     }
 
+    /**
+     * Obtem o mail do contacto
+     */
     public String getMail() throws InvalidFieldException {
         if (this.mail.equals("campo vazio")) {
             throw new InvalidFieldException("O campo mail ainda não foi preenchido\n");
@@ -92,6 +137,9 @@ public class Contacto implements Serializable {
         }
     }
 
+    /**
+     * Obtem a morada do Contacto
+     */
     public String getMorada() throws InvalidFieldException {
         if (this.morada.equals("campo vazio")) {
             throw new InvalidFieldException("O campo morada ainda não foi preenchido\n");
@@ -101,6 +149,9 @@ public class Contacto implements Serializable {
         }
     }
 
+     /**
+     * Método que devolve a representação em String de toda o Contacto. 
+     */
     public String toString() {
         String text, space;
         space = "________________________________________\n";
@@ -119,28 +170,48 @@ public class Contacto implements Serializable {
         return (text);
     }
 
-    // ---- Setters --------------------------------
-
+    /**
+     * Redefine o nif do Contacto
+     */
     public void setNif(Long n) {
         this.nif = n;
     }
 
+    /**
+     * Redefine o numero de telefone de um Contacto
+     */
     public void setTelefone(String telefone) {
         this.telefone = telefone;
     }
 
+    /**
+     * Redefine o nome de Contacto
+     */
     public void setNome(String n) {
         this.nome = n;
     }
 
+    /**
+     * Redefine o mail do Contacto
+     */
     public void setMail(String n) {
         this.mail = n;
     }
 
+    /**
+     * Redefine a morada do Contacto
+     */
     public void setMorada(String n) {
         this.morada = n;
     }
 
+    /**
+     * Método que determina se 2 Contactos são iguais.
+     * Esta função é deterministica, reflexiva, transitiva e simétrica.
+     * 
+     * @return booleano que é verdadeiro caso as Entidades sejam iguais e falso caso
+     *         contrário.
+     */
     public boolean equals(Object o) {
 
         if (this == o)
@@ -184,8 +255,13 @@ public class Contacto implements Serializable {
         return r && l;
     }
 
+    /**
+     * Método que faz o clone do objeto receptor da mensagem. Para tal invoca o
+     * construtor de cópia.
+     * 
+     * @return objecto clone do objeto que recebe mensagem.
+     */
     public Contacto clone() {
-
         return (new Contacto(this));
     }
 }

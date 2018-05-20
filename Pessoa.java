@@ -3,8 +3,7 @@ import java.util.stream.*;
 import java.io.Serializable;
 
 /**
- * Esta classe implementa uma Entidade. Uma Entidade será a unidade basica à
- * qual será aplicada tributação fiscal.
+ * Esta classe implementa uma Pessoa. Uma Pessoa é uma sub-classe da Entidade
  * 
  * @author (Gonçalo Faria);
  * @version (v1);

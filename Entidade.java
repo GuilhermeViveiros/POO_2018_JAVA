@@ -109,6 +109,7 @@ public class Entidade implements Serializable {
     /**
      * Métodos de instância
      */
+    
     /**
      * Obter um set de faturas por ordem cronológica
      */
