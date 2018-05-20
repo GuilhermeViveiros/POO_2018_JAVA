@@ -1,33 +1,40 @@
 import java.util.*;
 import java.util.stream.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 
-public class Pessoa extends Entidade implements Serializable {
+public class Pessoa extends Entidade implements Serializable, Reducao {
 
     private List<Long> agregado; // números fiscais do agregado familiar
     private Atividade emprego;
     private long nifEmpregador;
+    private boolean numerosa;
 
     public Pessoa() {
         super();
         this.agregado = new ArrayList<Long>();
         this.emprego = null;
         this.nifEmpregador = -1;
+        this.numerosa = false;
 
     }
 
-    public Pessoa(Contacto cont,String password, List<Long> agr, Atividade emprego, long empr) {
-        super(cont,password);
+    public Pessoa(Contacto cont, String password, List<Long> agr, Atividade emprego, long empr) {
+        super(cont, password);
         this.emprego = emprego.clone();
         this.agregado = new ArrayList(agr);
         this.nifEmpregador = empr;
+
+        this.refNumerosa();
     }
 
-    public Pessoa(Contacto cont,String password, List<Long> agr) {
-        super(cont,password);
+    public Pessoa(Contacto cont, String password, List<Long> agr) {
+        super(cont, password);
         this.agregado = new ArrayList(agr);
         this.emprego = null;
         this.nifEmpregador = -1;
+
+        this.refNumerosa();
     }
 
     public Pessoa(Pessoa p) {
@@ -50,6 +57,19 @@ public class Pessoa extends Entidade implements Serializable {
         } catch (InvalidFieldException a) {
             this.nifEmpregador = -1;
         }
+
+        this.refNumerosa();
+    }
+
+    public double reducaoImposto(){
+        if( this.numerosa ){
+            return (this.agregado.size() - 4) * 0.05;
+        }
+        else return 0.0;
+    }
+
+    public double calculoDeducao(LocalDate begin, LocalDate end){
+        return this.emprego.regraCalculo(this, begin, end);
     }
 
     public List<Long> getAgregado() throws EmptySetException {
@@ -72,26 +92,26 @@ public class Pessoa extends Entidade implements Serializable {
         return this.nifEmpregador;
     }
 
-    public Set<String> codigosdeAtividadesDeduziveis() throws EmptySetException{
-        
-        Set<String> x = new HashSet<String>(); 
-        for( Fatura f: this.getfaturas_Valor()){
+    public Set<String> codigosdeAtividadesDeduziveis() throws EmptySetException {
+
+        Set<String> x = new HashSet<String>();
+        for (Fatura f : this.getfaturas_Valor()) {
             Atividade g;
-            try{
+            try {
                 g = f.getArea();
-            }catch (InvalidActivityException aaa){
+            } catch (InvalidActivityException aaa) {
                 continue;
             }
 
-            if( g.areaDedusivel() && (!x.contains(g)) ){
-                try{ 
+            if (g.areaDedusivel() && (!x.contains(g))) {
+                try {
                     x.add(g.getCodidigoActividade());
-                }catch (InvalidFieldException aaa){
+                } catch (InvalidFieldException aaa) {
                     continue;
                 }
             }
-        } 
-        if( x.size() == 0 )
+        }
+        if (x.size() == 0)
             throw new EmptySetException();
 
         return x;
@@ -116,14 +136,29 @@ public class Pessoa extends Entidade implements Serializable {
 
     public void setAgregado(List<Long> agregado) {
         this.agregado = agregado.stream().collect(Collectors.toList());
+
+        this.refNumerosa();
+
+    }
+
+    private void refNumerosa() {
+
+        if (this.agregado.size() > 4) {
+            this.numerosa = true;
+        } else {
+            this.numerosa = false;
+        }
     }
 
     public void addAgregado(Long membro) {
         this.agregado.add(membro);
+        this.refNumerosa();
     }
 
     public void addAgregado(long membro) {
         this.agregado.add(new Long(membro));
+
+        this.refNumerosa();
     }
 
     public void setEmprego(Atividade emprego) {

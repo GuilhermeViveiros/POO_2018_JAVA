@@ -121,10 +121,18 @@ public class Empresa extends Entidade implements Serializable {
         }
     }
 
+    
+    public double calculoDeducao(LocalDate begin, LocalDate end){
+        return this.areas.stream().mapToDouble( l -> l.regraCalculo(this, begin, end) ).sum();
+    }
+    
+    
+    
     /**
      * Métodos de
      * instância-------------------------------------------------------------------------------------------------------
      */
+    
     // Getters!
     /*
      */
