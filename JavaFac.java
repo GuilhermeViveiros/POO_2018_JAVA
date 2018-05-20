@@ -13,6 +13,11 @@ public class JavaFac implements Serializable {
         this.empresas = new HashMap<Long, Empresa>();
         this.adminstrador = "@@invalid";
     }
+    public JavaFac(String admin) {
+        this.contribuintes = new HashMap<Long, Entidade>();
+        this.empresas = new HashMap<Long, Empresa>();
+        this.adminstrador = admin;
+    }
 
     public JavaFac(Collection<Entidade> x, String admin) {
         this.contribuintes = new HashMap<Long, Entidade>();
@@ -123,7 +128,10 @@ public class JavaFac implements Serializable {
             this.contribuintes.put(x.getContacto().getNif(), x.clone());
         }
     }
-
+    
+    boolean contemContribuinte( Long nif ){
+        return this.contribuintes.containsKey(nif);
+    }
     public Collection<Entidade> maisGasta() {
 
         PriorityQueue<Entidade> pq = new PriorityQueue<Entidade>(new Comparator<Entidade>() {

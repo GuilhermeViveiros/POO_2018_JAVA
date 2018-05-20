@@ -75,6 +75,15 @@ public class Pessoa extends Entidade implements Serializable, Reducao {
         this.refNumerosa();
     }
 
+    public Pessoa(Contacto cont, String password, double coe) {
+        super(cont, password);
+        this.agregado = new ArrayList();
+        this.emprego = null;
+        this.nifEmpregador = -1;
+        this.coeficiente = coe;
+        this.numerosa = false;
+    }
+
     /**
      * Construtor de cópia da Pessoa. Aceita como parâmetro outra Pessoa e utiliza
      * os métodos de acesso aos valores das variáveis de instância. A
