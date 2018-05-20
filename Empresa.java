@@ -5,8 +5,7 @@ import java.lang.String;//string
 import java.io.Serializable;
 
 /**
- * Esta classe implementa uma Entidade. Uma Entidade será a unidade basica à
- * qual será aplicada tributação fiscal.
+ * Esta classe implementa uma Empresa. Uma Empresa é uma sub-classe da Entidade
  * 
  * @author (Gonçalo Faria);
  * @version (v1);
