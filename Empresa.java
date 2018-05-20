@@ -405,7 +405,7 @@ public class Empresa extends Entidade implements Serializable {
      * Método que determina se 2 Empresas são iguais. Esta função é deterministica,
      * reflexiva, transitiva e simétrica.
      * 
-     * @return booleano que é verdadeiro caso as Entidades sejam iguais e falso caso
+     * @return booleano que é verdadeiro caso as Empresas sejam iguais e falso caso
      *         contrário.
      */
     public boolean equals(Object y) {
