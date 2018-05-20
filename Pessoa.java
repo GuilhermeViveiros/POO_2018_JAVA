@@ -1,6 +1,7 @@
 import java.util.*;
 import java.util.stream.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 
 /**
  * Esta classe implementa uma Pessoa. Uma Pessoa é uma sub-classe da Entidade
@@ -15,13 +16,15 @@ import java.io.Serializable;
  * @version (v1);
  */
 
-public class Pessoa extends Entidade implements Serializable {
+public class Pessoa extends Entidade implements Serializable, Reducao {
     /** Números fiscais do agregado familiar da Pessoa */
     private List<Long> agregado; 
     /** Emprego da Pessoa */
     private Atividade emprego;
     /** Nif da Pessoa */
     private long nifEmpregador;
+    private boolean numerosa;
+    private double coeficiente;
 
     /**
      * Construtor por omissão de Entidade.
@@ -31,6 +34,8 @@ public class Pessoa extends Entidade implements Serializable {
         this.agregado = new ArrayList<Long>();
         this.emprego = null;
         this.nifEmpregador = -1;
+        this.numerosa = false;
+        this.coeficiente = 1.0;
     }
 
     /**
@@ -41,11 +46,14 @@ public class Pessoa extends Entidade implements Serializable {
      * @param Emprego
      * @param Nif
      */
-    public Pessoa(Contacto cont,String password, List<Long> agr, Atividade emprego, long empr) {
+    public Pessoa(Contacto cont,String password, List<Long> agr, Atividade emprego, long empr, double coe) {
         super(cont,password);
         this.emprego = emprego.clone();
         this.agregado = new ArrayList(agr);
         this.nifEmpregador = empr;
+        this.coeficiente = coe;
+
+        this.refNumerosa();
     }
 
     /**
@@ -54,11 +62,15 @@ public class Pessoa extends Entidade implements Serializable {
      * @param Password
      * @param Agregado
      */
-    public Pessoa(Contacto cont,String password, List<Long> agr) {
+    
+    public Pessoa(Contacto cont,String password, List<Long> agr, double coe) {
         super(cont,password);
         this.agregado = new ArrayList(agr);
         this.emprego = null;
         this.nifEmpregador = -1;
+        this.coeficiente = coe;
+
+        this.refNumerosa();
     }
 
      /**
@@ -69,6 +81,7 @@ public class Pessoa extends Entidade implements Serializable {
     public Pessoa(Pessoa p) {
         super(p);
 
+        this.coeficiente = p.getCoeficiente();
         try {
             this.agregado = p.getAgregado();
         } catch (EmptySetException a) {
@@ -86,6 +99,20 @@ public class Pessoa extends Entidade implements Serializable {
         } catch (InvalidFieldException a) {
             this.nifEmpregador = -1;
         }
+
+        this.refNumerosa();
+        
+    }
+
+    public double reducaoImposto(){
+        if( this.numerosa ){
+            return (this.agregado.size() - 4) * 0.05;
+        }
+        else return 0.0;
+    }
+
+    public double calculoDeducao(LocalDate begin, LocalDate end){
+        return this.emprego.regraCalculo(this, begin, end);
     }
 
     /**
@@ -97,6 +124,10 @@ public class Pessoa extends Entidade implements Serializable {
         return this.agregado.stream().collect(Collectors.toList());
     }
 
+    public double getCoeficiente(){
+        return this.coeficiente;
+    }
+    
     /**
      * Obtem uma Atividade relacionada ao emprego da Pessoa 
      */
@@ -125,21 +156,21 @@ public class Pessoa extends Entidade implements Serializable {
         Set<String> x = new HashSet<String>(); 
         for( Fatura f: this.getfaturas_Valor()){
             Atividade g;
-            try{
+            try {
                 g = f.getArea();
-            }catch (InvalidActivityException aaa){
+            } catch (InvalidActivityException aaa) {
                 continue;
             }
 
-            if( g.areaDedusivel() && (!x.contains(g)) ){
-                try{ 
+            if (g.areaDedusivel() && (!x.contains(g))) {
+                try {
                     x.add(g.getCodidigoActividade());
-                }catch (InvalidFieldException aaa){
+                } catch (InvalidFieldException aaa) {
                     continue;
                 }
             }
-        } 
-        if( x.size() == 0 )
+        }
+        if (x.size() == 0)
             throw new EmptySetException();
 
         return x;
@@ -173,6 +204,22 @@ public class Pessoa extends Entidade implements Serializable {
      */
     public void setAgregado(List<Long> agregado) {
         this.agregado = agregado.stream().collect(Collectors.toList());
+
+        this.refNumerosa();
+
+    }
+
+    public void setCoeficiente(double coe){
+       this.coeficiente = coe; 
+    }
+
+    private void refNumerosa() {
+
+        if (this.agregado.size() > 4) {
+            this.numerosa = true;
+        } else {
+            this.numerosa = false;
+        }
     }
 
     /**
@@ -181,6 +228,7 @@ public class Pessoa extends Entidade implements Serializable {
      */
     public void addAgregado(Long membro) {
         this.agregado.add(membro);
+        this.refNumerosa();
     }
 
     /**
@@ -189,6 +237,8 @@ public class Pessoa extends Entidade implements Serializable {
      */
     public void addAgregado(long membro) {
         this.agregado.add(new Long(membro));
+
+        this.refNumerosa();
     }
 
     /**

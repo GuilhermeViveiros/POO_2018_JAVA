@@ -17,7 +17,7 @@ import java.io.Serializable;
  * @version (v1);
  */
 
-public class Entidade implements Serializable {
+public abstract class Entidade implements Serializable {
     /** O contacto da entidade */
     private Contacto info;
     /** As faturas da entidade ordendas por data   */
@@ -27,6 +27,9 @@ public class Entidade implements Serializable {
     /** A password da entidade */
     private String password;
 
+    public abstract double calculoDeducao(LocalDate begin, LocalDate end);
+    public abstract Entidade clone();
+    
     /**
      * Construtor por omissão de Entidade.
      */
@@ -331,10 +334,6 @@ public class Entidade implements Serializable {
      * 
      * @return objecto clone do objeto que recebe mensagem.
      */
-    public Entidade clone() {
-
-        return (new Entidade(this));
-    }
 
     /**
      * Obtem um hasCode para um Nif associado ao Contacto

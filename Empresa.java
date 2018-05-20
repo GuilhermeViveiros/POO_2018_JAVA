@@ -137,6 +137,13 @@ public class Empresa extends Entidade implements Serializable {
         }
     }
 
+    
+    public double calculoDeducao(LocalDate begin, LocalDate end){
+        return this.areas.stream().mapToDouble( l -> l.regraCalculo(this, begin, end) ).sum();
+    }
+    
+    
+    
     /**
      * Métodos de
      * instância
@@ -365,7 +372,7 @@ public class Empresa extends Entidade implements Serializable {
     * Obtem o total faturado pela Empresa
     */
     public double totalFaturado() throws EmptySetException{
-        if(this.emissoes_data.size() == 0) throw new EmptyMapException("Nao existem faturas na base de dados");
+        if(this.emissoes_data.size() == 0) throw new EmptySetException("Nao existem faturas na base de dados");
         return this.emissoes_data.stream().mapToDouble(Fatura::getTotal).sum();
     }
 
