@@ -166,3 +166,4 @@ public class Produto implements Serializable{
         return (int)this.nome.hashCode();
     }
 }
+
