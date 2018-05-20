@@ -49,13 +49,14 @@ public class Empresa extends Entidade implements Serializable {
     }
 
     /**
-     * Construtor parametrizado da Empresa. 
+     * Construtor parametrizado da Empresa.
+     * 
      * @param Contacto
      * @param Password
      * @param Areas
      */
-    public Empresa(Contacto ct, String password,Set<Atividade> areas) {
-        super(ct , password);
+    public Empresa(Contacto ct, String password, Set<Atividade> areas) {
+        super(ct, password);
         this.emissoes_data = new TreeSet<Fatura>();
 
         this.emissoes_valor = new TreeSet<>(new Comparator<Fatura>() {
@@ -71,7 +72,8 @@ public class Empresa extends Entidade implements Serializable {
     /**
      * Construtor de cópia da Empresa. Aceita como parâmetro outra Empresa e utiliza
      * os métodos de acesso aos valores das variáveis de instância. As faturas dos
-     * clientes ordenadas por data e valor não são copiadas. 
+     * clientes ordenadas por data e valor não são copiadas.
+     * 
      * @param Empresa
      */
     public Empresa(Empresa x) {
@@ -105,9 +107,10 @@ public class Empresa extends Entidade implements Serializable {
     }
 
     /**
-     *  Privado -> apenas para os construtores pois nao queremos estar a repetir clones
-     *  Atraves do Map clientes criamos um set de Faturas iguais com ordenacao baseada na data
-     * */
+     * Privado -> apenas para os construtores pois nao queremos estar a repetir
+     * clones Atraves do Map clientes criamos um set de Faturas iguais com ordenacao
+     * baseada na data
+     */
     private void makeClienteData() {
 
         this.emissoes_data = new TreeSet<>();
@@ -120,8 +123,9 @@ public class Empresa extends Entidade implements Serializable {
     }
 
     /**
-     * Privado -> apenas para os construtores pois nao queremos estar a repetir clones
-     * Atraves do Map clientes criamos um set de Faturas iguais com ordenacao baseada na data
+     * Privado -> apenas para os construtores pois nao queremos estar a repetir
+     * clones Atraves do Map clientes criamos um set de Faturas iguais com ordenacao
+     * baseada na data
      */
     private void makeClienteValue() {
         this.emissoes_valor = new TreeSet<>(new Comparator<Fatura>() {
@@ -137,16 +141,12 @@ public class Empresa extends Entidade implements Serializable {
         }
     }
 
-    
-    public double calculoDeducao(LocalDate begin, LocalDate end){
-        return this.areas.stream().mapToDouble( l -> l.regraCalculo(this, begin, end) ).sum();
+    public double calculoDeducao(LocalDate begin, LocalDate end) {
+        return this.areas.stream().mapToDouble(l -> l.regraCalculo(this, begin, end)).sum();
     }
-    
-    
-    
+
     /**
-     * Métodos de
-     * instância
+     * Métodos de instância
      */
 
     /**
@@ -168,7 +168,8 @@ public class Empresa extends Entidade implements Serializable {
     }
 
     /**
-     * Obtem o conjunto de Faturas ordenadas por valor referidos nas Faturas da Empresa
+     * Obtem o conjunto de Faturas ordenadas por valor referidos nas Faturas da
+     * Empresa
      */
     public Set<Fatura> getEmissoesV() throws EmptySetException {
         if (this.emissoes_valor.size() == 0)
@@ -197,87 +198,56 @@ public class Empresa extends Entidade implements Serializable {
     }
 
     /**
-     * Método que adiciona uma determinado fatura no sistema
-     * Devolve a fatura emitida pela Empresa de um determinado utilizador que comprou algo na Empresa
+     * Método que adiciona uma determinado fatura no sistema Devolve a fatura
+     * emitida pela Empresa de um determinado utilizador que comprou algo na Empresa
+     * 
      * @param Entidade
      * @param Compras
-    */
-    public Fatura faturaEmi(Entidade x, List<Produto> compras) throws EmptySetException, InvalidFieldException {
+     */
+    public Fatura faturaEmi(Entidade x, List<Produto> compras)
+            throws EmptySetException, EmptyListException, InvalidFieldException {
 
         Fatura f;
         if (compras.size() == 0)
+            throw new EmptyListException(" Não indicou nenhum produto na lista de compras ");
 
-            if (this.artigos.containsAll(compras)) { // estou a verificar se a lista de Produtos corresponde com a lista
-                                                     // de
-                                                     // produtos da minha empresa
+        if (this.areas.size() == 0)
+            throw new EmptySetException(" A empresa não tem nenhuma Atividade económica ");
 
-                /* Inicia o histograma */
-                if (getAreas().size() == 0)
-                    throw new EmptySetException("Setor de areas inválido");
+        if (!this.artigos.containsAll(compras))
+            throw new InvalidFieldException(" Pelo menos uma das compras indicadas nao sao vendidadas na empresa");
 
-                /* cria histograma */
-                Map<Atividade, Integer> s = new HashMap<Atividade, Integer>();
-                Atividade active;
-                for (Produto th : compras) {
-                    try {
-                        active = th.getArea();
-                    } catch (InvalidActivityException a) {
-                        continue;
+        if (this.areas.size() == 1) {
+            f = new Fatura(this.getContacto(), (Atividade)this.areas.toArray()[0], x.getContacto().getNif(), compras);
+
+        } else {
+            f = new Fatura(this.getContacto(), x.getContacto().getNif(), compras);
+        }
+
+        this.emissoes_data.add(f);
+        this.emissoes_valor.add(f);
+
+        if (!this.cliente.containsKey(x.getContacto().getNome())) {
+                TreeSet<Fatura> l = new TreeSet<>(new Comparator<Fatura>() {
+                    public int compare(Fatura x, Fatura y) {
+                        return (-1) * x.comparePreco(y);
                     }
-                    s.put(active, new Integer(0));
-                }
+                });
 
-                /* Preenche o histograma */
-                for (Produto pd : compras) {
-                    try {
-                        active = pd.getArea();
-                    } catch (InvalidActivityException a) {
-                        continue;
-                    }
-                    s.put(active, new Integer(s.get(active).intValue() + 1));
-                }
+                l.add(f);
+                this.cliente.put(x.getContacto().getNome(), l);
 
-                int max = 0, current;
-                Atividade maxim = null;
+        } else {
+            this.cliente.get(x.getContacto().getNome()).add(f);
+        }
 
-                for (Map.Entry<Atividade, Integer> k : s.entrySet()) {
-                    current = k.getValue().intValue();
-                    if (current >= max) {
-                        max = current;
-                        maxim = k.getKey();
-                    }
-                }
-
-                f = new Fatura(this.getContacto(), maxim, x.getContacto().getNif(),
-                        compras.stream().map(Produto::clone).collect(Collectors.toList()));
-
-                this.emissoes_data.add(f);
-                this.emissoes_valor.add(f);
-
-                if (!this.cliente.containsKey(x.getContacto().getNome())) {
-                    TreeSet<Fatura> l = new TreeSet<>(new Comparator<Fatura>() {
-                        public int compare(Fatura x, Fatura y) {
-                            // estamos a fazer (-1) pois o Metodo 8 pede as despesas por ordem decresecente
-                            return (-1) * x.comparePreco(y);
-                        }
-                    });
-
-                    l.add(f);
-                    this.cliente.put(x.getContacto().getNome(), l);
-
-                } else {
-                    this.cliente.get(x.getContacto().getNome()).add(f);
-                }
-                // private Map<String,Set<Fatura>> cliente;
-                return f.clone();
-            }
-        return null;
+        return f.clone();
     }
 
     /**
      * Obtem o numero de Faturas emitidas da Empresa
      */
-    public int numeroDeFaturasEmitidas(){
+    public int numeroDeFaturasEmitidas() {
         return emissoes_data.size();
     }
 
@@ -342,11 +312,13 @@ public class Empresa extends Entidade implements Serializable {
 
     /**
      * Remove uma fatura de um determinado Utilizador
+     * 
      * @param Entidade
      * @param Fatura
      */
-    public boolean removeRegisto(Entidade ent, Fatura x) throws InvalidFieldException , EmptyMapException{
-        if(this.cliente.size() == 0) throw new EmptyMapException("Nao existem clientes/faturas na base de dados");
+    public boolean removeRegisto(Entidade ent, Fatura x) throws InvalidFieldException, EmptyMapException {
+        if (this.cliente.size() == 0)
+            throw new EmptyMapException("Nao existem clientes/faturas na base de dados");
         if (this.cliente.containsKey(ent.getContacto().getNome())) {
 
             Set<Fatura> fac_set = this.cliente.get(ent.getContacto().getNome());
@@ -361,7 +333,7 @@ public class Empresa extends Entidade implements Serializable {
     }
 
     /**
-     * Método que devolve a representação em String de toda a Empresa. 
+     * Método que devolve a representação em String de toda a Empresa.
      */
     public String toString() {
         return super.toString() + "\nEmpresa\nSetores economico : " + this.areas.toString() + this.artigos.toString()
@@ -369,15 +341,17 @@ public class Empresa extends Entidade implements Serializable {
     }
 
     /**
-    * Obtem o total faturado pela Empresa
-    */
-    public double totalFaturado() throws EmptySetException{
-        if(this.emissoes_data.size() == 0) throw new EmptySetException("Nao existem faturas na base de dados");
+     * Obtem o total faturado pela Empresa
+     */
+    public double totalFaturado() throws EmptySetException {
+        if (this.emissoes_data.size() == 0)
+            throw new EmptySetException("Nao existem faturas na base de dados");
         return this.emissoes_data.stream().mapToDouble(Fatura::getTotal).sum();
     }
 
     /**
-     * Obtem as faturas que a Empresa emitiu ordenadas por ordem cronológica entre 2 datas
+     * Obtem as faturas que a Empresa emitiu ordenadas por ordem cronológica entre 2
+     * datas
      */
     public List<Fatura> faturasData(LocalDate begin, LocalDate end) throws InvalidIntervalException, EmptySetException {
         if (this.emissoes_data.size() == 0)
@@ -401,7 +375,8 @@ public class Empresa extends Entidade implements Serializable {
     }
 
     /**
-     * Obtem a lista de faturas que a empresa emitiu ordenadas por valor entre 2 datas
+     * Obtem a lista de faturas que a empresa emitiu ordenadas por valor entre 2
+     * datas
      */
     public List<Fatura> faturasValor(LocalDate begin, LocalDate end)
             throws InvalidIntervalException, EmptySetException { // ordenadas por valor
@@ -416,7 +391,7 @@ public class Empresa extends Entidade implements Serializable {
             throw new InvalidIntervalException("Intervalo inválido");
     }
 
-     /**
+    /**
      * Método que faz o clone do objeto receptor da mensagem. Para tal invoca o
      * construtor de cópia.
      * 
@@ -425,10 +400,10 @@ public class Empresa extends Entidade implements Serializable {
     public Empresa clone() {
         return new Empresa(this);
     }
-    
-     /**
-     * Método que determina se 2 Empresas são iguais. 
-     * Esta função é deterministica, reflexiva, transitiva e simétrica.
+
+    /**
+     * Método que determina se 2 Empresas são iguais. Esta função é deterministica,
+     * reflexiva, transitiva e simétrica.
      * 
      * @return booleano que é verdadeiro caso as Entidades sejam iguais e falso caso
      *         contrário.
@@ -466,7 +441,8 @@ public class Empresa extends Entidade implements Serializable {
     }
 
     /**
-     * Obtem a lista de faturas emitidas pela Empresa , ordenadas por ordem cronologica
+     * Obtem a lista de faturas emitidas pela Empresa , ordenadas por ordem
+     * cronologica
      */
     public List<Fatura> faturasData() throws EmptySetException { // ordenadas por data de emisssao
         if (this.emissoes_data.size() == 0)
@@ -476,9 +452,10 @@ public class Empresa extends Entidade implements Serializable {
 
     /**
      * Obtem a lista das faturas por ordem cronologica de um dado Utilizador
+     * 
      * @param Datas
      * @param String
-    * */
+     */
     public List<Fatura> faturasTempo(LocalDate begin, LocalDate end, String nome_cliente)
             throws InvalidIntervalException, EmptyMapException {
 
@@ -501,7 +478,7 @@ public class Empresa extends Entidade implements Serializable {
 
     /**
      * Obtem todas as Faturas de um cliente ordenadas por ordem cronologica
-     * */
+     */
     public List<Fatura> faturasTempo(String nome_cliente) throws EmptyMapException {
         if (this.cliente.size() == 0)
             throw new EmptyMapException("Nao existem clientes nem as respetivas faturas");
@@ -516,7 +493,7 @@ public class Empresa extends Entidade implements Serializable {
 
     /**
      * Obtem a lista das faturas ordenadas em ordem decrescente da despesa
-    * */
+     */
     public List<Fatura> faturasDespesa(String nome_cliente) throws EmptyMapException {
         if (this.cliente.size() == 0)
             throw new EmptyMapException("Nao existem clientes nem as respetivas faturas");
@@ -536,9 +513,10 @@ public class Empresa extends Entidade implements Serializable {
 
     }
 
-    /** 
-     * Obtem a Lista de faturas entre uma respetiva data de um cliente em ordem da despesa
-     * */
+    /**
+     * Obtem a Lista de faturas entre uma respetiva data de um cliente em ordem da
+     * despesa
+     */
     public List<Fatura> faturasDespesa(LocalDate begin, LocalDate end, String nome_cliente)
             throws InvalidIntervalException, EmptyMapException {
         if (this.cliente.size() == 0)
@@ -563,9 +541,9 @@ public class Empresa extends Entidade implements Serializable {
     }
 
     /**
-    * Obtem o total faturado por uma Empresa num determinado periodo
-    * */
-     public double totalFaturado(LocalDate begin, LocalDate end) throws EmptySetException {
+     * Obtem o total faturado por uma Empresa num determinado periodo
+     */
+    public double totalFaturado(LocalDate begin, LocalDate end) throws EmptySetException {
         if (this.emissoes_data.size() == 0)
             throw new EmptySetException("Emissoes de faturas ordendas por data invalidas");
 

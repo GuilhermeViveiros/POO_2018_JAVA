@@ -57,6 +57,22 @@ public class Fatura implements Serializable {
         this.code = Fatura.contagem;
     }
 
+    public Fatura(Contacto x, long nifCliente, List<Produto> compras) {
+        this.servidor = x.clone();
+        this.area = null;
+        this.desc = "campo vazio";
+        this.date = LocalDate.now();
+        this.nifcliente = nifCliente;
+        this.compras = compras.stream().map(Produto::clone).collect(Collectors.toList());
+        this.total = compras.stream().mapToDouble(Produto::getPreco).sum();
+        
+        this.history = new Stack<Atividade>();
+        this.history.push(area.clone());
+
+        Fatura.contagem.valueOf(contagem.longValue() + 1);
+        this.code = Fatura.contagem;
+    }
+
     public Fatura(Fatura x) {
         this.servidor = x.getServidor();
         this.total = x.getTotal();
@@ -221,4 +237,43 @@ public class Fatura implements Serializable {
         this.compras.add(x.clone());
         this.total += x.getPreco();
     }
+
+    public void setMostLikelyAtivity(){
+        
+        Map<Atividade, Integer> s = new HashMap<Atividade, Integer>();
+        Atividade active;
+
+        for (Produto th : compras) {
+
+            try {
+                active = th.getArea();
+            } catch (InvalidActivityException a) {
+                continue;
+            }
+            
+            if( s.containsKey(active)){
+                s.put(active, new Integer(s.get(active).intValue() + 1));
+            }else{
+                s.put(active, new Integer(0));
+            }
+            
+        }
+
+        int max = 0, current;
+        Atividade maxim = null;
+
+        for (Map.Entry<Atividade, Integer> k : s.entrySet()) {
+                current = k.getValue().intValue();
+                if (current >= max) {
+                    max = current;
+                    maxim = k.getKey();
+                }
+        }
+        
+        if( maxim != null)
+            this.setArea(maxim);         
+    }
+        
+    
+    
 }
