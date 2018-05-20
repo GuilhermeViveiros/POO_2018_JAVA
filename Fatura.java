@@ -214,6 +214,7 @@ public class Fatura implements Serializable {
 
     public void setArea(Atividade area) {
         this.area = area.clone();
+        this.history.push(area.clone());
     }
 
     public void addCompra(Produto x) {

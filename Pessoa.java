@@ -24,6 +24,7 @@ public class Pessoa extends Entidade implements Serializable, Reducao {
     /** Nif da Pessoa */
     private long nifEmpregador;
     private boolean numerosa;
+    private double coeficiente;
 
     /**
      * Construtor por omissão de Entidade.
@@ -34,6 +35,7 @@ public class Pessoa extends Entidade implements Serializable, Reducao {
         this.emprego = null;
         this.nifEmpregador = -1;
         this.numerosa = false;
+        this.coeficiente = 1.0;
     }
 
     /**
@@ -44,11 +46,12 @@ public class Pessoa extends Entidade implements Serializable, Reducao {
      * @param Emprego
      * @param Nif
      */
-    public Pessoa(Contacto cont,String password, List<Long> agr, Atividade emprego, long empr) {
+    public Pessoa(Contacto cont,String password, List<Long> agr, Atividade emprego, long empr, double coe) {
         super(cont,password);
         this.emprego = emprego.clone();
         this.agregado = new ArrayList(agr);
         this.nifEmpregador = empr;
+        this.coeficiente = coe;
 
         this.refNumerosa();
     }
@@ -60,11 +63,12 @@ public class Pessoa extends Entidade implements Serializable, Reducao {
      * @param Agregado
      */
     
-    public Pessoa(Contacto cont,String password, List<Long> agr) {
+    public Pessoa(Contacto cont,String password, List<Long> agr, double coe) {
         super(cont,password);
         this.agregado = new ArrayList(agr);
         this.emprego = null;
         this.nifEmpregador = -1;
+        this.coeficiente = coe;
 
         this.refNumerosa();
     }
@@ -77,6 +81,7 @@ public class Pessoa extends Entidade implements Serializable, Reducao {
     public Pessoa(Pessoa p) {
         super(p);
 
+        this.coeficiente = p.getCoeficiente();
         try {
             this.agregado = p.getAgregado();
         } catch (EmptySetException a) {
@@ -96,6 +101,7 @@ public class Pessoa extends Entidade implements Serializable, Reducao {
         }
 
         this.refNumerosa();
+        
     }
 
     public double reducaoImposto(){
@@ -118,6 +124,10 @@ public class Pessoa extends Entidade implements Serializable, Reducao {
         return this.agregado.stream().collect(Collectors.toList());
     }
 
+    public double getCoeficiente(){
+        return this.coeficiente;
+    }
+    
     /**
      * Obtem uma Atividade relacionada ao emprego da Pessoa 
      */
@@ -197,6 +207,10 @@ public class Pessoa extends Entidade implements Serializable, Reducao {
 
         this.refNumerosa();
 
+    }
+
+    public void setCoeficiente(double coe){
+       this.coeficiente = coe; 
     }
 
     private void refNumerosa() {

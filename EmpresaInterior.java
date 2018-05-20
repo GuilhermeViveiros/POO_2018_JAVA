@@ -63,7 +63,8 @@ public class EmpresaInterior extends Empresa implements Serializable, Reducao {
         else
             this.conselho = "nenhum";
     }
-
+    
+    @Override
     public double calculoDeducao(LocalDate begin, LocalDate end){
         
         try {
