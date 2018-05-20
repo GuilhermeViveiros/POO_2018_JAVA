@@ -63,4 +63,16 @@ public class EmpresaInterior extends Empresa implements Serializable, Reducao {
         else
             this.conselho = "nenhum";
     }
+
+    public double calculoDeducao(LocalDate begin, LocalDate end){
+        
+        try {
+            return this.getAreas().stream().
+                    mapToDouble( l -> l.regraCalculo(this, begin, end) ).
+                        sum() * (1 - this.reducaoImposto());
+        }
+        catch ( EmptySetException aa){
+            return 0.0;
+        }
+    }
 }

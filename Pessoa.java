@@ -24,7 +24,6 @@ public class Pessoa extends Entidade implements Serializable, Reducao {
     /** Nif da Pessoa */
     private long nifEmpregador;
     private boolean numerosa;
-    this.numerosa = false;
 
     /**
      * Construtor por omissão de Entidade.
