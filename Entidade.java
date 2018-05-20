@@ -9,19 +9,27 @@ import java.io.Serializable;
  * 
  * @author (Gonçalo Faria);
  * @version (v1);
+ * 
+ * @author (Guilherme Viveiros);
+ * @version (v1);
+ * 
+ * @author (Angelo Andre);
+ * @version (v1);
  */
 
 public class Entidade implements Serializable {
-    // variáveis de instância
+    /** O contacto da entidade */
     private Contacto info;
+    /** As faturas da entidade ordendas por data   */
     private TreeSet<Fatura> faturas_dt;
+    /** As faturas da entidade ordenadas por valor */
     private TreeSet<Fatura> faturas_val;
+    /** A password da entidade */
     private String password;
 
     /**
      * Construtor por omissão de Entidade.
      */
-
     public Entidade() {
         this.info = new Contacto();
         this.faturas_dt = new TreeSet<Fatura>();
@@ -36,8 +44,9 @@ public class Entidade implements Serializable {
     /**
      * Construtor parametrizado de Entidade. Aceita como parâmetros os valores para
      * cada variável de instância.
+     * @param Contacto
+     * @param Password
      */
-
     public Entidade(Contacto x, String pw) {
         this.info = x.clone();
         this.faturas_dt = new TreeSet<Fatura>();
@@ -48,7 +57,12 @@ public class Entidade implements Serializable {
         });
         this.password = pw;
     }
-
+    /**
+     * Construtor parametrizado de Entidade.
+     * @param Contacto
+     * @param Password
+     * @param Faturas
+     */
     public Entidade(Contacto x, String pw, Set<Fatura> fat) {
 
         this.info = x.clone();
@@ -72,8 +86,8 @@ public class Entidade implements Serializable {
      * Construtor de cópia de Entidade. Aceita como parâmetro outra Entidade e
      * utiliza os métodos de acesso aos valores das variáveis de instância. A
      * password não é copiada. É iniciada por omissão.
+     * @param Entidade
      */
-
     public Entidade(Entidade inc) {
         this.info = new Contacto(inc.getContacto());
         try {
@@ -89,34 +103,42 @@ public class Entidade implements Serializable {
         }
 
         this.faturas_dt = new TreeSet(this.faturas_val);
-        // a password está vazia.
+        //a password está vazia.
     }
 
     /**
      * Métodos de instância
      */
-
+    /**
+     * Obter um set de faturas por ordem cronológica
+     */
     public TreeSet<Fatura> getfaturas_Crono() throws EmptySetException {
         if (this.faturas_dt.size() == 0)
             throw new EmptySetException("Não contém faturas\n");
         else
             return this.faturas_dt.stream().map(Fatura::clone).collect(Collectors.toCollection(TreeSet::new));
     }
-
+    /**
+     * Obter um set de faturas ordenadas por valor
+     */
     public TreeSet<Fatura> getfaturas_Valor() throws EmptySetException {
         if (this.faturas_val.size() == 0)
             throw new EmptySetException("Não contém faturas\n");
         else
             return this.faturas_val.stream().map(Fatura::clone).collect(Collectors.toCollection(TreeSet::new));
     }
-
+    /**
+     * Obter uma lista de faturas ordenadas por ordem cronológica
+     */
     public List<Fatura> listafaturas_Crono() throws EmptySetException {
         if (this.faturas_dt.size() == 0)
             throw new EmptySetException("Não contém faturas \n");
         else
             return this.faturas_dt.stream().map(Fatura::clone).collect(Collectors.toList());
     }
-
+    /**
+     * Obter uma lista de faturas ordenadas por ordem cronológica entre duas datas
+     */
     public List<Fatura> listafaturas_Crono(LocalDate begin, LocalDate end)
             throws EmptySetException, InvalidIntervalException {
 
@@ -133,6 +155,9 @@ public class Entidade implements Serializable {
 
     }
 
+    /**
+     * Obter uma lista de faturas ordenadas pelo valor
+     */
     public List<Fatura> listafaturas_Valor() throws EmptySetException {
 
         if (this.faturas_val.size() == 0)
@@ -141,6 +166,9 @@ public class Entidade implements Serializable {
             return this.faturas_val.stream().map(Fatura::clone).collect(Collectors.toList());
     }
 
+    /**
+     * Obter uma lista de faturas ordendas pelo valor entre duas datas
+     */
     public List<Fatura> listafaturas_Valor(LocalDate begin, LocalDate end)
             throws EmptySetException, InvalidIntervalException {
 
@@ -156,17 +184,25 @@ public class Entidade implements Serializable {
             return l;
     }
 
+    /**
+     * Obtem uma copia do Contacto
+     */
     public Contacto getContacto() {
         return this.info.clone();
     }
 
+    /**
+     * Obter a password
+     */
     public String getPassword() throws InvalidFieldException{
         if(this.password=="invalido")
             throw new InvalidFieldException(" Ainda não foi inserida uma password ");
-        
         return this.password;
     }
 
+    /**
+     * Obter as despesas totais do conjunto de Faturas da Entidade
+     */
     public double getDespesa() throws EmptySetException {
         if (this.faturas_dt.size() == 0) {
             throw new EmptySetException(" Conjunto de faturas vazio \n");
@@ -175,6 +211,9 @@ public class Entidade implements Serializable {
         }
     }
 
+    /**
+     * Obter as despesas totais do conjunto de Faturas da Entidade entre duas datas 
+     */
     public double getDespesa(LocalDate begin, LocalDate end) throws EmptySetException {
         if (this.faturas_val.size() == 0) {
             throw new EmptySetException(" Conjunto de faturas vazio \n");
@@ -184,6 +223,11 @@ public class Entidade implements Serializable {
         }
     }
 
+    /**
+     * Obter um Map que associa as despesas totais a uma dada Atividade(area)
+     * Cria se um histograma , se a atividade ainda na estiver no histograma sua Despesa é inicializada a 0
+     * Se a atividade já estiver contida no histograma entao soma se o valor atual + a despesa associada ha atual Fatura
+     */
     public Map<Atividade, Double> getDespesaArea() throws EmptySetException {
         HashMap<Atividade, Double> hist = new HashMap<>();
         Double count;
@@ -211,15 +255,15 @@ public class Entidade implements Serializable {
         return hist;
 
     }
-
+    /**
+     * Remove uma determinada fatura 
+     */
     public boolean removerFatura(Fatura bh) {
-
         return this.faturas_dt.remove(bh);
     }
 
     /**
-     * Método que devolve a representação em String de toda a Entidade.
-     * 
+     * Método que devolve a representação em String de toda a Entidade. 
      * @return String com tudas as variáveis de instâncias(exceto password).
      */
     public String toString() {
@@ -241,6 +285,7 @@ public class Entidade implements Serializable {
     public void setPassword( String pw ){
         this.password = pw;
     }
+
     /**
      * Método que determina se 2 Entidades são iguais. Apenas é necessário o mesmo
      * nif. Esta função é deterministica, reflexiva, transitiva e simétrica.
@@ -266,7 +311,6 @@ public class Entidade implements Serializable {
         } catch (EmptySetException e) {
             l = (this.faturas_val.size() == 0);
         }
-        // não é neces
 
         return r && l;
     }
@@ -282,6 +326,9 @@ public class Entidade implements Serializable {
         return (new Entidade(this));
     }
 
+    /**
+     * Obtem um hasCode para um Nif associado ao Contacto
+     */
     public int hashCode() {
         long v;
         try {
