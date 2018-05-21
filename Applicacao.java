@@ -1,11 +1,15 @@
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.*;
 
 public class Applicacao {
 
     public int main() {
 
-        JavaFac estado=null;
+        JavaFac estado = null;
 
         switch (menuEstado()) {
         case 0:
@@ -17,24 +21,24 @@ public class Applicacao {
             estado = menuRecuperarEstado();
             break;
         }
-        
-        if(estado == null) return 0;
-        
-       
+
+        if (estado == null)
+            return 0;
+
         return menuModos(estado);
     }
 
-    public int menuModos( JavaFac estado){
+    public int menuModos(JavaFac estado) {
         switch (menuUser()) {
-            case 0:
-                return main();
-            case 1:
-                return menuAdmnistrador(estado);
-            case 2:
-                return menuContribuinte(estado);
-            case 3:
-                return menuEmpresa(estado);
-            }
+        case 0:
+            return main();
+        case 1:
+            return menuAdmnistrador(estado);
+        case 2:
+            return menuContribuinte(estado);
+        case 3:
+            return menuEmpresa(estado);
+        }
         return 1;
     }
 
@@ -103,15 +107,16 @@ public class Applicacao {
         boolean b;
         Scanner sc = new Scanner(System.in);
         int value;
+        Collection<? extends Entidade> gather = new ArrayList<>();
         do {
             boolean pss;
-            
-            try{
+
+            try {
                 pss = !menuPassword().equals(estado.getAdminPassword());
-            } catch(InvalidFieldException aa){
+            } catch (InvalidFieldException aa) {
                 return menuModos(estado);
             }
-            
+
             if (pss) {
                 System.out.println(" A palavra-chave não está correta :");
                 System.out.println(" 1 - Voltar a tentar ");
@@ -127,15 +132,45 @@ public class Applicacao {
 
         } while (b);
 
-        /**
-         * 
-         * Fazer coisas como admin !!!!
-         * 
-         * eliminar entidades;
-         * 
-         */
-        System.out.println(" Você é o admnistrador ");
-        return 1;
+        do {
+            System.out.println(" 1 - Adicionar Atividade :");
+            System.out.println(" 2 - Remover Contribuinte/Empresa ");
+            System.out.println(" 3 - Apresentar Empresas que mais faturam ");
+            System.out.println(" 4 - Apresentar os 10 Contribuintes com mais despesa ");
+            System.out.println(" 5 - Apresentar Empreas com mais faturas ");
+            System.out.println(" 0 - Menu Anterior ");
+            value = sc.nextInt();
+        } while (value < 0 && value > 4);
+
+        switch (value) {
+        case 1:
+            return menuAddAtividade(estado);
+        case 2:
+            return menuRemover(estado);
+        case 3:
+            System.out.println(" Indique quantas das que mais faturam quer ver ");
+            gather = estado.maisFaturam(sc.nextInt());
+            break;
+        case 4:
+            gather = estado.maisGasta();
+            break;
+        case 5:
+            System.out.println(" Indique quantas das com mais faturas quer ver ");
+            gather = estado.maisFaturas(sc.nextInt());
+            break;
+        case 0:
+            return menuContribuinte(estado);
+        }
+        /* Aqui apresentará collection de 3,4 e 5 */
+
+        for (Entidade o : gather) {
+            try {
+                System.out.println(o.getContacto().getNif().toString() + " : " + o.getContacto().getNome());
+            } catch (InvalidFieldException aa) {
+                continue;
+            }
+        }
+        return menuAdmnistrador(estado);
     }
 
     public int menuContribuinte(JavaFac estado) {
@@ -176,9 +211,9 @@ public class Applicacao {
             }
 
             try {
-                estado.addContribuinte(new Pessoa(c, pw, coe ), cw);
+                estado.addContribuinte(new Pessoa(c, pw, coe), cw);
             } catch (IncorrectPasswordException aa) {
-                System.out.println(" O contribuinte proporcionado não contem nif ");
+                System.out.println(" Password Incorreta ");
                 return menuContribuinte(estado);
             } catch (InvalidFieldException aa) {
                 System.out.println(" O contribuinte proporcionado não contem nif ");
@@ -190,18 +225,54 @@ public class Applicacao {
         case 2:
             c = menuCriarContacto();
             pw = menuPassword();
-            return 1;
+            Empresa x = new Empresa();
+            x.setContacto(c);
+            x.setPassword(pw);
+            try {
+                estado.addContribuinte(x, pw);
+            } catch (IncorrectPasswordException aa) {
+                System.out.println(" O contribuinte já existe com palavra-chave diferente ");
+                return menuContribuinte(estado);
+            } catch (InvalidFieldException aa) {
+                System.out.println(" O contribuinte proporcionado não contem nif ");
+                return menuContribuinte(estado);
+            }
+            return menuContribuinte(estado);
         case 3:
             c = menuCriarContacto();
             pw = menuPassword();
-            return 1;
-        case 4: return 1;
+            EmpresaInterior y = new EmpresaInterior();
+            y.setContacto(c);
+            y.setPassword(pw);
+            try {
+                estado.addContribuinte(y, pw);
+            } catch (IncorrectPasswordException aa) {
+                System.out.println(" O contribuinte já existe com palavra-chave diferente ");
+                return menuContribuinte(estado);
+            } catch (InvalidFieldException aa) {
+                System.out.println(" O contribuinte proporcionado não contem nif ");
+                return menuContribuinte(estado);
+            }
+            return menuContribuinte(estado);
+        case 4:
+            System.out.println(" Indique o seu nif ");
+            Long nif = new Long(s.nextLong());
+            if (estado.contemContribuinte(nif)) {
+                System.out.println(" Indique a sua password ");
+                try{
+                    return menuAcederContribuinte(estado, estado.getContribuinte(nif, s.nextLine()));
+                }catch(Exception aa){
+                    System.out.println( aa.toString() );
+                    return menuContribuinte(estado);
+                }
+            } else {
+                return menuContribuinte(estado);
+            }
+
         case 5:
             s = new Scanner(System.in);
             System.out.println(" Indique o nome do ficheiro onde pretende guardar");
             String filename = s.nextLine();
-            System.out.println( " Bros " + filename);
-
             try {
                 estado.gravarEstado(filename);
             } catch (IOException aa) {
@@ -215,10 +286,10 @@ public class Applicacao {
 
     public Contacto menuCriarContacto() {
         Scanner s = new Scanner(System.in);
-        
+
         System.out.println(" Informações ");
         System.out.print(" indique o nif : ");
-        
+
         Long value = new Long(s.nextLong());
         System.out.println("");
 
@@ -236,6 +307,257 @@ public class Applicacao {
 
         return new Contacto(value, nome, mail, morada, movel);
     }
-    
-    public int menuEmpresa(JavaFac o){return 1;}
+
+    public int menuEmpresa(JavaFac estado) {
+
+        return menuContribuinte(estado);
+    }
+
+    public int menuAddAtividade(JavaFac estado) {
+
+        int value;
+        String nome;
+        String codigo;
+        boolean check;
+        double a, b;
+        Scanner s = new Scanner(System.in);
+        do {
+            System.out.println(" 1 - Industria Extrativa ");
+            System.out.println(" 2 - Industria Transformadora");
+            System.out.println(" 3 - Agricultura ");
+            System.out.println(" 4 - Educacao ");
+            value = s.nextInt();
+        } while (value < 1 && value > 4);
+
+        System.out.println(" Indique o nome da atividade ");
+        nome = s.nextLine();
+        System.out.println(" Indique o código da atividade ");
+        codigo = s.nextLine();
+
+        switch (value) {
+        case 1:
+            estado.addAtividade(new IndustriaExtrativa(nome, codigo));
+            break;
+        case 2:
+            System.out.println(" Indique 1 caso a área é dedusível ");
+            if (s.nextInt() == 1)
+                check = true;
+            else
+                check = false;
+            System.out.println(" Indique o coeficiente de cálculo A seguido do B");
+            a = s.nextDouble();
+            b = s.nextDouble();
+            estado.addAtividade(new IndustriaTransformadora(nome, codigo, check, a, b));
+            break;
+        case 3:
+            System.out.println(" Indique 1 caso a área é dedusível ");
+            if (s.nextInt() == 1)
+                check = true;
+            else
+                check = false;
+            System.out.println(" Indique o coeficiente de cálculo A seguido do B");
+            a = s.nextDouble();
+            b = s.nextDouble();
+            estado.addAtividade(new Agricultura(nome, codigo, check, a, b));
+            break;
+        case 4:
+            System.out.println(" Indique 1 caso a área é dedusível ");
+            if (s.nextInt() == 1)
+                check = true;
+            else
+                check = false;
+            estado.addAtividade(new Educacao(nome, codigo, check));
+            break;
+        }
+        return menuAdmnistrador(estado);
+    }
+
+    public int menuRemover(JavaFac estado) {
+        Scanner s = new Scanner(System.in);
+        long value;
+
+        System.out.println(" Indique o Nif que pretende remover ");
+        value = s.nextLong();
+
+        if (estado.contemContribuinte(new Long(value))) {
+            estado.removeContribuinte(new Long(value));
+        } else {
+            System.out.println(" Esse contribuinte não existe no sistema");
+        }
+        return menuAdmnistrador(estado);
+    }
+
+    public int menuAlterarEntidade(JavaFac estado, Entidade subject) {
+
+        int value;
+        Scanner s = new Scanner(System.in);
+        String str;
+        String pw = "campovazio";
+
+        do {
+            System.out.println(" Selecione a opção que pretende expandir");
+            System.out.println(" 1 - Alterar Nome ");
+            System.out.println(" 2 - Alterar Morada");
+            System.out.println(" 3 - Alterar E-mail ");
+            System.out.println(" 4 - Alterar número de telfone");
+            System.out.println(" 5 - Alterar Password ");
+            System.out.println(" 0 - Voltar ");
+            value = s.nextInt();
+        } while (value < 0 && value > 5);
+
+        switch (value) {
+        case 1:
+            System.out.println(" Indique o novo nome ");
+            str = s.nextLine();
+            try{
+            pw = subject.getPassword();
+            Contacto cont = subject.getContacto();
+            cont.setNome(str);
+            subject.setContacto( cont );
+            }catch(Exception aa){
+                   System.out.println( aa.toString() );
+                   return menuContribuinte(estado);
+            }
+            break;
+        case 2:
+            System.out.println(" Indique a nova morada ");
+            str = s.nextLine();
+            try{
+            pw = subject.getPassword();
+            Contacto cont = subject.getContacto();
+            cont.setMorada(str);
+            subject.setContacto(cont);
+            }catch(Exception aa){
+                System.out.println( aa.toString() );
+                return menuContribuinte(estado);
+            }
+            break;
+        case 3:
+            System.out.println(" Indique o e-mail");
+            str = s.nextLine();
+            try{
+                pw = subject.getPassword();
+                Contacto cont = subject.getContacto();
+                cont.setMail(str);
+                subject.setContacto(cont);
+            }catch(Exception aa ){
+                System.out.println(aa.toString() );
+                return menuContribuinte(estado);
+            }
+            break;
+        case 4:
+            System.out.println(" Indique o novo numero de telefone ");
+            str = s.nextLine();
+            try{
+            pw = subject.getPassword();
+            Contacto cont = subject.getContacto();
+            cont.setTelefone(str);
+            subject.setContacto(cont);
+            }catch(Exception aa){
+                System.out.println(aa.toString() );
+                return menuContribuinte(estado);
+            }
+            break;
+        case 5:
+            System.out.println(" Indique o novo numero de telefone ");
+            str = s.nextLine();
+            
+            try{
+            pw = subject.getPassword();
+            subject.setPassword(str);
+            }catch(Exception aa){
+                System.out.println( aa.toString() );
+                return menuContribuinte(estado);
+            }
+            break;
+        }
+                if( value >0 && value< 6 ){
+                    try{
+                        estado.addContribuinte(subject, pw);
+                    } catch ( Exception aa){
+                        System.out.println( aa.toString());
+                    }
+                }
+        return menuAcederContribuinte(estado, subject);
+    }
+
+    public int menuAcederContribuinte(JavaFac estado, Entidade subject) {
+
+        int value;
+        Scanner s = new Scanner(System.in);
+
+        do {
+            System.out.println(" Selecione a opção que pretende expandir");
+            System.out.println(" 1 - Calculo de Deducao fiscal");
+            System.out.println(" 2 - Obter faturas ordenadas cronológicamente ");
+            System.out.println(" 3 - Obter faturas ordenadas por valor ");
+            System.out.println(" 4 - Obter Depesa ");
+            System.out.println(" 5 - Despesa por área ");
+            System.out.println(" 6 - Alterar informação básica ");
+            System.out.println(" 0 - Voltar para o menu anterior ");
+            value = s.nextInt();
+        } while (value < 0 && value > 6);
+
+        switch (value) {
+        case 0:
+            return menuContribuinte(estado);
+        case 1:
+            System.out.println(" Indique o Intervalo de datas que petende");
+            System.out.println(" Um total  de " + subject.calculoDeducao(menuData(), menuData()));
+            break;
+        case 2:
+            System.out.println(" Indique o Intervalo de datas que petende");
+            List<Fatura> x;
+            try {
+                x = subject.listafaturas_Crono(menuData(), menuData());
+                for (Fatura var : x) {
+                    System.out.println(var.getCode().toString() + var.getTotal());
+                }
+            } catch (Exception aa) {
+                System.out.println(aa.toString());
+            }
+            break;
+        case 3:
+            System.out.println(" Indique o Intervalo de datas que petende");
+            try {
+                x = subject.listafaturas_Valor(menuData(), menuData());
+                for (Fatura var : x) {
+                    System.out.println(var.getCode().toString() + var.getTotal());
+                }
+            } catch (Exception aa) {
+                System.out.println(aa.toString());
+            }
+            break;
+        case 4:
+            System.out.println(" Indique o Intervalo de datas que petende");
+            System.out.println(" Um total  de " + subject.getDespesa(menuData(), menuData()));
+            break;
+        case 5:
+            try {
+                for (Map.Entry<Atividade, Double> a : subject.getDespesaArea().entrySet()) {
+                    System.out.println(a.getKey().getNomeActividade() + "   : " + a.toString());
+                }
+            } catch (Exception aa) {
+                System.out.println(aa.toString());
+            }
+            break;
+        case 6:
+            return menuAcederContribuinte(estado, subject);
+        }
+
+        return menuAcederContribuinte(estado, subject);
+    }
+
+    public LocalDate menuData() {
+        int dia, mes, ano;
+        Scanner s = new Scanner(System.in);
+        System.out.println(" Indique o dia ");
+        dia = s.nextInt();
+        System.out.println(" Indique o número do mês ");
+        mes = s.nextInt();
+        System.out.println(" Indique o número do ano ");
+        ano = s.nextInt();
+
+        return LocalDate.of(ano, Month.of(mes), dia);
+    }
 }

@@ -118,7 +118,7 @@ public class Pessoa extends Entidade implements Serializable, Reducao {
 
     public double reducaoImposto() {
         if (this.numerosa) {
-            return (this.agregado.size() - 4) * 0.05;
+            return this.agregado.size() * 0.05;
         } else
             return 0.0;
     }

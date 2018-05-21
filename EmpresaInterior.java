@@ -1,16 +1,34 @@
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
+import java.io.*;
 
 public class EmpresaInterior extends Empresa implements Serializable, Reducao {
     static Map<String, Double> conselhos;
 
     static {
-        conselhos = new HashMap<String, Double>();
+        EmpresaInterior.conselhos = new HashMap<String, Double>();
+        EmpresaInterior.conselhos.put("Covilha", new Double(0.1));
+        EmpresaInterior.conselhos.put("Guarda", new Double(0.8));
+        EmpresaInterior.conselhos.put("Fundao", new Double(0.14));
+    }
 
-        conselhos.put("Covilha", new Double(0.1));
-        conselhos.put("Guarda", new Double(0.8));
-        conselhos.put("Fundao", new Double(0.14));
+    static void addCidade( String  cidade ,double desconto ){
+        EmpresaInterior.conselhos.put(cidade ,new Double(desconto));
+    }
+
+    static void recover() throws IOException, ClassNotFoundException {
+        FileInputStream fis = new FileInputStream("EmpresaInteriorvar.var");
+        ObjectInputStream ois = new ObjectInputStream(fis);
+        EmpresaInterior.conselhos = (Map<String, Double>) ois.readObject();
+        ois.close();
+    }
+
+    static void save() throws IOException{
+        ObjectOutputStream oout = new ObjectOutputStream(new FileOutputStream("EmpresaInteriorvar.var"));
+        oout.writeObject(EmpresaInterior.conselhos);
+        oout.flush();
+        oout.close();
     }
 
     private String conselho;
