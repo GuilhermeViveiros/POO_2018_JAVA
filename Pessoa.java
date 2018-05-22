@@ -25,6 +25,7 @@ public class Pessoa extends Entidade implements Serializable {
     private long nifEmpregador;
     private boolean numerosa;
     private double coeficiente;
+    private Stack<Atividade> historico;
 
     /**
      * Construtor por omissão de Entidade.
@@ -36,6 +37,7 @@ public class Pessoa extends Entidade implements Serializable {
         this.nifEmpregador = -1;
         this.numerosa = false;
         this.coeficiente = 1.0;
+        this.historico = new Stack();
     }
 
     /**
@@ -53,6 +55,8 @@ public class Pessoa extends Entidade implements Serializable {
         this.agregado = new ArrayList(agr);
         this.nifEmpregador = empr;
         this.coeficiente = coe;
+        this.historico = new Stack();
+        this.historico.push(emprego.clone());
 
         this.refNumerosa();
     }
@@ -71,6 +75,7 @@ public class Pessoa extends Entidade implements Serializable {
         this.emprego = null;
         this.nifEmpregador = -1;
         this.coeficiente = coe;
+        this.historico = new Stack();
 
         this.refNumerosa();
     }
@@ -81,6 +86,7 @@ public class Pessoa extends Entidade implements Serializable {
         this.emprego = null;
         this.nifEmpregador = -1;
         this.coeficiente = coe;
+        this.historico = new Stack();
         this.numerosa = false;
     }
 
@@ -111,7 +117,7 @@ public class Pessoa extends Entidade implements Serializable {
         } catch (InvalidFieldException a) {
             this.nifEmpregador = -1;
         }
-
+        this.historico = p.getHistorico();
         this.refNumerosa();
 
     }
@@ -128,6 +134,10 @@ public class Pessoa extends Entidade implements Serializable {
             throw new EmptySetException("Lista de agregados inválida");
         return this.agregado.stream().collect(Collectors.toList());
     }
+
+    public Stack<Atividade> getHistorico(){
+        return this.historico.stream().map(Atividade::clone).collect( Collectors.toCollection(Stack::new));
+    } 
 
     public double getCoeficiente() {
         return this.coeficiente;
@@ -259,6 +269,7 @@ public class Pessoa extends Entidade implements Serializable {
      */
     public void setEmprego(Atividade emprego) {
         this.emprego = emprego.clone();
+        this.historico.push(emprego.clone());
     }
 
     /**

@@ -574,6 +574,18 @@ public class Applicacao {
 
     private void menuAlterarFatura(JavaFac estado, Entidade subject, Fatura f) {
 
+        try {
+            for (Atividade g : f.getHistory()) {
+                try {
+                    System.out.println(g.getNomeActividade() + "   " + g.getCodidigoActividade());
+                } catch (Exception a) {
+                    continue;
+                }
+            }
+        } catch (Exception b) {
+
+        }
+
         f.setArea(menuAtividade());
         subject.addFatura(f);
         Empresa emp;
@@ -846,12 +858,13 @@ public class Applicacao {
     private int menuPessoa(JavaFac estado, Pessoa subject) {
         Menu mpessoa = new Menu(" Seleciona a opção que pretende explorar ");
         Scanner s = new Scanner(System.in);
-        
+
         mpessoa.add(" Cálculo da Dedução fiscal ");
         mpessoa.add(" Despesa do Agregado ");
         mpessoa.add(" Ver Emprego ");
         mpessoa.add(" Alterar emprego ");
         mpessoa.add(" Alterar o coeficiente fiscal ");
+        mpessoa.add(" Histórico de empregos ");
 
         switch (mpessoa.showMenu()) {
         case 0:
@@ -901,6 +914,16 @@ public class Applicacao {
         case 5:
             System.out.println(" Indique o novo coeficiente fiscal");
             subject.setCoeficiente(s.nextDouble());
+            break;
+        case 6:
+            for(Atividade ac: subject.getHistorico()){
+                
+                try{
+                    System.out.println(ac.getCodidigoActividade() + "  " + ac.getNomeActividade());
+                }catch (InvalidFieldException a ){
+                    continue;
+                }
+            }
             break;
         }
         return menuPessoa(estado, subject);
@@ -959,28 +982,29 @@ public class Applicacao {
 
     }
 
-    private int menuEmpresaInterior(JavaFac estado, EmpresaInterior ent){
+    private int menuEmpresaInterior(JavaFac estado, EmpresaInterior ent) {
 
         Menu mint = new Menu(" Indique a opção que pretende explorar ");
         mint.add(" Associar uma cidade do interior a esta empresa ");
 
-        switch( mint.showMenu()){
-            case 0: return menuEmpresa(estado,ent);
-            case 1: 
-                System.out.println(" Indique o nome :");
-                Scanner nom = new Scanner(System.in);
-                String cid = nom.nextLine();
-                try{
-                    ent.setConselho(cid);
-                    
-                    try{
-                        estado.addContribuinte(ent);
-                    }catch (Exception aa){
-                        System.out.println( aa.toString() );
-                    }
-                }catch (Exception aa){
-                    System.out.println(" Esse conselho não faz parte do conjunto conselhos do Interior ");
+        switch (mint.showMenu()) {
+        case 0:
+            return menuEmpresa(estado, ent);
+        case 1:
+            System.out.println(" Indique o nome :");
+            Scanner nom = new Scanner(System.in);
+            String cid = nom.nextLine();
+            try {
+                ent.setConselho(cid);
+
+                try {
+                    estado.addContribuinte(ent);
+                } catch (Exception aa) {
+                    System.out.println(aa.toString());
                 }
+            } catch (Exception aa) {
+                System.out.println(" Esse conselho não faz parte do conjunto conselhos do Interior ");
+            }
             break;
         }
         return menuEmpresa(estado, ent);
