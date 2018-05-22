@@ -3,6 +3,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.Map;
 import java.util.Scanner;
+
 import java.util.*;
 
 public class Applicacao {
@@ -33,7 +34,7 @@ public class Applicacao {
         return menuModos(estado);
     }
 
-    public int menuModos(JavaFac estado) {
+    private int menuModos(JavaFac estado) {
         Scanner s = new Scanner(System.in);
         Menu muser = new Menu(" Indique o número da opção que pretende expandir :");
 
@@ -75,7 +76,7 @@ public class Applicacao {
         return 1;
     }
 
-    public JavaFac menuRecuperarEstado() {
+    private JavaFac menuRecuperarEstado() {
         Scanner s = new Scanner(System.in);
         String out;
         JavaFac o = null;
@@ -100,14 +101,14 @@ public class Applicacao {
         return o;
     }
 
-    public String menuPassword() {
+    private String menuPassword() {
         Scanner s = new Scanner(System.in);
         String value;
         System.out.println(" Indique a palavra-chave :");
         return s.nextLine();
     }
 
-    public int menuAdmnistrador(JavaFac estado) {
+    private int menuAdmnistrador(JavaFac estado) {
 
         boolean b;
         Scanner sc = new Scanner(System.in);
@@ -143,7 +144,8 @@ public class Applicacao {
         madmin.add(" Remover Contribuinte/Empresa ");
         madmin.add(" Apresentar Empresas que mais faturam ");
         madmin.add(" Apresentar os 10 Contribuintes com mais despesa ");
-        madmin.add(" Apresentar Empreas com mais faturas ");
+        madmin.add(" Apresentar Empresa com mais faturas ");
+        madmin.add(" Adicionar uma cidade à categoria de Interior ");
 
         switch (madmin.showMenu()) {
         case 1:
@@ -162,6 +164,13 @@ public class Applicacao {
             System.out.println(" Indique quantas das com mais faturas quer ver ");
             gather = estado.maisFaturas(sc.nextInt());
             break;
+        case 6:
+            System.out.println(" Nome da cidade ");
+            String cidade = sc.nextLine();
+            System.out.println(" fração de desconto ");
+            double coe = sc.nextDouble();
+            EmpresaInterior.addCidade(cidade, coe);
+            break;
         case 0:
             return menuContribuinte(estado);
         }
@@ -177,7 +186,7 @@ public class Applicacao {
         return menuAdmnistrador(estado);
     }
 
-    public int menuContribuinte(JavaFac estado) {
+    private int menuContribuinte(JavaFac estado) {
 
         Scanner s = new Scanner(System.in);
         Menu mcontr = new Menu("Indique o número da opção que pretende expandir :");
@@ -198,15 +207,16 @@ public class Applicacao {
             pw = menuPassword();
             System.out.println(" Indique o coeficiente fiscal ");
             coe = s.nextFloat();
-
+            Pessoa nvPess;
             try {
-                estado.addContribuinte(new Pessoa(c, pw, coe));
+                nvPess = new Pessoa(c, pw, coe);
+                estado.addContribuinte(nvPess);
             } catch (InvalidFieldException aa) {
                 System.out.println(" O contribuinte proporcionado não contem nif ");
                 return menuContribuinte(estado);
             }
 
-            return menuContribuinte(estado);
+            return menuPessoa(estado, nvPess);
 
         case 2:
             c = menuCriarContacto();
@@ -220,7 +230,7 @@ public class Applicacao {
                 System.out.println(" O contribuinte proporcionado não contem nif ");
                 return menuContribuinte(estado);
             }
-            return menuContribuinte(estado);
+            return menuEmpresa(estado, x);
         case 3:
             c = menuCriarContacto();
             pw = menuPassword();
@@ -233,7 +243,7 @@ public class Applicacao {
                 System.out.println(" O contribuinte proporcionado não contem nif ");
                 return menuContribuinte(estado);
             }
-            return menuContribuinte(estado);
+            return menuEmpresa(estado, y);
         case 4:
             System.out.println(" Indique o seu nif ");
             Long nif = new Long(s.nextLong());
@@ -251,7 +261,7 @@ public class Applicacao {
         return 0;
     }
 
-    public Contacto menuCriarContacto() {
+    private Contacto menuCriarContacto() {
         Scanner s = new Scanner(System.in);
 
         System.out.println(" Informações ");
@@ -275,7 +285,7 @@ public class Applicacao {
         return new Contacto(value, nome, mail, morada, movel);
     }
 
-    public Atividade menuAtividade() {
+    private Atividade menuAtividade() {
         int value;
         String nome;
         String codigo;
@@ -329,7 +339,7 @@ public class Applicacao {
         return null;
     }
 
-    public int menuRemover(JavaFac estado) {
+    private int menuRemover(JavaFac estado) {
         Scanner s = new Scanner(System.in);
         long value;
 
@@ -344,7 +354,7 @@ public class Applicacao {
         return menuAdmnistrador(estado);
     }
 
-    public void menuAlterarEntidade(JavaFac estado, Entidade subject) {
+    private void menuAlterarEntidade(JavaFac estado, Entidade subject) {
 
         int value;
         Scanner s = new Scanner(System.in);
@@ -436,7 +446,7 @@ public class Applicacao {
 
     }
 
-    public int menuAcederContribuinte(JavaFac estado, Entidade subject) {
+    private int menuAcederContribuinte(JavaFac estado, Entidade subject) {
 
         Menu mentidade = new Menu(" Selecione a opção que pretende expandir");
         Scanner s = new Scanner(System.in);
@@ -549,7 +559,7 @@ public class Applicacao {
         return menuAcederContribuinte(estado, subject);
     }
 
-    public LocalDate menuData() {
+    private LocalDate menuData() {
         int dia, mes, ano;
         Scanner s = new Scanner(System.in);
         System.out.println(" Indique o dia ");
@@ -562,7 +572,7 @@ public class Applicacao {
         return LocalDate.of(ano, Month.of(mes), dia);
     }
 
-    public void menuAlterarFatura(JavaFac estado, Entidade subject, Fatura f) {
+    private void menuAlterarFatura(JavaFac estado, Entidade subject, Fatura f) {
 
         f.setArea(menuAtividade());
         subject.addFatura(f);
@@ -580,7 +590,7 @@ public class Applicacao {
 
     }
 
-    public int menuEmpresa(JavaFac estado, Empresa ent) {
+    private int menuEmpresa(JavaFac estado, Empresa ent) {
         Menu mempresa = new Menu(" Seleciona a opção que pretende explorar ");
         Scanner s = new Scanner(System.in);
 
@@ -596,6 +606,7 @@ public class Applicacao {
         mempresa.add(" Faturas de um dado cliente ");
         mempresa.add(" Adicionar Produtos ");
         mempresa.add(" Adicionar Atividade ");
+        mempresa.add(" Empresa do Interior ");
 
         switch (mempresa.showMenu()) {
         case 0:
@@ -645,7 +656,7 @@ public class Applicacao {
                         }
                         System.out.println(" Insira o numero da fatura que pretende eliminar ");
                         value = s.nextInt();
-                        if ( value < lfat.size()) {
+                        if (value < lfat.size()) {
                             ent.removerFatura(lfat.get(value));
                         } else {
                             System.out.println(" Indice invalido ");
@@ -783,88 +794,196 @@ public class Applicacao {
             System.out.println(" Indique o Indice da Atividade que quer associar ao Produto ");
             try {
                 int count = 0;
-                List<Atividade> la = new ArrayList<Atividade>( ent.getAreas() );
-                for (Atividade avar : la ) {
+                List<Atividade> la = new ArrayList<Atividade>(ent.getAreas());
+                for (Atividade avar : la) {
                     try {
-                        System.out.println( count + " " + avar.getCodidigoActividade() + " | " + avar.getNomeActividade());   
+                        System.out
+                                .println(count + " " + avar.getCodidigoActividade() + " | " + avar.getNomeActividade());
                     } catch (InvalidFieldException aa) {
                         continue;
                     }
-                    count ++;
+                    count++;
                 }
                 int indx = s.nextInt();
                 Atividade avar;
-                if( indx < la.size() ){
+                if (indx < la.size()) {
                     avar = la.get(indx);
-                    ent.adicionarArtigo (new Produto(nome,avar,preco));
-                }else{
+                    ent.adicionarArtigo(new Produto(nome, avar, preco));
+                } else {
                     System.out.println(" Indice muito grande ");
                     return menuEmpresa(estado, ent);
                 }
-                
-                try{
+
+                try {
                     estado.addContribuinte(ent);
-                }catch (InvalidFieldException aa){
-                    System.out.println( aa.toString() );
+                } catch (InvalidFieldException aa) {
+                    System.out.println(aa.toString());
                 }
 
             } catch (EmptySetException aa) {
                 System.out.println(" Não tem Faturas ");
             }
-            
+
         case 12:
-            ent.adicionaArea( menuAtividade() );
-            try{
-                estado.addContribuinte( ent );
-            }catch (InvalidFieldException aa){
-                System.out.println( aa.toString() );
+            ent.adicionaArea(menuAtividade());
+            try {
+                estado.addContribuinte(ent);
+            } catch (InvalidFieldException aa) {
+                System.out.println(aa.toString());
             }
             return menuEmpresa(estado, ent);
+        case 13:
+            if (ent instanceof EmpresaInterior) {
+                return menuEmpresaInterior(estado, (EmpresaInterior) ent);
+            } else {
+                System.out.println("Não é uma empresa do interior");
+                return menuEmpresa(estado, ent);
+            }
         }
         return menuModos(estado);
     }
 
-    public int menuPessoa(JavaFac estado, Pessoa subject) {
+    private int menuPessoa(JavaFac estado, Pessoa subject) {
         Menu mpessoa = new Menu(" Seleciona a opção que pretende explorar ");
-
-        mpessoa.add(" Remover o registo de uma dada Fatura ");
-        mpessoa.add(" Criar uma nova Fatura");
-        mpessoa.add(" Total Faturado ");
+        Scanner s = new Scanner(System.in);
+        
         mpessoa.add(" Cálculo da Dedução fiscal ");
-        mpessoa.add(" Obter emissões por data ");
-        mpessoa.add(" Obter emissões por valor ");
-        mpessoa.add(" Ver áreas ");
-        mpessoa.add(" Número de Faturas emitidas ");
-        mpessoa.add(" Alterar informações ");
-        mpessoa.add(" Faturas de um dado cliente ");
+        mpessoa.add(" Despesa do Agregado ");
+        mpessoa.add(" Ver Emprego ");
         mpessoa.add(" Alterar emprego ");
+        mpessoa.add(" Alterar o coeficiente fiscal ");
 
         switch (mpessoa.showMenu()) {
         case 0:
             return menuAcederContribuinte(estado, subject);
         case 1:
-            return 1;
+            System.out.println(" Indique o Intervalo de datas que petende");
+            System.out.println(" Um total  de " + subject.calculoDeducao(menuData(), menuData()));
+
+            break;
         case 2:
-            return 1;
+            System.out.println(" Indique o Intervalo de datas que petende");
+            LocalDate begin = menuData(), end = menuData();
+            try {
+                double sm = subject.getDespesa(begin, end);
+                for (Long x : subject.getAgregado()) {
+                    try {
+                        sm += estado.getContribuinte(x).getDespesa(begin, end);
+                    } catch (Exception aa) {
+                        System.out.println(aa.toString());
+                    }
+                }
+                System.out.println(" Um total  de " + sm);
+            } catch (Exception aa) {
+                System.out.println(" Um total  de " + subject.getDespesa(begin, end));
+            }
+            break;
         case 3:
-            return 1;
+            try {
+                Atividade act = subject.getEmprego();
+                System.out.println(" " + act.getCodidigoActividade() + " " + act.getNomeActividade());
+            } catch (Exception aa) {
+                System.out.println(aa.toString());
+            }
+            break;
         case 4:
-            return 1;
+            subject.setEmprego(menuAtividade());
+            System.out.println(" Indique o nif do seu empregador ");
+            subject.setNifEmpregador(s.nextLong());
+
+            try {
+                estado.addContribuinte(subject);
+            } catch (Exception aa) {
+                System.out.println(aa.toString());
+            }
+
+            break;
         case 5:
-            return 1;
-        case 6:
-            return 1;
-        case 7:
-            return 1;
-        case 8:
-            return 1;
-        case 10:
-            return 1;
+            System.out.println(" Indique o novo coeficiente fiscal");
+            subject.setCoeficiente(s.nextDouble());
+            break;
         }
-        return 1;
+        return menuPessoa(estado, subject);
     }
 
-    public void menuNovaFatura(JavaFac estado, Empresa ent) {
-        return;
+    private void menuNovaFatura(JavaFac estado, Empresa ent) {
+        Scanner s = new Scanner(System.in);
+        System.out.println(" Indique o Nif do contribuiente a quem quer emitir uma fatura ");
+        long nif = s.nextLong();
+        Entidade usr;
+        try {
+            usr = estado.getContribuinte(new Long(nif));
+        } catch (Exception aa) {
+            System.out.println(" Contribuinte não existente");
+            return;
+        }
+        Menu mcompra = new Menu(" Indique o produto que pretende incluir na Fatura ");
+
+        List<Produto> avar;
+        try {
+            avar = new ArrayList<>(ent.getArtigos());
+        } catch (EmptySetException aa) {
+            System.out.println(" A empresa não tem Artigos ");
+            return;
+        }
+
+        for (Produto a : avar) {
+            try {
+                mcompra.add(a.getNome() + "\t| " + a.getPreco());
+            } catch (Exception aa) {
+                System.out.println(" Erro inesperado ");
+                return;
+            }
+        }
+
+        int value;
+        List<Produto> compras = new ArrayList<>();
+
+        do {
+            value = mcompra.showMenu();
+            compras.add(avar.get(value - 1));
+
+        } while (value > 0);
+
+        try {
+            ent.faturaEmi(usr, compras);
+        } catch (Exception aa) {
+            System.out.println(aa.toString());
+        }
+
+        try {
+            estado.addContribuinte(ent);
+        } catch (InvalidFieldException aa) {
+            System.out.println(aa.toString());
+        }
+
+    }
+
+    private int menuEmpresaInterior(JavaFac estado, EmpresaInterior ent){
+
+        Menu mint = new Menu(" Indique a opção que pretende explorar ");
+        mint.add(" Associar uma cidade do interior a esta empresa ");
+
+        switch( mint.showMenu()){
+            case 0: return menuEmpresa(estado,ent);
+            case 1: 
+                System.out.println(" Indique o nome :");
+                Scanner nom = new Scanner(System.in);
+                String cid = nom.nextLine();
+                try{
+                    ent.setConselho(cid);
+                    
+                    try{
+                        estado.addContribuinte(ent);
+                    }catch (Exception aa){
+                        System.out.println( aa.toString() );
+                    }
+                }catch (Exception aa){
+                    System.out.println(" Esse conselho não faz parte do conjunto conselhos do Interior ");
+                }
+            break;
+        }
+        return menuEmpresa(estado, ent);
+
     }
 }

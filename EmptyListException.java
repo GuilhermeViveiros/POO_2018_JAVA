@@ -8,7 +8,7 @@ public class EmptyListException extends Exception
        super(x);
    }
    
-   public EmptyListException(IncorrectPasswordException x){
+   public EmptyListException(EmptyListException x){
        super(x);
    }
 }

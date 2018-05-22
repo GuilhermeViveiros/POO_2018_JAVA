@@ -4,7 +4,7 @@ import java.util.*;
 import java.io.*;
 
 public class EmpresaInterior extends Empresa implements Serializable, Reducao {
-    static Map<String, Double> conselhos;
+    private static Map<String, Double> conselhos;
 
     static {
         EmpresaInterior.conselhos = new HashMap<String, Double>();
@@ -13,18 +13,18 @@ public class EmpresaInterior extends Empresa implements Serializable, Reducao {
         EmpresaInterior.conselhos.put("Fundao", new Double(0.14));
     }
 
-    static void addCidade( String  cidade ,double desconto ){
+    public static void addCidade( String  cidade ,double desconto ){
         EmpresaInterior.conselhos.put(cidade ,new Double(desconto));
     }
 
-    static void recover() throws IOException, ClassNotFoundException {
+    public static void recover() throws IOException, ClassNotFoundException {
         FileInputStream fis = new FileInputStream("EmpresaInteriorvar.var");
         ObjectInputStream ois = new ObjectInputStream(fis);
         EmpresaInterior.conselhos = (Map<String, Double>) ois.readObject();
         ois.close();
     }
 
-    static void save() throws IOException{
+    public static void save() throws IOException{
         ObjectOutputStream oout = new ObjectOutputStream(new FileOutputStream("EmpresaInteriorvar.var"));
         oout.writeObject(EmpresaInterior.conselhos);
         oout.flush();
@@ -74,11 +74,11 @@ public class EmpresaInterior extends Empresa implements Serializable, Reducao {
         return this.conselho;
     }
 
-    public void setConselho(String cons) {
+    public void setConselho(String cons) throws InvalidConselhoException{
         if (EmpresaInterior.conselhos.containsKey(cons))
             this.conselho = cons;
         else
-            this.conselho = "nenhum";
+            throw new InvalidConselhoException(cons);
     }
 
     @Override
