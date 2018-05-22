@@ -916,11 +916,11 @@ public class Applicacao {
             subject.setCoeficiente(s.nextDouble());
             break;
         case 6:
-            for(Atividade ac: subject.getHistorico()){
-                
-                try{
+            for (Atividade ac : subject.getHistorico()) {
+
+                try {
                     System.out.println(ac.getCodidigoActividade() + "  " + ac.getNomeActividade());
-                }catch (InvalidFieldException a ){
+                } catch (InvalidFieldException a) {
                     continue;
                 }
             }
