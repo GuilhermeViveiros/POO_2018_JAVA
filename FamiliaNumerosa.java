@@ -7,6 +7,7 @@ import java.io.Serializable;
  * @version (número de versão ou data)
  */
 public class FamiliaNumerosa extends Pessoa implements Reducao ,Serializable{
+
     public FamiliaNumerosa( Pessoa x)
     {
         super(x);
@@ -20,4 +21,5 @@ public class FamiliaNumerosa extends Pessoa implements Reducao ,Serializable{
             return 0;
         }
     }
+
 }

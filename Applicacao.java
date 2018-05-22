@@ -40,11 +40,11 @@ public class Applicacao {
             Scanner s = new Scanner(System.in);
             System.out.println(" Indique o numero de identificação fiscal ");
             long value = s.nextLong();
-            try{
-                Entidade emp = estado.getContribuinte(new Long(value) );
-                if( emp instanceof Empresa )
-                    return menuEmpresa( estado , (Empresa)emp );
-            }catch(Exception aa){
+            try {
+                Entidade emp = estado.getContribuinte(new Long(value));
+                if (emp instanceof Empresa)
+                    return menuEmpresa(estado, (Empresa) emp);
+            } catch (Exception aa) {
                 return menuModos(estado);
             }
             return menuModos(estado);
@@ -372,25 +372,23 @@ public class Applicacao {
         return menuAdmnistrador(estado);
     }
 
-    public int menuAlterarEntidade(JavaFac estado, Entidade subject) {
+    public void menuAlterarEntidade(JavaFac estado, Entidade subject) {
 
         int value;
         Scanner s = new Scanner(System.in);
         String str;
         String pw = "campovazio";
+        Menu mentidade = new Menu(" Selecione a opção que pretende expandir");
 
-        do {
-            System.out.println(" Selecione a opção que pretende expandir");
-            System.out.println(" 1 - Alterar Nome ");
-            System.out.println(" 2 - Alterar Morada");
-            System.out.println(" 3 - Alterar E-mail ");
-            System.out.println(" 4 - Alterar número de telfone");
-            System.out.println(" 5 - Alterar Password ");
-            System.out.println(" 0 - Voltar ");
-            value = s.nextInt();
-        } while (value < 0 && value > 5);
+        mentidade.add(" Alterar Nome ");
+        mentidade.add(" Alterar Morada");
+        mentidade.add(" Alterar E-mail ");
+        mentidade.add(" Alterar número de telfone");
+        mentidade.add(" Alterar Password ");
 
-        switch (value) {
+        switch (mentidade.showMenu()) {
+        case 0:
+            return;
         case 1:
             System.out.println(" Indique o novo nome ");
             str = s.nextLine();
@@ -401,7 +399,7 @@ public class Applicacao {
                 subject.setContacto(cont);
             } catch (Exception aa) {
                 System.out.println(aa.toString());
-                return menuContribuinte(estado);
+                return;
             }
             break;
         case 2:
@@ -414,7 +412,7 @@ public class Applicacao {
                 subject.setContacto(cont);
             } catch (Exception aa) {
                 System.out.println(aa.toString());
-                return menuContribuinte(estado);
+                return;
             }
             break;
         case 3:
@@ -427,7 +425,7 @@ public class Applicacao {
                 subject.setContacto(cont);
             } catch (Exception aa) {
                 System.out.println(aa.toString());
-                return menuContribuinte(estado);
+                return;
             }
             break;
         case 4:
@@ -440,7 +438,7 @@ public class Applicacao {
                 subject.setContacto(cont);
             } catch (Exception aa) {
                 System.out.println(aa.toString());
-                return menuContribuinte(estado);
+                return;
             }
             break;
         case 5:
@@ -452,39 +450,35 @@ public class Applicacao {
                 subject.setPassword(str);
             } catch (Exception aa) {
                 System.out.println(aa.toString());
-                return menuContribuinte(estado);
+                menuContribuinte(estado);
+                return;
             }
             break;
         }
-        if (value > 0 && value < 6) {
-            try {
-                estado.addContribuinte(subject);
-            } catch (Exception aa) {
-                System.out.println(aa.toString());
-            }
+
+        try {
+            estado.addContribuinte(subject);
+        } catch (Exception aa) {
+            System.out.println(aa.toString());
         }
-        return menuAcederContribuinte(estado, subject);
+
     }
 
     public int menuAcederContribuinte(JavaFac estado, Entidade subject) {
 
-        int value;
+        Menu mentidade = new Menu(" Selecione a opção que pretende expandir");
         Scanner s = new Scanner(System.in);
 
-        do {
-            System.out.println(" Selecione a opção que pretende expandir");
-            System.out.println(" 1 - Calculo de Deducao fiscal");
-            System.out.println(" 2 - Obter faturas ordenadas cronológicamente ");
-            System.out.println(" 3 - Obter faturas ordenadas por valor ");
-            System.out.println(" 4 - Obter Depesa ");
-            System.out.println(" 5 - Despesa por área ");
-            System.out.println(" 6 - Alterar informação básica ");
-            System.out.println(" 7 - Alterar fatura pendente ");
-            System.out.println(" 0 - Voltar para o menu anterior ");
-            value = s.nextInt();
-        } while (value < 0 && value > 6);
+        mentidade.add(" Calculo de Deducao fiscal");
+        mentidade.add(" Obter faturas ordenadas cronológicamente ");
+        mentidade.add(" Obter faturas ordenadas por valor ");
+        mentidade.add(" Obter Depesa ");
+        mentidade.add(" Despesa por área ");
+        mentidade.add(" Alterar informação básica ");
+        mentidade.add(" Alterar fatura pendente ");
+        mentidade.add(" Alterar Pessoa ");
 
-        switch (value) {
+        switch (mentidade.showMenu()) {
         case 0:
             return menuContribuinte(estado);
         case 1:
@@ -497,7 +491,8 @@ public class Applicacao {
             try {
                 x = subject.listafaturas_Crono(menuData(), menuData());
                 for (Fatura var : x) {
-                    System.out.println(var.getServidor().getNome() + var.getTotal());
+                    System.out.println(
+                            var.getServidor().getNome() + " " + var.getDate().toString() + " " + var.getTotal());
                 }
             } catch (Exception aa) {
                 System.out.println(aa.toString());
@@ -508,7 +503,8 @@ public class Applicacao {
             try {
                 x = subject.listafaturas_Valor(menuData(), menuData());
                 for (Fatura var : x) {
-                    System.out.println(var.getServidor().getNome() + var.getTotal());
+                    System.out.println(
+                            var.getServidor().getNome() + " " + var.getDate().toString() + " " + var.getTotal());
                 }
             } catch (Exception aa) {
                 System.out.println(aa.toString());
@@ -528,26 +524,50 @@ public class Applicacao {
             }
             break;
         case 6:
+            menuAlterarEntidade(estado, subject);
+            try{
+                estado.addContribuinte(subject);}catch(InvalidFieldException aa){
+                    System.out.println( aa.toString() );
+                }
             return menuAcederContribuinte(estado, subject);
+
         case 7:
             int count = 0;
             List<Fatura> fact = subject.listafaturas_Pendente();
             for (Fatura fat : fact) {
                 try {
-                    System.out.println(" " + count + "|" + fat.getServidor().getNome() + "|" + fat.getTotal());
+                    System.out.println(" " + count + "| " + fat.getServidor().getNome() + "| "
+                            + fat.getDate().toString() + " " + fat.getTotal());
                     count++;
                 } catch (Exception aa) {
                     continue;
                 }
             }
-
-            value = s.nextInt();
+            int value = s.nextInt();
             if (value < fact.size()) {
-                menuAlterarFatura(estado, subject, fact.get(value));
+                Fatura altfac = fact.get(value);
+                menuAlterarFatura(estado, subject, altfac);
+                subject.addFatura(altfac);
+                try{
+                estado.addContribuinte(subject);
+            }catch( InvalidFieldException aa){
+                System.out.println( aa.toString() );
+            }
             } else {
                 System.out.println(" O indice indicado não foi a presentado ");
             }
-
+            return menuAcederContribuinte(estado, subject);
+        case 8:
+            if (subject instanceof Pessoa) {
+                menuPessoa(estado, (Pessoa) subject);
+                try{
+                estado.addContribuinte(subject);
+                }catch(InvalidFieldException aa){ System.out.println(aa.toString());}
+                return menuAcederContribuinte(estado, subject);
+                
+            } else {
+                System.out.println(" Não é uma Pessoa ");
+            }
             return menuAcederContribuinte(estado, subject);
         }
 
@@ -574,20 +594,20 @@ public class Applicacao {
         boolean check;
         double a, b;
         Scanner s = new Scanner(System.in);
-        do {
-            System.out.println(" 1 - Industria Extrativa ");
-            System.out.println(" 2 - Industria Transformadora");
-            System.out.println(" 3 - Agricultura ");
-            System.out.println(" 4 - Educacao ");
-            value = s.nextInt();
-        } while (value < 1 && value > 4);
+        Menu mfatura = new Menu(" Classes de Atividade disponíveis ");
+        mfatura.add(" Industria Extrativa ");
+        mfatura.add(" Industria Transformadora");
+        mfatura.add(" Agricultura ");
+        mfatura.add(" Educacao ");
 
         System.out.println(" Indique o nome da atividade ");
         nome = s.nextLine();
         System.out.println(" Indique o código da atividade ");
         codigo = s.nextLine();
 
-        switch (value) {
+        switch (mfatura.showMenu()) {
+        case 0:
+            menuAcederContribuinte(estado, subject);
         case 1:
             f.setArea(new IndustriaExtrativa(nome, codigo));
             break;
@@ -628,7 +648,7 @@ public class Applicacao {
             emp = (Empresa) estado.getContribuinte(f.getServidor().getNif());
             emp.addFatura(f);
             estado.addContribuinte(emp);
-            menuAcederContribuinte(estado,subject);
+            menuAcederContribuinte(estado, subject);
 
         } catch (Exception aa) {
             System.out.println(aa.toString());
@@ -638,39 +658,241 @@ public class Applicacao {
     }
 
     public int menuEmpresa(JavaFac estado, Empresa ent) {
-        int value;
+        Menu mempresa = new Menu(" Seleciona a opção que pretende explorar ");
         Scanner s = new Scanner(System.in);
-        do{
-            System.out.println(" Seleciona a opção que pretende explorar  ");
-            System.out.println(" 1 - Remover o registo de uma dada Fatura ");
-            System.out.println(" 2 - Criar uma nova Fatura");
-            System.out.println(" 3 - Total Faturado ");
-            System.out.println(" 4 - Cálculo da Dedução fiscal ");
-            System.out.println(" 5 - Obter emissões por data ");
-            System.out.println(" 6 - Obter emissões por valor ");
-            System.out.println(" 7 - Ver áreas ");
-            System.out.println(" 8 - Número de Faturas emitidas ");
-            System.out.println(" 9 - Alterar informações ");
-            System.out.println(" 10 - Faturas de um dado cliente ");
-            System.out.println(" 0 - Sair  ");
-            value = s.nextInt();
-        }while(value < -1 && value > 10 );
 
-        switch(value){
-            case 0:
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-            case 5:
-            case 6:
-            case 7:
-            case 8:
-            case 9:
-            case 10:
-        
+        mempresa.add(" Remover o registo de uma dada Fatura ");
+        mempresa.add(" Criar uma nova Fatura");
+        mempresa.add(" Total Faturado ");
+        mempresa.add(" Cálculo da Dedução fiscal ");
+        mempresa.add(" Obter emissões por data ");
+        mempresa.add(" Obter emissões por valor ");
+        mempresa.add(" Ver áreas ");
+        mempresa.add(" Número de Faturas emitidas ");
+        mempresa.add(" Alterar informações ");
+        mempresa.add(" Faturas de um dado cliente ");
+
+        switch (mempresa.showMenu()) {
+        case 0:
+            return menuModos(estado);
+        case 1:
+            System.out.println(" Indique o nome do cliente que pretende remover a fatura ");
+            String nome = s.nextLine();
+            if (ent.contemCliente(nome)) {
+                System.out.println(" Pretende ver as faturas pendentes ? (1 para Sim / 0 para Não)");
+                int value = s.nextInt();
+                List<Fatura> lfat;
+                switch (value) {
+                case 1:
+                    try {
+                        int count = 0;
+                        lfat = ent.listarPendentes(nome);
+                        for (Fatura x : lfat) {
+                            System.out.println(count + x.getDate().toString() + x.getTotal());
+                            count++;
+                        }
+                        System.out.println(" Insira o numero da fatura que pretende eliminar ");
+                        value = s.nextInt();
+                        if (value > 0 && value < lfat.size()) {
+                            ent.removerFatura(lfat.get(value));
+                        } else {
+                            System.out.println(" Indice invalido ");
+                            return menuEmpresa(estado, ent);
+                        }
+                        try{
+                            estado.addContribuinte(ent);
+                        }catch(InvalidFieldException aa){System.out.println(aa.toString());}
+                        return menuEmpresa(estado, ent);
+
+                    } catch (EmptySetException aa) {
+                        System.out.println(" O que cliente não existe ");
+                        return menuEmpresa(estado, ent);
+                    }
+                case 0:
+                    try {
+                        int count = 0;
+                        lfat = ent.faturasDespesa(nome);
+                        for (Fatura x : lfat) {
+                            System.out.println(count + x.getDate().toString() + x.getTotal());
+                            count++;
+                        }
+                        System.out.println(" Insira o numero da fatura que pretende eliminar ");
+                        value = s.nextInt();
+                        if (value > 0 && value < lfat.size()) {
+                            ent.removerFatura(lfat.get(value));
+                        } else {
+                            System.out.println(" Indice invalido ");
+                            return menuEmpresa(estado, ent);
+                        }
+                        try {
+                            estado.addContribuinte(ent);
+                        } catch (InvalidFieldException aa) {
+                            System.out.println(aa.toString());
+                        }
+                        return menuEmpresa(estado, ent);
+
+                    } catch (EmptyMapException aa) {
+                        System.out.println(" O que cliente não existe ");
+                        return menuEmpresa(estado, ent);
+                    }
+                default:
+                    return menuEmpresa(estado, ent);
+                }
+
+            } else {
+                System.out.println(" Cliente não existente ");
+                return menuEmpresa(estado, ent);
+            }
+
+        case 2:
+            menuNovaFatura(estado, ent);
+            try {
+                estado.addContribuinte(ent);
+            } catch (InvalidFieldException aa) {
+                System.out.println(aa.toString());
+            }
+            return menuEmpresa(estado, ent);
+        case 3:
+            System.out.println(" Indique o Intervalo que pretende saber ");
+            System.out.println(" Um total de " + ent.totalFaturado(menuData(), menuData()));
+            return menuEmpresa(estado, ent);
+        case 4:
+            System.out.println(" Indique o Intervalo que pretende saber ");
+            System.out.println(" Um total de " + ent.calculoDeducao(menuData(), menuData()));
+            return menuEmpresa(estado, ent);
+        case 5:
+
+            try {
+                for (Fatura fvar : ent.getEmissoesD()) {
+                    try {
+                        System.out.println(fvar.getCnif() + " " + fvar.getDate().toString() + " |" + fvar.getTotal());
+                    } catch (InvalidFieldException aa) {
+                        continue;
+                    }
+                }
+            } catch (EmptySetException aa) {
+                System.out.println(" Não tem Faturas ");
+            }
+            return menuEmpresa(estado, ent);
+        case 6:
+            try {
+                for (Fatura fvar : ent.getEmissoesV()) {
+                    try {
+                        System.out.println(fvar.getCnif() + " " + fvar.getDate().toString() + " |" + fvar.getTotal());
+                    } catch (InvalidFieldException aa) {
+                        continue;
+                    }
+                }
+            } catch (EmptySetException aa) {
+                System.out.println(" Não tem Faturas ");
+            }
+            return menuEmpresa(estado, ent);
+        case 7:
+            try {
+                for (Atividade avar : ent.getAreas()) {
+                    try {
+                        System.out.println(avar.getCodidigoActividade() + " | " + avar.getNomeActividade());
+                    } catch (InvalidFieldException aa) {
+                        continue;
+                    }
+                }
+            } catch (EmptySetException aa) {
+                System.out.println(" Não tem Faturas ");
+            }
+            return menuEmpresa(estado, ent);
+        case 8:
+            System.out.println(" Emitiu " + ent.numeroDeFaturasEmitidas() + " Faturas ");
+            return menuEmpresa(estado, ent);
+        case 9:
+            menuAlterarEntidade(estado, ent);
+            return menuEmpresa(estado, ent);
+        case 10:
+            System.out.println(" Indique o nome do cliente que pretende remover a fatura ");
+            nome = s.nextLine();
+            if (ent.contemCliente(nome)) {
+                System.out.println(" Pretende ver as faturas pendentes ? (1 para Sim / 0 para Não)");
+                int value = s.nextInt();
+                List<Fatura> lfat;
+                switch (value) {
+                case 1:
+                    try {
+                        int count = 0;
+                        lfat = ent.listarPendentes(nome);
+                        for (Fatura x : lfat)
+                            System.out.println(x.getDate().toString() + x.getTotal());
+
+                        return menuEmpresa(estado, ent);
+
+                    } catch (EmptySetException aa) {
+                        System.out.println(" O cliente não existe ");
+                        return menuEmpresa(estado, ent);
+                    }
+                case 0:
+                    try {
+                        int count = 0;
+                        lfat = ent.faturasDespesa(nome);
+                        for (Fatura x : lfat)
+                            System.out.println(x.getDate().toString() + x.getTotal());
+
+                        return menuEmpresa(estado, ent);
+                    } catch (EmptyMapException aa) {
+                        System.out.println(" O cliente não existe ");
+                        return menuEmpresa(estado, ent);
+                    }
+
+                default:
+                    return menuEmpresa(estado, ent);
+                }
+
+            } else {
+                System.out.println(" Cliente não existente ");
+                return menuEmpresa(estado, ent);
+            }
+
         }
+        return menuModos(estado);
+    }
 
-        return menuContribuinte(estado);
+    public int menuPessoa(JavaFac estado, Pessoa subject) {
+        Menu mpessoa = new Menu(" Seleciona a opção que pretende explorar ");
+
+        mpessoa.add(" Remover o registo de uma dada Fatura ");
+        mpessoa.add(" Criar uma nova Fatura");
+        mpessoa.add(" Total Faturado ");
+        mpessoa.add(" Cálculo da Dedução fiscal ");
+        mpessoa.add(" Obter emissões por data ");
+        mpessoa.add(" Obter emissões por valor ");
+        mpessoa.add(" Ver áreas ");
+        mpessoa.add(" Número de Faturas emitidas ");
+        mpessoa.add(" Alterar informações ");
+        mpessoa.add(" Faturas de um dado cliente ");
+
+        switch (mpessoa.showMenu()) {
+        case 0:
+            return menuAcederContribuinte(estado, subject);
+        case 1:
+            return 1;
+        case 2:
+            return 1;
+        case 3:
+            return 1;
+        case 4:
+            return 1;
+        case 5:
+            return 1;
+        case 6:
+            return 1;
+        case 7:
+            return 1;
+        case 8:
+            return 1;
+        case 10:
+            return 1;
+        }
+        return 1;
+    }
+
+    public void menuNovaFatura(JavaFac estado, Empresa ent) {
+        return;
     }
 }

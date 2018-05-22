@@ -15,6 +15,7 @@ public class JavaFac implements Serializable {
         this.areas = new HashSet<Atividade>();
         this.adminstrador = "@@invalid";
     }
+
     public JavaFac(String admin) {
         this.contribuintes = new HashMap<Long, Entidade>();
         this.empresas = new HashMap<Long, Empresa>();
@@ -105,47 +106,53 @@ public class JavaFac implements Serializable {
         return this.contribuintes.values().stream().map(Entidade::clone).collect(Collectors.toSet());
     }
 
-    public Entidade getContribuinte(Long nif, String password)
-            throws IncorrectPasswordException, NonExistentEntityException, InvalidFieldException {
+    public Entidade getContribuinte(Long nif) throws NonExistentEntityException, InvalidFieldException {
         if (!this.contribuintes.containsKey(nif))
             throw new NonExistentEntityException(" Esse nif não se encontra na base de dados");
 
         Entidade x = this.contribuintes.get(nif);
 
-        if (!x.getPassword().equals(password)) {
-            throw new IncorrectPasswordException(" A Palavra-passe indica está errada");
-        }
-
         return x.clone();
     }
 
-    public void addAtividade( Atividade a ){
+    public void addAtividade(Atividade a) {
         this.areas.add(a.clone());
     }
 
-    public void addContribuinte(Entidade x, String password) throws IncorrectPasswordException, InvalidFieldException {
-        if (this.contribuintes.containsValue(x)) {
-            Entidade e = this.contribuintes.get(x.getContacto().getNif());
+    public void addContribuinte(Entidade x) throws InvalidFieldException {
 
-            if (!e.getPassword().equals(password))
-                throw new IncorrectPasswordException(" A Palavra-passe indica está errado ");
+        if (this.contribuintes.containsKey(x.getContacto().getNif())) {
+            this.contribuintes.remove(x.getContacto().getNif());
+        }
 
-            this.contribuintes.put(x.getContacto().getNif(), x.clone());
+        if (x instanceof Pessoa) {
+            Pessoa a = (Pessoa) x;
+            if (a.isNumerosa()) {
+                this.contribuintes.put(x.getContacto().getNif(), new FamiliaNumerosa(a));
+                return;
+            } else {
+                this.contribuintes.put(x.getContacto().getNif(),a.clone());
+                return;
+            }
+        }
 
-        } else {
-            this.contribuintes.put(x.getContacto().getNif(), x.clone());
+        if (x instanceof Empresa) {
+            Empresa emp = (Empresa) x.clone();
+            this.contribuintes.put(x.getContacto().getNif(), emp);
+            this.empresas.put(x.getContacto().getNif(), emp);
         }
     }
 
-    boolean contemContribuinte( Long nif ){
+    boolean contemContribuinte(Long nif) {
         return this.contribuintes.containsKey(nif);
     }
 
-    void removeContribuinte( Long nif ){
-        if( this.contribuintes.remove(nif) instanceof Empresa){
+    void removeContribuinte(Long nif) {
+        if (this.contribuintes.remove(nif) instanceof Empresa) {
             this.empresas.remove(nif);
         }
     }
+
     public Collection<Entidade> maisGasta() {
 
         PriorityQueue<Entidade> pq = new PriorityQueue<Entidade>(new Comparator<Entidade>() {
@@ -195,7 +202,7 @@ public class JavaFac implements Serializable {
         return this.maisFaturam(n).stream().mapToDouble(l -> l.calculoDeducao(begin, end)).sum();
     }
 
-    public Collection<Empresa> maisFaturas(int n){
+    public Collection<Empresa> maisFaturas(int n) {
         PriorityQueue<Empresa> pq = new PriorityQueue<Empresa>(new Comparator<Empresa>() {
             public int compare(Empresa x, Empresa y) {
                 return (int) (x.numeroDeFaturasEmitidas() - y.numeroDeFaturasEmitidas());

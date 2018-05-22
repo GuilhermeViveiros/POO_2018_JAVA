@@ -31,20 +31,19 @@ public class Empresa extends Entidade implements Serializable {
 
     private double faturado;
 
+    private Comparator<Fatura> cmpvalor;
     /**
      * Construtor por omissão de Empresa.
      */
     public Empresa() {
         super();
-        // quando nao declaramos nenhuma função para o comparator ele assume a dele ou
-        // usa a nossa funcao se tiver o nome de ->"compare"
-        // neste caso já temos , a comparaçao é feita a partir da data
-        this.emissoes_data = new TreeSet<Fatura>();
-        this.emissoes_valor = new TreeSet<>(new Comparator<Fatura>() {
+        this.cmpvalor = new Comparator<Fatura>() {
             public int compare(Fatura x, Fatura y) {
                 return x.comparePreco(y);
             }
-        });
+        };
+        this.emissoes_data = new TreeSet<Fatura>();
+        this.emissoes_valor = new TreeSet<>(this.cmpvalor);
         this.cliente = new HashMap<String, Set<Fatura>>();
         this.artigos = new HashSet<Produto>();
         this.areas = new HashSet<Atividade>();
@@ -60,13 +59,13 @@ public class Empresa extends Entidade implements Serializable {
      */
     public Empresa(Contacto ct, String password, Set<Atividade> areas) {
         super(ct, password);
-        this.emissoes_data = new TreeSet<Fatura>();
-
-        this.emissoes_valor = new TreeSet<>(new Comparator<Fatura>() {
+        this.cmpvalor = new Comparator<Fatura>() {
             public int compare(Fatura x, Fatura y) {
                 return x.comparePreco(y);
             }
-        });
+        };
+        this.emissoes_data = new TreeSet<Fatura>();
+        this.emissoes_valor = new TreeSet<>(this.cmpvalor);
         this.cliente = new HashMap<String, Set<Fatura>>();
         this.artigos = new HashSet<Produto>();
         this.areas = areas.stream().map(Atividade::clone).collect(Collectors.toSet());
@@ -83,6 +82,12 @@ public class Empresa extends Entidade implements Serializable {
     public Empresa(Empresa x) {
         super(x);
 
+        this.cmpvalor = new Comparator<Fatura>() {
+            public int compare(Fatura x, Fatura y) {
+                return x.comparePreco(y);
+            }
+        };
+
         try {
             this.cliente = x.getClientes();
             this.makeClienteData();
@@ -90,11 +95,7 @@ public class Empresa extends Entidade implements Serializable {
         } catch (EmptyMapException a) {
             this.cliente = new HashMap<String, Set<Fatura>>();
             this.emissoes_data = new TreeSet<Fatura>();
-            this.emissoes_valor = new TreeSet<>(new Comparator<Fatura>() {
-                public int compare(Fatura x, Fatura y) {
-                    return x.comparePreco(y);
-                }
-            });
+            this.emissoes_valor = new TreeSet<>(this.cmpvalor);
         }
 
         try {
@@ -517,6 +518,15 @@ public class Empresa extends Entidade implements Serializable {
 
     }
 
+    public List<Fatura> listarPendentes(String nome) throws EmptySetException{
+        if( !this.contemCliente(nome) )
+            throw new EmptySetException( nome + " utilizador não existente");
+        return cliente.get(nome).stream().filter(Fatura::isPendente).map(Fatura::clone).collect(Collectors.toList());
+    }
+
+    public boolean contemCliente(String nome){
+        return cliente.containsKey(nome);
+    }
     /**
      * Obtem a Lista de faturas entre uma respetiva data de um cliente em ordem da
      * despesa
