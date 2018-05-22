@@ -16,7 +16,7 @@ import java.time.LocalDate;
  * @version (v1);
  */
 
-public class Pessoa extends Entidade implements Serializable, Reducao {
+public class Pessoa extends Entidade implements Serializable {
     /** Números fiscais do agregado familiar da Pessoa */
     private List<Long> agregado;
     /** Emprego da Pessoa */
@@ -114,13 +114,6 @@ public class Pessoa extends Entidade implements Serializable, Reducao {
 
         this.refNumerosa();
 
-    }
-
-    public double reducaoImposto() {
-        if (this.numerosa) {
-            return this.agregado.size() * 0.05;
-        } else
-            return 0.0;
     }
 
     public double calculoDeducao(LocalDate begin, LocalDate end) {
@@ -235,6 +228,10 @@ public class Pessoa extends Entidade implements Serializable, Reducao {
             this.numerosa = false;
         }
     }
+    public boolean isNumerosa(){
+        return this.numerosa;
+    }
+
 
     /**
      * Adiciona uma novo membro ao agregado familiar

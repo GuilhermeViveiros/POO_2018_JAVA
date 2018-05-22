@@ -34,16 +34,10 @@ public class Fatura implements Serializable {
     private List<Produto> compras;
     /** O total faturado */
     private double total;
-    /** O codigo da fatura */
-    private Long code;
-    /** Numero da fatura (contador) */
-    static Long contagem;
-    private Stack<Atividade> history;
-     private boolean pendente;
 
-    static {
-        Fatura.contagem.valueOf(0);
-    }
+    private Stack<Atividade> history;
+    
+    private boolean pendente;
 
     /**
      * Construtor por omissão de Fatura.
@@ -58,8 +52,6 @@ public class Fatura implements Serializable {
         this.compras = new ArrayList<Produto>();
         this.history = new Stack<Atividade>();
         this.pendente = true;
-        Fatura.contagem.valueOf(contagem.longValue() + 1);
-        this.code = Fatura.contagem;
     }
 
     /**
@@ -82,8 +74,6 @@ public class Fatura implements Serializable {
         this.history = new Stack<Atividade>();
         this.history.push(area.clone());
         this.pendente = false;
-        Fatura.contagem.valueOf(contagem.longValue() + 1);
-        this.code = Fatura.contagem;
     }
 
     public Fatura(Contacto x, long nifCliente, List<Produto> compras) {
@@ -98,8 +88,6 @@ public class Fatura implements Serializable {
         this.history = new Stack<Atividade>();
         this.history.push(area.clone());
         this.pendente = true;
-        Fatura.contagem.valueOf(contagem.longValue() + 1);
-        this.code = Fatura.contagem;
     }
 
     /**
@@ -112,7 +100,6 @@ public class Fatura implements Serializable {
         this.servidor = x.getServidor();
         this.total = x.getTotal();
         this.date = x.getDate();
-        this.code = x.getCode();
         this.pendente = x.isPendente();
 
         try {
@@ -219,12 +206,6 @@ public class Fatura implements Serializable {
         return pendente;
     }
 
-    /**
-     * Obtem o code da Fatura
-     */
-    public Long getCode() {
-        return this.code;
-    }
 
     /**
      * Obtem a data da Fatura

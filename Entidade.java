@@ -132,7 +132,8 @@ public abstract class Entidade implements Serializable {
         if (this.faturas_dt.size() == 0)
             throw new EmptySetException("Não contém faturas\n");
         else
-            return this.faturas_dt.stream().map(Fatura::clone).collect(Collectors.toCollection(TreeSet::new));
+            return this.faturas_dt.stream().filter(l -> !l.isPendente()).map(Fatura::clone)
+                    .collect(Collectors.toCollection(TreeSet::new));
     }
 
     /**
@@ -142,7 +143,8 @@ public abstract class Entidade implements Serializable {
         if (this.faturas_val.size() == 0)
             throw new EmptySetException("Não contém faturas\n");
         else
-            return this.faturas_val.stream().map(Fatura::clone).collect(Collectors.toCollection(TreeSet::new));
+            return this.faturas_val.stream().filter(l -> !l.isPendente()).map(Fatura::clone)
+                    .collect(Collectors.toCollection(TreeSet::new));
     }
 
     /**
@@ -152,7 +154,8 @@ public abstract class Entidade implements Serializable {
         if (this.faturas_dt.size() == 0)
             throw new EmptySetException("Não contém faturas \n");
         else
-            return this.faturas_dt.stream().map(Fatura::clone).collect(Collectors.toList());
+            return this.faturas_dt.stream().filter(l -> !l.isPendente()).map(Fatura::clone)
+                    .collect(Collectors.toList());
     }
 
     /**
@@ -164,7 +167,7 @@ public abstract class Entidade implements Serializable {
         if (this.faturas_dt.size() == 0)
             throw new EmptySetException("Não contém faturas \n");
 
-        List<Fatura> l = this.faturas_dt.stream().map(Fatura::clone)
+        List<Fatura> l = this.faturas_dt.stream().filter(c -> !c.isPendente()).map(Fatura::clone)
                 .filter(p -> p.getDate().isAfter(begin) && p.getDate().isBefore(end)).collect(Collectors.toList());
 
         if (l.size() == 0)
@@ -182,7 +185,12 @@ public abstract class Entidade implements Serializable {
         if (this.faturas_val.size() == 0)
             throw new EmptySetException("Não contém faturas \n");
         else
-            return this.faturas_val.stream().map(Fatura::clone).collect(Collectors.toList());
+            return this.faturas_val.stream().filter(l -> !l.isPendente()).map(Fatura::clone)
+                    .collect(Collectors.toList());
+    }
+
+    public List<Fatura> listafaturas_Pendente() {
+        return this.faturas_val.stream().filter(l -> !l.isPendente()).map(Fatura::clone).collect(Collectors.toList());
     }
 
     /**
@@ -194,7 +202,7 @@ public abstract class Entidade implements Serializable {
         if (this.faturas_val.size() == 0)
             throw new EmptySetException(" Conjunto de faturas vazio \n");
 
-        List<Fatura> l = this.faturas_val.stream().map(Fatura::clone)
+        List<Fatura> l = this.faturas_val.stream().filter(f -> !f.isPendente()).map(Fatura::clone)
                 .filter(p -> p.getDate().isAfter(begin) && p.getDate().isBefore(end)).collect(Collectors.toList());
 
         if (l.size() == 0)
@@ -233,7 +241,7 @@ public abstract class Entidade implements Serializable {
         if (this.faturas_val.size() == 0) {
             return 0;
         } else {
-            return this.faturas_dt.stream().filter(p -> (p.getDate().isAfter(begin)) && (p.getDate().isBefore(end)))
+            return this.faturas_dt.stream().filter(l -> ! l.isPendente() ).filter(p -> (p.getDate().isAfter(begin)) && (p.getDate().isBefore(end)))
                     .mapToDouble(Fatura::getTotal).sum();
         }
     }
@@ -252,21 +260,21 @@ public abstract class Entidade implements Serializable {
 
         Atividade a;
         for (Fatura l : this.faturas_dt) {
+            if (!l.isPendente()) {
+                try {
+                    a = l.getArea();
+                } catch (InvalidActivityException b) {
+                    continue;
+                }
 
-            try {
-                a = l.getArea();
-            } catch (InvalidActivityException b) {
-                continue;
+                if (hist.containsKey(a)) {
+                    count = hist.get(a);
+
+                } else {
+                    count = new Double(0);
+                }
+                hist.put(a, new Double(count.doubleValue() + l.getTotal()));
             }
-
-            if (hist.containsKey(a)) {
-                count = hist.get(a);
-
-            } else {
-                count = new Double(0);
-            }
-            hist.put(a, new Double(count.doubleValue() + l.getTotal()));
-
         }
         return hist;
 

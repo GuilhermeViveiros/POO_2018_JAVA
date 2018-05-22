@@ -37,7 +37,17 @@ public class Applicacao {
         case 2:
             return menuContribuinte(estado);
         case 3:
-            return menuEmpresa(estado);
+            Scanner s = new Scanner(System.in);
+            System.out.println(" Indique o numero de identificação fiscal ");
+            long value = s.nextLong();
+            try{
+                Entidade emp = estado.getContribuinte(new Long(value) );
+                if( emp instanceof Empresa )
+                    return menuEmpresa( estado , (Empresa)emp );
+            }catch(Exception aa){
+                return menuModos(estado);
+            }
+            return menuModos(estado);
         }
         return 1;
     }
@@ -201,20 +211,7 @@ public class Applicacao {
             coe = s.nextFloat();
 
             try {
-                if (estado.contemContribuinte(c.getNif())) {
-                    System.out.println(" Indique a palavra-chave da ultima vez que acedou a sua conta ");
-                    cw = s.nextLine();
-                }
-            } catch (InvalidFieldException aa) {
-                System.out.println(" O contribuinte proporcionado não contem nif ");
-                return menuContribuinte(estado);
-            }
-
-            try {
-                estado.addContribuinte(new Pessoa(c, pw, coe), cw);
-            } catch (IncorrectPasswordException aa) {
-                System.out.println(" Password Incorreta ");
-                return menuContribuinte(estado);
+                estado.addContribuinte(new Pessoa(c, pw, coe));
             } catch (InvalidFieldException aa) {
                 System.out.println(" O contribuinte proporcionado não contem nif ");
                 return menuContribuinte(estado);
@@ -229,10 +226,7 @@ public class Applicacao {
             x.setContacto(c);
             x.setPassword(pw);
             try {
-                estado.addContribuinte(x, pw);
-            } catch (IncorrectPasswordException aa) {
-                System.out.println(" O contribuinte já existe com palavra-chave diferente ");
-                return menuContribuinte(estado);
+                estado.addContribuinte(x);
             } catch (InvalidFieldException aa) {
                 System.out.println(" O contribuinte proporcionado não contem nif ");
                 return menuContribuinte(estado);
@@ -245,10 +239,7 @@ public class Applicacao {
             y.setContacto(c);
             y.setPassword(pw);
             try {
-                estado.addContribuinte(y, pw);
-            } catch (IncorrectPasswordException aa) {
-                System.out.println(" O contribuinte já existe com palavra-chave diferente ");
-                return menuContribuinte(estado);
+                estado.addContribuinte(y);
             } catch (InvalidFieldException aa) {
                 System.out.println(" O contribuinte proporcionado não contem nif ");
                 return menuContribuinte(estado);
@@ -258,11 +249,10 @@ public class Applicacao {
             System.out.println(" Indique o seu nif ");
             Long nif = new Long(s.nextLong());
             if (estado.contemContribuinte(nif)) {
-                System.out.println(" Indique a sua password ");
-                try{
-                    return menuAcederContribuinte(estado, estado.getContribuinte(nif, s.nextLine()));
-                }catch(Exception aa){
-                    System.out.println( aa.toString() );
+                try {
+                    return menuAcederContribuinte(estado, estado.getContribuinte(nif));
+                } catch (Exception aa) {
+                    System.out.println(aa.toString());
                     return menuContribuinte(estado);
                 }
             } else {
@@ -306,11 +296,6 @@ public class Applicacao {
         String movel = s.nextLine();
 
         return new Contacto(value, nome, mail, morada, movel);
-    }
-
-    public int menuEmpresa(JavaFac estado) {
-
-        return menuContribuinte(estado);
     }
 
     public int menuAddAtividade(JavaFac estado) {
@@ -409,75 +394,75 @@ public class Applicacao {
         case 1:
             System.out.println(" Indique o novo nome ");
             str = s.nextLine();
-            try{
-            pw = subject.getPassword();
-            Contacto cont = subject.getContacto();
-            cont.setNome(str);
-            subject.setContacto( cont );
-            }catch(Exception aa){
-                   System.out.println( aa.toString() );
-                   return menuContribuinte(estado);
+            try {
+                pw = subject.getPassword();
+                Contacto cont = subject.getContacto();
+                cont.setNome(str);
+                subject.setContacto(cont);
+            } catch (Exception aa) {
+                System.out.println(aa.toString());
+                return menuContribuinte(estado);
             }
             break;
         case 2:
             System.out.println(" Indique a nova morada ");
             str = s.nextLine();
-            try{
-            pw = subject.getPassword();
-            Contacto cont = subject.getContacto();
-            cont.setMorada(str);
-            subject.setContacto(cont);
-            }catch(Exception aa){
-                System.out.println( aa.toString() );
+            try {
+                pw = subject.getPassword();
+                Contacto cont = subject.getContacto();
+                cont.setMorada(str);
+                subject.setContacto(cont);
+            } catch (Exception aa) {
+                System.out.println(aa.toString());
                 return menuContribuinte(estado);
             }
             break;
         case 3:
             System.out.println(" Indique o e-mail");
             str = s.nextLine();
-            try{
+            try {
                 pw = subject.getPassword();
                 Contacto cont = subject.getContacto();
                 cont.setMail(str);
                 subject.setContacto(cont);
-            }catch(Exception aa ){
-                System.out.println(aa.toString() );
+            } catch (Exception aa) {
+                System.out.println(aa.toString());
                 return menuContribuinte(estado);
             }
             break;
         case 4:
             System.out.println(" Indique o novo numero de telefone ");
             str = s.nextLine();
-            try{
-            pw = subject.getPassword();
-            Contacto cont = subject.getContacto();
-            cont.setTelefone(str);
-            subject.setContacto(cont);
-            }catch(Exception aa){
-                System.out.println(aa.toString() );
+            try {
+                pw = subject.getPassword();
+                Contacto cont = subject.getContacto();
+                cont.setTelefone(str);
+                subject.setContacto(cont);
+            } catch (Exception aa) {
+                System.out.println(aa.toString());
                 return menuContribuinte(estado);
             }
             break;
         case 5:
             System.out.println(" Indique o novo numero de telefone ");
             str = s.nextLine();
-            
-            try{
-            pw = subject.getPassword();
-            subject.setPassword(str);
-            }catch(Exception aa){
-                System.out.println( aa.toString() );
+
+            try {
+                pw = subject.getPassword();
+                subject.setPassword(str);
+            } catch (Exception aa) {
+                System.out.println(aa.toString());
                 return menuContribuinte(estado);
             }
             break;
         }
-                if( value >0 && value< 6 ){
-                    try{
-                        estado.addContribuinte(subject, pw);
-                    } catch ( Exception aa){
-                        System.out.println( aa.toString());
-                    }
-                }
+        if (value > 0 && value < 6) {
+            try {
+                estado.addContribuinte(subject);
+            } catch (Exception aa) {
+                System.out.println(aa.toString());
+            }
+        }
         return menuAcederContribuinte(estado, subject);
     }
 
@@ -494,6 +479,7 @@ public class Applicacao {
             System.out.println(" 4 - Obter Depesa ");
             System.out.println(" 5 - Despesa por área ");
             System.out.println(" 6 - Alterar informação básica ");
+            System.out.println(" 7 - Alterar fatura pendente ");
             System.out.println(" 0 - Voltar para o menu anterior ");
             value = s.nextInt();
         } while (value < 0 && value > 6);
@@ -511,7 +497,7 @@ public class Applicacao {
             try {
                 x = subject.listafaturas_Crono(menuData(), menuData());
                 for (Fatura var : x) {
-                    System.out.println(var.getCode().toString() + var.getTotal());
+                    System.out.println(var.getServidor().getNome() + var.getTotal());
                 }
             } catch (Exception aa) {
                 System.out.println(aa.toString());
@@ -522,7 +508,7 @@ public class Applicacao {
             try {
                 x = subject.listafaturas_Valor(menuData(), menuData());
                 for (Fatura var : x) {
-                    System.out.println(var.getCode().toString() + var.getTotal());
+                    System.out.println(var.getServidor().getNome() + var.getTotal());
                 }
             } catch (Exception aa) {
                 System.out.println(aa.toString());
@@ -543,6 +529,26 @@ public class Applicacao {
             break;
         case 6:
             return menuAcederContribuinte(estado, subject);
+        case 7:
+            int count = 0;
+            List<Fatura> fact = subject.listafaturas_Pendente();
+            for (Fatura fat : fact) {
+                try {
+                    System.out.println(" " + count + "|" + fat.getServidor().getNome() + "|" + fat.getTotal());
+                    count++;
+                } catch (Exception aa) {
+                    continue;
+                }
+            }
+
+            value = s.nextInt();
+            if (value < fact.size()) {
+                menuAlterarFatura(estado, subject, fact.get(value));
+            } else {
+                System.out.println(" O indice indicado não foi a presentado ");
+            }
+
+            return menuAcederContribuinte(estado, subject);
         }
 
         return menuAcederContribuinte(estado, subject);
@@ -559,5 +565,112 @@ public class Applicacao {
         ano = s.nextInt();
 
         return LocalDate.of(ano, Month.of(mes), dia);
+    }
+
+    public void menuAlterarFatura(JavaFac estado, Entidade subject, Fatura f) {
+        int value;
+        String nome;
+        String codigo;
+        boolean check;
+        double a, b;
+        Scanner s = new Scanner(System.in);
+        do {
+            System.out.println(" 1 - Industria Extrativa ");
+            System.out.println(" 2 - Industria Transformadora");
+            System.out.println(" 3 - Agricultura ");
+            System.out.println(" 4 - Educacao ");
+            value = s.nextInt();
+        } while (value < 1 && value > 4);
+
+        System.out.println(" Indique o nome da atividade ");
+        nome = s.nextLine();
+        System.out.println(" Indique o código da atividade ");
+        codigo = s.nextLine();
+
+        switch (value) {
+        case 1:
+            f.setArea(new IndustriaExtrativa(nome, codigo));
+            break;
+        case 2:
+            System.out.println(" Indique 1 caso a área é dedusível ");
+            if (s.nextInt() == 1)
+                check = true;
+            else
+                check = false;
+            System.out.println(" Indique o coeficiente de cálculo A seguido do B");
+            a = s.nextDouble();
+            b = s.nextDouble();
+            f.setArea(new IndustriaTransformadora(nome, codigo, check, a, b));
+            break;
+        case 3:
+            System.out.println(" Indique 1 caso a área é dedusível ");
+            if (s.nextInt() == 1)
+                check = true;
+            else
+                check = false;
+            System.out.println(" Indique o coeficiente de cálculo A seguido do B");
+            a = s.nextDouble();
+            b = s.nextDouble();
+            f.setArea(new Agricultura(nome, codigo, check, a, b));
+            break;
+        case 4:
+            System.out.println(" Indique 1 caso a área é dedusível ");
+            if (s.nextInt() == 1)
+                check = true;
+            else
+                check = false;
+            f.setArea(new Educacao(nome, codigo, check));
+            break;
+        }
+        subject.addFatura(f);
+        Empresa emp;
+        try {
+            emp = (Empresa) estado.getContribuinte(f.getServidor().getNif());
+            emp.addFatura(f);
+            estado.addContribuinte(emp);
+            menuAcederContribuinte(estado,subject);
+
+        } catch (Exception aa) {
+            System.out.println(aa.toString());
+            menuAlterarFatura(estado, subject, f);
+        }
+
+    }
+
+    public int menuEmpresa(JavaFac estado, Empresa ent) {
+        int value;
+        Scanner s = new Scanner(System.in);
+        do{
+            System.out.println(" Seleciona a opção que pretende explorar  ");
+            System.out.println(" 1 - Remover o registo de uma dada Fatura ");
+            System.out.println(" 2 - Criar uma nova Fatura");
+            System.out.println(" 3 - Total Faturado ");
+            System.out.println(" 4 - Cálculo da Dedução fiscal ");
+            System.out.println(" 5 - Obter emissões por data ");
+            System.out.println(" 6 - Obter emissões por valor ");
+            System.out.println(" 7 - Ver áreas ");
+            System.out.println(" 8 - Número de Faturas emitidas ");
+            System.out.println(" 9 - Alterar informações ");
+            System.out.println(" 10 - Faturas de um dado cliente ");
+            System.out.println(" 0 - Sair  ");
+            value = s.nextInt();
+        }while(value < -1 && value > 10 );
+
+        switch(value){
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+            case 10:
+        
+        }
+
+        return menuContribuinte(estado);
     }
 }

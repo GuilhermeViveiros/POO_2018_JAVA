@@ -170,7 +170,7 @@ public class Empresa extends Entidade implements Serializable {
     public Set<Fatura> getEmissoesD() throws EmptySetException {
         if (this.artigos.size() == 0)
             throw new EmptySetException("Set de Faturas ainda nao preenchido");
-        return this.emissoes_data.stream().map(Fatura::clone).collect(Collectors.toSet());
+        return this.emissoes_data.stream().filter(l -> ! l.isPendente() ).map(Fatura::clone).collect(Collectors.toSet());
     }
 
     /**
@@ -180,7 +180,7 @@ public class Empresa extends Entidade implements Serializable {
     public Set<Fatura> getEmissoesV() throws EmptySetException {
         if (this.emissoes_valor.size() == 0)
             throw new EmptySetException("Set de Faturas ainda nao preenchido");
-        return this.emissoes_valor.stream().map(Fatura::clone).collect(Collectors.toSet());
+        return this.emissoes_valor.stream().filter(f -> ! f.isPendente() ).map(Fatura::clone).collect(Collectors.toSet());
     }
 
     /**
@@ -191,7 +191,7 @@ public class Empresa extends Entidade implements Serializable {
             throw new EmptyMapException(
                     "Map com os respetivos clientes e as suas respetivas faturas ainda nao está preenchido");
         return this.cliente.entrySet().stream().collect(Collectors.toMap(l -> l.getKey(),
-                l -> l.getValue().stream().map(Fatura::clone).collect(Collectors.toSet())));
+                l -> l.getValue().stream().filter(f -> ! f.isPendente() ).map(Fatura::clone).collect(Collectors.toSet())));
     }
 
     /**
@@ -361,7 +361,7 @@ public class Empresa extends Entidade implements Serializable {
         if (this.emissoes_data.size() == 0)
             throw new EmptySetException("Emissoes de faturas ordenadas por data inválidas");
         List<Fatura> x = this.emissoes_data.stream()
-                .filter(h -> h.getDate().isAfter(begin) && h.getDate().isBefore(end)).map(Fatura::clone)
+                .filter(h -> h.getDate().isAfter(begin) && h.getDate().isBefore(end)).filter(l -> ! l.isPendente() ).map(Fatura::clone)
                 .collect(Collectors.toList());
         if (x.size() != 0)
             return x;
@@ -375,7 +375,7 @@ public class Empresa extends Entidade implements Serializable {
     public List<Fatura> faturasValor() throws EmptySetException {// ordenadas por valor
         if (this.emissoes_valor.size() == 0)
             throw new EmptySetException("Emissoes de faturas ordenadas por valor inválidas");
-        return this.emissoes_valor.stream().map(Fatura::clone).collect(Collectors.toList());
+        return this.emissoes_valor.stream().filter(l -> ! l.isPendente() ).map(Fatura::clone).collect(Collectors.toList());
     }
 
     /**
@@ -386,7 +386,7 @@ public class Empresa extends Entidade implements Serializable {
             throws InvalidIntervalException, EmptySetException { // ordenadas por valor
         if (this.emissoes_valor.size() == 0)
             throw new EmptySetException("Emissoes de faturas por valor inválidas");
-        List<Fatura> x = this.emissoes_valor.stream()
+        List<Fatura> x = this.emissoes_valor.stream().filter(l -> ! l.isPendente() )
                 .filter(h -> h.getDate().isAfter(begin) && h.getDate().isBefore(end)).map(Fatura::clone)
                 .collect(Collectors.toList());
         if (x.size() != 0)
@@ -451,7 +451,7 @@ public class Empresa extends Entidade implements Serializable {
     public List<Fatura> faturasData() throws EmptySetException { // ordenadas por data de emisssao
         if (this.emissoes_data.size() == 0)
             throw new EmptySetException("Emissoes de faturas ordendas por data invalidas");
-        return this.emissoes_data.stream().map(Fatura::clone).collect(Collectors.toList());
+        return this.emissoes_data.stream().filter(l -> ! l.isPendente() ).map(Fatura::clone).collect(Collectors.toList());
     }
 
     /**
@@ -468,7 +468,7 @@ public class Empresa extends Entidade implements Serializable {
 
         if (this.cliente.containsKey(nome_cliente)) {
             // existe;
-            List<Fatura> x = this.cliente.get(nome_cliente).stream()
+            List<Fatura> x = this.cliente.get(nome_cliente).stream().filter(l -> ! l.isPendente() )
                     .filter(h -> h.getDate().isAfter(begin) && h.getDate().isBefore(end)).map(Fatura::clone)
                     .collect(Collectors.toList());
             if (x.size() != 0)
@@ -489,7 +489,7 @@ public class Empresa extends Entidade implements Serializable {
 
         if (this.cliente.containsKey(nome_cliente)) {
             // existe;
-            return this.cliente.get(nome_cliente).stream().map(Fatura::clone).collect(Collectors.toList());
+            return this.cliente.get(nome_cliente).stream().filter(l -> ! l.isPendente() ).map(Fatura::clone).collect(Collectors.toList());
         }
         return new ArrayList<Fatura>();
 
@@ -551,7 +551,7 @@ public class Empresa extends Entidade implements Serializable {
         if (this.emissoes_data.size() == 0)
             return 0;
 
-        return this.emissoes_data.stream().filter(h -> h.getDate().isAfter(begin) && h.getDate().isBefore(end))
+        return this.emissoes_data.stream().filter(l -> ! l.isPendente() ).filter(h -> h.getDate().isAfter(begin) && h.getDate().isBefore(end))
                 .mapToDouble(Fatura::getTotal).sum();
     }
 
