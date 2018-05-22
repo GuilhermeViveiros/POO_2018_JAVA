@@ -8,10 +8,15 @@ import java.util.*;
 public class Applicacao {
 
     public int main() {
+        Scanner s = new Scanner(System.in);
+        Menu mestado = new Menu(" Indique o número da opção que pretende expandir :");
+
+        mestado.add(" Iniciar um novo estado ");
+        mestado.add(" Continuar um estado guardado ");
 
         JavaFac estado = null;
 
-        switch (menuEstado()) {
+        switch (mestado.showMenu()) {
         case 0:
             return 1;
         case 1:
@@ -29,7 +34,16 @@ public class Applicacao {
     }
 
     public int menuModos(JavaFac estado) {
-        switch (menuUser()) {
+        Scanner s = new Scanner(System.in);
+        Menu muser = new Menu(" Indique o número da opção que pretende expandir :");
+
+        muser.add(" Indique o número da opção que pretende expandir :");
+        muser.add(" Entrar como admnistrador ");
+        muser.add(" Entrar como Contribuinte ");
+        muser.add(" Entrar como Empresa ");
+        muser.add(" Guardar Estado da Aplicação ");
+
+        switch (muser.showMenu()) {
         case 0:
             return main();
         case 1:
@@ -37,7 +51,6 @@ public class Applicacao {
         case 2:
             return menuContribuinte(estado);
         case 3:
-            Scanner s = new Scanner(System.in);
             System.out.println(" Indique o numero de identificação fiscal ");
             long value = s.nextLong();
             try {
@@ -48,21 +61,18 @@ public class Applicacao {
                 return menuModos(estado);
             }
             return menuModos(estado);
+        case 4:
+            s = new Scanner(System.in);
+            System.out.println(" Indique o nome do ficheiro onde pretende guardar");
+            String filename = s.nextLine();
+            try {
+                estado.gravarEstado(filename);
+            } catch (IOException aa) {
+                System.out.println(" Ocorreu um erro. Tente outra vez");
+            }
+            return menuModos(estado);
         }
         return 1;
-    }
-
-    public int menuEstado() {
-        Scanner s = new Scanner(System.in);
-        int value;
-        do {
-            System.out.println(" Indique o número da opção que pretende expandir :");
-            System.out.println(" 1 - Iniciar um novo estado ");
-            System.out.println(" 2 - Continuar um estado guardado ");
-            System.out.println(" 0 - Sair ");
-            value = s.nextInt();
-        } while (value < 1 && value > 2);
-        return value;
     }
 
     public JavaFac menuRecuperarEstado() {
@@ -71,7 +81,7 @@ public class Applicacao {
         JavaFac o = null;
         boolean b = false;
         do {
-            System.out.println(" ::> Indique o nome do ficheiro Guardado <:: ");
+            System.out.println(" Indique o nome do ficheiro Guardado ");
             out = s.nextLine();
             try {
                 o = JavaFac.recuperarEstado(out);
@@ -88,21 +98,6 @@ public class Applicacao {
         } while (b);
 
         return o;
-    }
-
-    public int menuUser() {
-        Scanner s = new Scanner(System.in);
-        int value;
-        do {
-            System.out.println(" Indique o número da opção que pretende expandir :");
-            System.out.println(" 1 - Entrar como admnistrador ");
-            System.out.println(" 2 - Entrar como Contribuinte ");
-            System.out.println(" 3 - Entrar como Empresa ");
-            System.out.println(" 0 - Voltar para o Menu inicial ");
-
-            value = s.nextInt();
-        } while (value < 0 && value > 3);
-        return value;
     }
 
     public String menuPassword() {
@@ -142,19 +137,18 @@ public class Applicacao {
 
         } while (b);
 
-        do {
-            System.out.println(" 1 - Adicionar Atividade :");
-            System.out.println(" 2 - Remover Contribuinte/Empresa ");
-            System.out.println(" 3 - Apresentar Empresas que mais faturam ");
-            System.out.println(" 4 - Apresentar os 10 Contribuintes com mais despesa ");
-            System.out.println(" 5 - Apresentar Empreas com mais faturas ");
-            System.out.println(" 0 - Menu Anterior ");
-            value = sc.nextInt();
-        } while (value < 0 && value > 4);
+        Menu madmin = new Menu(" Indique a opção que pretende explorar ");
 
-        switch (value) {
+        madmin.add(" Adicionar Atividade :");
+        madmin.add(" Remover Contribuinte/Empresa ");
+        madmin.add(" Apresentar Empresas que mais faturam ");
+        madmin.add(" Apresentar os 10 Contribuintes com mais despesa ");
+        madmin.add(" Apresentar Empreas com mais faturas ");
+
+        switch (madmin.showMenu()) {
         case 1:
-            return menuAddAtividade(estado);
+            estado.addAtividade(menuAtividade());
+            return menuAdmnistrador(estado);
         case 2:
             return menuRemover(estado);
         case 3:
@@ -186,22 +180,17 @@ public class Applicacao {
     public int menuContribuinte(JavaFac estado) {
 
         Scanner s = new Scanner(System.in);
-        int value;
-        do {
-            System.out.println(" Indique o número da opção que pretende expandir :");
-            System.out.println(" 1 - Criar Contribuinte (Pessoa ) ");
-            System.out.println(" 2 - Criar Contribuinte (Empresa) ");
-            System.out.println(" 3 - Criar Contribuinte (Empresa Interior) ");
-            System.out.println(" 4 - Aceder a um contribuinte ");
-            System.out.println(" 5 - Guardar Estado atual ");
-            System.out.println(" 0 - Voltar para trás ");
-            value = s.nextInt();
-        } while (value < 0 && value > 5);
+        Menu mcontr = new Menu("Indique o número da opção que pretende expandir :");
+
+        mcontr.add(" Criar Contribuinte (Pessoa ) ");
+        mcontr.add(" Criar Contribuinte (Empresa) ");
+        mcontr.add(" Criar Contribuinte (Empresa Interior) ");
+        mcontr.add(" Aceder a um contribuinte ");
 
         Contacto c;
         String pw, cw = "vazio";
         float coe;
-        switch (value) {
+        switch (mcontr.showMenu()) {
         case 0:
             return menuModos(estado);
         case 1:
@@ -258,18 +247,6 @@ public class Applicacao {
             } else {
                 return menuContribuinte(estado);
             }
-
-        case 5:
-            s = new Scanner(System.in);
-            System.out.println(" Indique o nome do ficheiro onde pretende guardar");
-            String filename = s.nextLine();
-            try {
-                estado.gravarEstado(filename);
-            } catch (IOException aa) {
-                System.out.println(" Ocorreu um erro. Tente outra vez");
-            }
-
-            return menuContribuinte(estado);
         }
         return 0;
     }
@@ -298,31 +275,29 @@ public class Applicacao {
         return new Contacto(value, nome, mail, morada, movel);
     }
 
-    public int menuAddAtividade(JavaFac estado) {
-
+    public Atividade menuAtividade() {
         int value;
         String nome;
         String codigo;
         boolean check;
         double a, b;
         Scanner s = new Scanner(System.in);
-        do {
-            System.out.println(" 1 - Industria Extrativa ");
-            System.out.println(" 2 - Industria Transformadora");
-            System.out.println(" 3 - Agricultura ");
-            System.out.println(" 4 - Educacao ");
-            value = s.nextInt();
-        } while (value < 1 && value > 4);
+        Menu mfatura = new Menu(" Classe de atividades disponíveis ");
+
+        mfatura.add(" Industria Extrativa ");
+        mfatura.add(" Industria Transformadora");
+        mfatura.add(" Agricultura ");
+        mfatura.add(" Educacao ");
+
+        value = mfatura.showMenu("nope");
 
         System.out.println(" Indique o nome da atividade ");
         nome = s.nextLine();
         System.out.println(" Indique o código da atividade ");
         codigo = s.nextLine();
-
         switch (value) {
         case 1:
-            estado.addAtividade(new IndustriaExtrativa(nome, codigo));
-            break;
+            return (new IndustriaExtrativa(nome, codigo));
         case 2:
             System.out.println(" Indique 1 caso a área é dedusível ");
             if (s.nextInt() == 1)
@@ -332,8 +307,7 @@ public class Applicacao {
             System.out.println(" Indique o coeficiente de cálculo A seguido do B");
             a = s.nextDouble();
             b = s.nextDouble();
-            estado.addAtividade(new IndustriaTransformadora(nome, codigo, check, a, b));
-            break;
+            return (new IndustriaTransformadora(nome, codigo, check, a, b));
         case 3:
             System.out.println(" Indique 1 caso a área é dedusível ");
             if (s.nextInt() == 1)
@@ -343,18 +317,16 @@ public class Applicacao {
             System.out.println(" Indique o coeficiente de cálculo A seguido do B");
             a = s.nextDouble();
             b = s.nextDouble();
-            estado.addAtividade(new Agricultura(nome, codigo, check, a, b));
-            break;
+            return (new Agricultura(nome, codigo, check, a, b));
         case 4:
             System.out.println(" Indique 1 caso a área é dedusível ");
             if (s.nextInt() == 1)
                 check = true;
             else
                 check = false;
-            estado.addAtividade(new Educacao(nome, codigo, check));
-            break;
+            return (new Educacao(nome, codigo, check));
         }
-        return menuAdmnistrador(estado);
+        return null;
     }
 
     public int menuRemover(JavaFac estado) {
@@ -525,10 +497,11 @@ public class Applicacao {
             break;
         case 6:
             menuAlterarEntidade(estado, subject);
-            try{
-                estado.addContribuinte(subject);}catch(InvalidFieldException aa){
-                    System.out.println( aa.toString() );
-                }
+            try {
+                estado.addContribuinte(subject);
+            } catch (InvalidFieldException aa) {
+                System.out.println(aa.toString());
+            }
             return menuAcederContribuinte(estado, subject);
 
         case 7:
@@ -548,11 +521,11 @@ public class Applicacao {
                 Fatura altfac = fact.get(value);
                 menuAlterarFatura(estado, subject, altfac);
                 subject.addFatura(altfac);
-                try{
-                estado.addContribuinte(subject);
-            }catch( InvalidFieldException aa){
-                System.out.println( aa.toString() );
-            }
+                try {
+                    estado.addContribuinte(subject);
+                } catch (InvalidFieldException aa) {
+                    System.out.println(aa.toString());
+                }
             } else {
                 System.out.println(" O indice indicado não foi a presentado ");
             }
@@ -560,11 +533,13 @@ public class Applicacao {
         case 8:
             if (subject instanceof Pessoa) {
                 menuPessoa(estado, (Pessoa) subject);
-                try{
-                estado.addContribuinte(subject);
-                }catch(InvalidFieldException aa){ System.out.println(aa.toString());}
+                try {
+                    estado.addContribuinte(subject);
+                } catch (InvalidFieldException aa) {
+                    System.out.println(aa.toString());
+                }
                 return menuAcederContribuinte(estado, subject);
-                
+
             } else {
                 System.out.println(" Não é uma Pessoa ");
             }
@@ -588,60 +563,8 @@ public class Applicacao {
     }
 
     public void menuAlterarFatura(JavaFac estado, Entidade subject, Fatura f) {
-        int value;
-        String nome;
-        String codigo;
-        boolean check;
-        double a, b;
-        Scanner s = new Scanner(System.in);
-        Menu mfatura = new Menu(" Classes de Atividade disponíveis ");
-        mfatura.add(" Industria Extrativa ");
-        mfatura.add(" Industria Transformadora");
-        mfatura.add(" Agricultura ");
-        mfatura.add(" Educacao ");
 
-        System.out.println(" Indique o nome da atividade ");
-        nome = s.nextLine();
-        System.out.println(" Indique o código da atividade ");
-        codigo = s.nextLine();
-
-        switch (mfatura.showMenu()) {
-        case 0:
-            menuAcederContribuinte(estado, subject);
-        case 1:
-            f.setArea(new IndustriaExtrativa(nome, codigo));
-            break;
-        case 2:
-            System.out.println(" Indique 1 caso a área é dedusível ");
-            if (s.nextInt() == 1)
-                check = true;
-            else
-                check = false;
-            System.out.println(" Indique o coeficiente de cálculo A seguido do B");
-            a = s.nextDouble();
-            b = s.nextDouble();
-            f.setArea(new IndustriaTransformadora(nome, codigo, check, a, b));
-            break;
-        case 3:
-            System.out.println(" Indique 1 caso a área é dedusível ");
-            if (s.nextInt() == 1)
-                check = true;
-            else
-                check = false;
-            System.out.println(" Indique o coeficiente de cálculo A seguido do B");
-            a = s.nextDouble();
-            b = s.nextDouble();
-            f.setArea(new Agricultura(nome, codigo, check, a, b));
-            break;
-        case 4:
-            System.out.println(" Indique 1 caso a área é dedusível ");
-            if (s.nextInt() == 1)
-                check = true;
-            else
-                check = false;
-            f.setArea(new Educacao(nome, codigo, check));
-            break;
-        }
+        f.setArea(menuAtividade());
         subject.addFatura(f);
         Empresa emp;
         try {
@@ -671,6 +594,8 @@ public class Applicacao {
         mempresa.add(" Número de Faturas emitidas ");
         mempresa.add(" Alterar informações ");
         mempresa.add(" Faturas de um dado cliente ");
+        mempresa.add(" Adicionar Produtos ");
+        mempresa.add(" Adicionar Atividade ");
 
         switch (mempresa.showMenu()) {
         case 0:
@@ -699,9 +624,11 @@ public class Applicacao {
                             System.out.println(" Indice invalido ");
                             return menuEmpresa(estado, ent);
                         }
-                        try{
+                        try {
                             estado.addContribuinte(ent);
-                        }catch(InvalidFieldException aa){System.out.println(aa.toString());}
+                        } catch (InvalidFieldException aa) {
+                            System.out.println(aa.toString());
+                        }
                         return menuEmpresa(estado, ent);
 
                     } catch (EmptySetException aa) {
@@ -718,7 +645,7 @@ public class Applicacao {
                         }
                         System.out.println(" Insira o numero da fatura que pretende eliminar ");
                         value = s.nextInt();
-                        if (value > 0 && value < lfat.size()) {
+                        if ( value < lfat.size()) {
                             ent.removerFatura(lfat.get(value));
                         } else {
                             System.out.println(" Indice invalido ");
@@ -848,7 +775,51 @@ public class Applicacao {
                 System.out.println(" Cliente não existente ");
                 return menuEmpresa(estado, ent);
             }
+        case 11:
+            System.out.println(" Indique o nome do novo produto");
+            nome = s.nextLine();
+            System.out.println(" Indique o preço do novo produto");
+            double preco = s.nextDouble();
+            System.out.println(" Indique o Indice da Atividade que quer associar ao Produto ");
+            try {
+                int count = 0;
+                List<Atividade> la = new ArrayList<Atividade>( ent.getAreas() );
+                for (Atividade avar : la ) {
+                    try {
+                        System.out.println( count + " " + avar.getCodidigoActividade() + " | " + avar.getNomeActividade());   
+                    } catch (InvalidFieldException aa) {
+                        continue;
+                    }
+                    count ++;
+                }
+                int indx = s.nextInt();
+                Atividade avar;
+                if( indx < la.size() ){
+                    avar = la.get(indx);
+                    ent.adicionarArtigo (new Produto(nome,avar,preco));
+                }else{
+                    System.out.println(" Indice muito grande ");
+                    return menuEmpresa(estado, ent);
+                }
+                
+                try{
+                    estado.addContribuinte(ent);
+                }catch (InvalidFieldException aa){
+                    System.out.println( aa.toString() );
+                }
 
+            } catch (EmptySetException aa) {
+                System.out.println(" Não tem Faturas ");
+            }
+            
+        case 12:
+            ent.adicionaArea( menuAtividade() );
+            try{
+                estado.addContribuinte( ent );
+            }catch (InvalidFieldException aa){
+                System.out.println( aa.toString() );
+            }
+            return menuEmpresa(estado, ent);
         }
         return menuModos(estado);
     }
@@ -866,6 +837,7 @@ public class Applicacao {
         mpessoa.add(" Número de Faturas emitidas ");
         mpessoa.add(" Alterar informações ");
         mpessoa.add(" Faturas de um dado cliente ");
+        mpessoa.add(" Alterar emprego ");
 
         switch (mpessoa.showMenu()) {
         case 0:

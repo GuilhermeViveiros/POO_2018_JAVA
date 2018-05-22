@@ -34,4 +34,22 @@ public class Menu
         
         return value;
     }
+
+    public int showMenu(String nope){
+        
+        int value;
+        Scanner s = new Scanner(System.in);
+        System.out.println(this.titulo);
+        do{
+            int count = 1 ;
+            for(String a :this.opcoes){
+                System.out.println( count + " - " + a );
+                count++;
+            }
+            value = s.nextInt();
+            
+        }while( value < 1 && value > this.opcoes.size() );
+        
+        return value;
+    }
 }

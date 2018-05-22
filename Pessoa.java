@@ -310,24 +310,7 @@ public class Pessoa extends Entidade implements Serializable {
 
         Pessoa inc = (Pessoa) o;
 
-        boolean r = super.equals(inc) && (this.numeroDeElementosDoAgregado() == inc.numeroDeElementosDoAgregado());
-        boolean l;
-
-        // && (this.getNifEmpregador() == inc.getNifEmpregador()))
-        try {
-            l = this.emprego.equals(inc.getEmprego());
-        } catch (InvalidActivityException e) {
-            l = (this.emprego == null);
-        }
-        r = r && l;
-
-        try {
-            l = (this.nifEmpregador == inc.getNifEmpregador());
-        } catch (InvalidFieldException e) {
-            l = (this.nifEmpregador == -1);
-        }
-
-        return r && l;
+        return super.equals(inc);
     }
 
 }

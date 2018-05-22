@@ -37,10 +37,10 @@ public class Produto implements Serializable{
      * @param Area
      * @param double
      */
-    public Produto(String x, Atividade y, double c) {
-        this.nome = x;
-        this.preco = c;
-        this.area = y.clone();
+    public Produto(String nome, Atividade area, double preco) {
+        this.nome = nome;
+        this.preco = preco;
+        this.area = area.clone();
     }
 
     /**
