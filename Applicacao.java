@@ -527,15 +527,9 @@ public class Applicacao {
                 }
             }
             int value = s.nextInt();
+
             if (value < fact.size()) {
-                Fatura altfac = fact.get(value);
-                menuAlterarFatura(estado, subject, altfac);
-                subject.addFatura(altfac);
-                try {
-                    estado.addContribuinte(subject);
-                } catch (InvalidFieldException aa) {
-                    System.out.println(aa.toString());
-                }
+                menuAlterarFatura(estado, subject, fact.get(value));
             } else {
                 System.out.println(" O indice indicado não foi a presentado ");
             }
@@ -574,30 +568,43 @@ public class Applicacao {
 
     private void menuAlterarFatura(JavaFac estado, Entidade subject, Fatura f) {
 
-        try {
-            for (Atividade g : f.getHistory()) {
-                try {
-                    System.out.println(g.getNomeActividade() + "   " + g.getCodidigoActividade());
-                } catch (Exception a) {
-                    continue;
+        Fatura old = f.clone();
+        Menu mfatura = new Menu("Indique a opção que pretende extender ");
+
+        mfatura.add(" Alterar atividade ");
+        mfatura.add(" Alterar descrição ");
+
+        switch (mfatura.showMenu()) {
+        case 0:
+            return;
+        case 1:
+            try {
+                for (Atividade g : f.getHistory()) {
+                    try {
+                        System.out.println(g.getNomeActividade() + "   " + g.getCodidigoActividade());
+                    } catch (Exception a) {
+                        continue;
+                    }
                 }
+            } catch (Exception b) {
+
             }
-        } catch (Exception b) {
-
+            f.setArea(menuAtividade());
+            break;
+        case 2:
+            System.out.println(" Indique a descricao : ");
+            Scanner s = new Scanner(System.in);
+            f.setDescricao(s.nextLine());
+            break;
         }
-
-        f.setArea(menuAtividade());
-        subject.addFatura(f);
-        Empresa emp;
-        try {
-            emp = (Empresa) estado.getContribuinte(f.getServidor().getNif());
-            emp.addFatura(f);
-            estado.addContribuinte(emp);
-            menuAcederContribuinte(estado, subject);
-
-        } catch (Exception aa) {
-            System.out.println(aa.toString());
-            menuAlterarFatura(estado, subject, f);
+        try{
+        subject.addFatura(old, f);
+        Empresa emissora = (Empresa)estado.getContribuinte(old.getServidor().getNif());
+        emissora.updateFatura(old, f);
+        estado.addContribuinte(subject);
+        estado.addContribuinte(emissora);
+        }catch (Exception aa){
+            System.out.println( aa.toString() );
         }
 
     }
@@ -969,13 +976,14 @@ public class Applicacao {
         } while (value > 0);
 
         try {
-            ent.faturaEmi(usr, compras);
+            usr.addFatura(null, ent.faturaEmi(usr, compras));
         } catch (Exception aa) {
             System.out.println(aa.toString());
         }
 
         try {
             estado.addContribuinte(ent);
+            estado.addContribuinte(usr);
         } catch (InvalidFieldException aa) {
             System.out.println(aa.toString());
         }

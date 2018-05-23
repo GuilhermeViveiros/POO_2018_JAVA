@@ -299,7 +299,7 @@ public class Fatura implements Serializable {
     /**
      * Redefine a descricao da Fatura
      */
-    public void setDesricao(String com) {
+    public void setDescricao(String com) {
         this.desc = com;
     }
 
