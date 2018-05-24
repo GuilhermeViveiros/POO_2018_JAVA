@@ -27,8 +27,6 @@ public abstract class Entidade implements Serializable {
     /** A password da entidade */
     private String password;
 
-    transient private Comparator<Fatura> cmpval;
-
     public abstract double calculoDeducao(LocalDate begin, LocalDate end);
 
     public abstract Entidade clone();
@@ -39,12 +37,7 @@ public abstract class Entidade implements Serializable {
     public Entidade() {
         this.info = new Contacto();
         this.faturas_dt = new TreeSet<Fatura>();
-        this.cmpval = new Comparator<Fatura>(){
-            public int compare(Fatura x, Fatura y) {
-                return x.comparePreco(y);
-            }
-        };
-        this.faturas_val = new TreeSet<Fatura>(this.cmpval);
+        this.faturas_val = new TreeSet<Fatura>(new CmpValor());
         this.password = "invalido";
     }
 
@@ -57,13 +50,8 @@ public abstract class Entidade implements Serializable {
      */
     public Entidade(Contacto x, String pw) {
         this.info = x.clone();
-        this.cmpval = new Comparator<Fatura>() {
-            public int compare(Fatura x, Fatura y) {
-                return x.comparePreco(y);
-            }
-        };
         this.faturas_dt = new TreeSet<Fatura>();
-        this.faturas_val = new TreeSet<Fatura>(this.cmpval);
+        this.faturas_val = new TreeSet<Fatura>(new CmpValor());
         this.password = pw;
     }
 
@@ -77,13 +65,8 @@ public abstract class Entidade implements Serializable {
     public Entidade(Contacto x, String pw, Set<Fatura> fat) {
 
         this.info = x.clone();
-        this.cmpval = new Comparator<Fatura>() {
-            public int compare(Fatura x, Fatura y) {
-                return x.comparePreco(y);
-            }
-        };
         this.faturas_dt = new TreeSet<Fatura>();
-        this.faturas_val = new TreeSet<Fatura>(this.cmpval);
+        this.faturas_val = new TreeSet<Fatura>(new CmpValor());
         this.password = pw;
 
         Fatura j;
@@ -103,15 +86,10 @@ public abstract class Entidade implements Serializable {
      */
     public Entidade(Entidade inc) {
         this.info = new Contacto(inc.getContacto());
-        this.cmpval = new Comparator<Fatura>() {
-            public int compare(Fatura x, Fatura y) {
-                return x.comparePreco(y);
-            }
-        };
         try {
             this.faturas_val = inc.getfaturas_Valor();
         } catch (EmptySetException e) {
-            this.faturas_val = new TreeSet(this.cmpval);
+            this.faturas_val = new TreeSet<Fatura>(new CmpValor());
         }
 
         try {
@@ -237,8 +215,7 @@ public abstract class Entidade implements Serializable {
         if (this.faturas_val.size() == 0) {
             return 0;
         } else {
-            return this.faturas_dt.stream().filter(l -> ! l.isPendente() )
-                    .mapToDouble(Fatura::getTotal).sum();
+            return this.faturas_dt.stream().filter(l -> !l.isPendente()).mapToDouble(Fatura::getTotal).sum();
         }
     }
 
@@ -249,7 +226,8 @@ public abstract class Entidade implements Serializable {
         if (this.faturas_val.size() == 0) {
             return 0;
         } else {
-            return this.faturas_dt.stream().filter(l -> ! l.isPendente() ).filter(p -> (p.getDate().isAfter(begin)) && (p.getDate().isBefore(end)))
+            return this.faturas_dt.stream().filter(l -> !l.isPendente())
+                    .filter(p -> (p.getDate().isAfter(begin)) && (p.getDate().isBefore(end)))
                     .mapToDouble(Fatura::getTotal).sum();
         }
     }
@@ -312,13 +290,13 @@ public abstract class Entidade implements Serializable {
      * Adiciona uma fatura
      */
     public void addFatura(Fatura old, Fatura x) {
-        
-        if( old != null && this.faturas_dt.contains(old) ){
+
+        if (old != null && this.faturas_dt.contains(old)) {
             this.faturas_dt.remove(old);
             this.faturas_val.remove(old);
         }
 
-        Fatura newer= x.clone();
+        Fatura newer = x.clone();
         this.faturas_dt.add(newer);
         this.faturas_val.add(newer);
     }

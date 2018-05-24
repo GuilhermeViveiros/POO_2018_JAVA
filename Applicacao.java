@@ -68,7 +68,8 @@ public class Applicacao {
             try {
                 estado.gravarEstado(filename);
             } catch (IOException aa) {
-                System.out.println(" Ocorreu um erro. Tente outra vez " + aa.toString() );
+                System.out.println(" Ocorreu um erro. Tente outra vez " + aa.toString() + " " + aa.getMessage()  );
+                aa.printStackTrace();
             }
             return menuModos(estado);
         }
@@ -78,7 +79,7 @@ public class Applicacao {
     private JavaFac menuRecuperarEstado() {
         Scanner s = new Scanner(System.in);
         String out;
-        int j=1;
+        int j = 1;
         JavaFac o = null;
         boolean b = false;
         do {
@@ -283,7 +284,7 @@ public class Applicacao {
 
         System.out.println(" indique o numero de telefone : ");
         String movel = s.nextLine();
-        
+
         System.out.println(" indique o nif : ");
         long olLong = s.nextLong();
         Long value = Long.valueOf(olLong);
@@ -308,111 +309,113 @@ public class Applicacao {
 
         switch (mfatura.showMenu("nope")) {
         case 1:
-            List<Atividade> sample = estado.getAtividade().stream().filter(l -> l instanceof IndustriaExtrativa).collect(Collectors.toList());
-            if( sample.size()==0){
+            List<Atividade> sample = estado.getAtividade().stream().filter(l -> l instanceof IndustriaExtrativa)
+                    .collect(Collectors.toList());
+            if (sample.size() == 0) {
                 System.out.println(" Não contêm atividades ");
                 return null;
             }
             int count = 0;
-            for(Atividade act  : sample ){
-                try{
-                    System.out.println( " " + count + act.getCodidigoActividade() + " " + act.getNomeActividade());
-                }catch (Exception aa){
-                    System.out.println( aa.toString() );
-                } 
+            for (Atividade act : sample) {
+                try {
+                    System.out.println(" " + count + act.getCodidigoActividade() + " " + act.getNomeActividade());
+                } catch (Exception aa) {
+                    System.out.println(aa.toString());
+                }
                 count++;
             }
             value = s.nextInt();
-            if( value < sample.size()){
+            if (value < sample.size()) {
                 return sample.get(value);
-            }else{
+            } else {
                 return menuAtividade(estado);
             }
         case 2:
-            sample = estado.getAtividade().stream().filter(l -> l instanceof IndustriaTransformadora).collect(Collectors.toList());
+            sample = estado.getAtividade().stream().filter(l -> l instanceof IndustriaTransformadora)
+                    .collect(Collectors.toList());
             count = 0;
-            if( sample.size()==0){
+            if (sample.size() == 0) {
                 System.out.println(" Não contêm atividades ");
                 return null;
             }
-            for(Atividade act  : sample ){
-                try{
-                    System.out.println( " " + count + act.getCodidigoActividade() + " " + act.getNomeActividade());
-                }catch (Exception aa){
-                    System.out.println( aa.toString() );
-                } 
+            for (Atividade act : sample) {
+                try {
+                    System.out.println(" " + count + act.getCodidigoActividade() + " " + act.getNomeActividade());
+                } catch (Exception aa) {
+                    System.out.println(aa.toString());
+                }
                 count++;
             }
             value = s.nextInt();
-            if( value < sample.size()){
+            if (value < sample.size()) {
                 return sample.get(value);
-            }else{
+            } else {
                 return menuAtividade(estado);
             }
         case 3:
             sample = estado.getAtividade().stream().filter(l -> l instanceof Agricultura).collect(Collectors.toList());
             count = 0;
-            if( sample.size()==0){
+            if (sample.size() == 0) {
                 System.out.println(" Não contêm atividades ");
                 return null;
             }
-            for(Atividade act  : sample ){
-                try{
-                    System.out.println( " " + count + act.getCodidigoActividade() + " " + act.getNomeActividade());
-                }catch (Exception aa){
-                    System.out.println( aa.toString() );
-                } 
+            for (Atividade act : sample) {
+                try {
+                    System.out.println(" " + count + act.getCodidigoActividade() + " " + act.getNomeActividade());
+                } catch (Exception aa) {
+                    System.out.println(aa.toString());
+                }
                 count++;
             }
             value = s.nextInt();
-            if( value < sample.size()){
+            if (value < sample.size()) {
                 return sample.get(value);
-            }else{
+            } else {
                 return menuAtividade(estado);
             }
         case 4:
             sample = estado.getAtividade().stream().filter(l -> l instanceof Educacao).collect(Collectors.toList());
             count = 0;
-            if( sample.size()==0){
+            if (sample.size() == 0) {
                 System.out.println(" Não contêm atividades ");
                 return null;
             }
-            for(Atividade act  : sample ){
-                try{
-                    System.out.println( " " + count + act.getCodidigoActividade() + " " + act.getNomeActividade());
-                }catch (Exception aa){
-                    System.out.println( aa.toString() );
-                } 
+            for (Atividade act : sample) {
+                try {
+                    System.out.println(" " + count + act.getCodidigoActividade() + " " + act.getNomeActividade());
+                } catch (Exception aa) {
+                    System.out.println(aa.toString());
+                }
                 count++;
             }
             value = s.nextInt();
-            if( value < sample.size()){
+            if (value < sample.size()) {
                 return sample.get(value);
-            }else{
+            } else {
                 return menuAtividade(estado);
             }
         case 5:
             sample = estado.getAtividade().stream().filter(l -> l instanceof Educacao).collect(Collectors.toList());
             count = 0;
-            if( sample.size()==0){
+            if (sample.size() == 0) {
                 System.out.println(" Não contêm atividades ");
                 return null;
             }
-            for(Atividade act  : sample ){
-                try{
-                    System.out.println( " " + count + act.getCodidigoActividade() + " " + act.getNomeActividade());
-                }catch (Exception aa){
-                    System.out.println( aa.toString() );
-                } 
+            for (Atividade act : sample) {
+                try {
+                    System.out.println(" " + count + act.getCodidigoActividade() + " " + act.getNomeActividade());
+                } catch (Exception aa) {
+                    System.out.println(aa.toString());
+                }
                 count++;
             }
             value = s.nextInt();
-            if( value < sample.size()){
+            if (value < sample.size()) {
                 return sample.get(value);
-            }else{
+            } else {
                 return menuAtividade(estado);
             }
-        
+
         }
         return null;
     }
