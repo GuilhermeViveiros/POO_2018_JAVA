@@ -3,7 +3,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.Map;
 import java.util.Scanner;
-
+import java.util.stream.*;
 import java.util.*;
 
 public class Applicacao {
@@ -78,7 +78,7 @@ public class Applicacao {
     private JavaFac menuRecuperarEstado() {
         Scanner s = new Scanner(System.in);
         String out;
-        int j;
+        int j=1;
         JavaFac o = null;
         boolean b = false;
         do {
@@ -101,9 +101,9 @@ public class Applicacao {
 
         } while (b);
 
-        if( j == 0 )
+        if (j == 0)
             System.exit(0);
-        
+
         return o;
     }
 
@@ -155,7 +155,7 @@ public class Applicacao {
 
         switch (madmin.showMenu()) {
         case 1:
-            estado.addAtividade(menuAtividade());
+            estado.addAtividade(makeAtividade());
             return menuAdmnistrador(estado);
         case 2:
             return menuRemover(estado);
@@ -271,10 +271,6 @@ public class Applicacao {
         Scanner s = new Scanner(System.in);
 
         System.out.println(" Informações ");
-        System.out.print(" indique o nif : ");
-
-        Long value = new Long(s.nextLong());
-        System.out.println("");
 
         System.out.println(" indique o nome : ");
         String nome = s.nextLine();
@@ -287,11 +283,15 @@ public class Applicacao {
 
         System.out.println(" indique o numero de telefone : ");
         String movel = s.nextLine();
+        
+        System.out.println(" indique o nif : ");
+        long olLong = s.nextLong();
+        Long value = Long.valueOf(olLong);
 
         return new Contacto(value, nome, mail, morada, movel);
     }
 
-    private Atividade menuAtividade() {
+    private Atividade menuAtividade(JavaFac estado) {
         int value;
         String nome;
         String codigo;
@@ -304,6 +304,113 @@ public class Applicacao {
         mfatura.add(" Industria Transformadora");
         mfatura.add(" Agricultura ");
         mfatura.add(" Educacao ");
+        mfatura.add(" Saude ");
+
+        switch (mfatura.showMenu("nope")) {
+        case 1:
+            List<Atividade> sample = estado.getAtividade().stream().filter(l -> l instanceof IndustriaExtrativa).collect(Collectors.toList());
+            int count = 0;
+            for(Atividade act  : sample ){
+                try{
+                    System.out.println( " " + count + act.getCodidigoActividade() + " " + act.getNomeActividade());
+                }catch (Exception aa){
+                    System.out.println( aa.toString() );
+                } 
+                count++;
+            }
+            value = s.nextInt();
+            if( value < sample.size()){
+                return sample.get(value);
+            }else{
+                return menuAtividade(estado);
+            }
+        case 2:
+            sample = estado.getAtividade().stream().filter(l -> l instanceof IndustriaTransformadora).collect(Collectors.toList());
+            count = 0;
+            for(Atividade act  : sample ){
+                try{
+                    System.out.println( " " + count + act.getCodidigoActividade() + " " + act.getNomeActividade());
+                }catch (Exception aa){
+                    System.out.println( aa.toString() );
+                } 
+                count++;
+            }
+            value = s.nextInt();
+            if( value < sample.size()){
+                return sample.get(value);
+            }else{
+                return menuAtividade(estado);
+            }
+        case 3:
+            sample = estado.getAtividade().stream().filter(l -> l instanceof Agricultura).collect(Collectors.toList());
+            count = 0;
+            for(Atividade act  : sample ){
+                try{
+                    System.out.println( " " + count + act.getCodidigoActividade() + " " + act.getNomeActividade());
+                }catch (Exception aa){
+                    System.out.println( aa.toString() );
+                } 
+                count++;
+            }
+            value = s.nextInt();
+            if( value < sample.size()){
+                return sample.get(value);
+            }else{
+                return menuAtividade(estado);
+            }
+        case 4:
+            sample = estado.getAtividade().stream().filter(l -> l instanceof Educacao).collect(Collectors.toList());
+            count = 0;
+            for(Atividade act  : sample ){
+                try{
+                    System.out.println( " " + count + act.getCodidigoActividade() + " " + act.getNomeActividade());
+                }catch (Exception aa){
+                    System.out.println( aa.toString() );
+                } 
+                count++;
+            }
+            value = s.nextInt();
+            if( value < sample.size()){
+                return sample.get(value);
+            }else{
+                return menuAtividade(estado);
+            }
+        case 5:
+            sample = estado.getAtividade().stream().filter(l -> l instanceof Educacao).collect(Collectors.toList());
+            count = 0;
+            for(Atividade act  : sample ){
+                try{
+                    System.out.println( " " + count + act.getCodidigoActividade() + " " + act.getNomeActividade());
+                }catch (Exception aa){
+                    System.out.println( aa.toString() );
+                } 
+                count++;
+            }
+            value = s.nextInt();
+            if( value < sample.size()){
+                return sample.get(value);
+            }else{
+                return menuAtividade(estado);
+            }
+        
+        }
+        return null;
+    }
+
+    private Atividade makeAtividade() {
+        int value;
+        String nome;
+        String codigo;
+        boolean check;
+        double a, b;
+        Scanner s = new Scanner(System.in);
+        Menu mfatura = new Menu(" Classe de atividades disponíveis ");
+
+        mfatura.add(" Industria Extrativa ");
+        mfatura.add(" Industria Transformadora");
+        mfatura.add(" Agricultura ");
+        mfatura.add(" Educacao ");
+        mfatura.add(" Saude ");
 
         value = mfatura.showMenu("nope");
 
@@ -341,6 +448,13 @@ public class Applicacao {
             else
                 check = false;
             return (new Educacao(nome, codigo, check));
+        case 5:
+            System.out.println(" Indique 1 caso a área é dedusível ");
+            if (s.nextInt() == 1)
+                check = true;
+            else
+                check = false;
+            return (new Saude(nome, codigo, check));
         }
         return null;
     }
@@ -595,7 +709,7 @@ public class Applicacao {
             } catch (Exception b) {
 
             }
-            f.setArea(menuAtividade());
+            f.setArea(menuAtividade(estado));
             break;
         case 2:
             System.out.println(" Indique a descricao : ");
@@ -603,14 +717,14 @@ public class Applicacao {
             f.setDescricao(s.nextLine());
             break;
         }
-        try{
-        subject.addFatura(old, f);
-        Empresa emissora = (Empresa)estado.getContribuinte(old.getServidor().getNif());
-        emissora.updateFatura(old, f);
-        estado.addContribuinte(subject);
-        estado.addContribuinte(emissora);
-        }catch (Exception aa){
-            System.out.println( aa.toString() );
+        try {
+            subject.addFatura(old, f);
+            Empresa emissora = (Empresa) estado.getContribuinte(old.getServidor().getNif());
+            emissora.updateFatura(old, f);
+            estado.addContribuinte(subject);
+            estado.addContribuinte(emissora);
+        } catch (Exception aa) {
+            System.out.println(aa.toString());
         }
 
     }
@@ -850,7 +964,7 @@ public class Applicacao {
             }
 
         case 12:
-            ent.adicionaArea(menuAtividade());
+            ent.adicionaArea(menuAtividade(estado));
             try {
                 estado.addContribuinte(ent);
             } catch (InvalidFieldException aa) {
@@ -913,7 +1027,7 @@ public class Applicacao {
             }
             break;
         case 4:
-            subject.setEmprego(menuAtividade());
+            subject.setEmprego(menuAtividade(estado));
             System.out.println(" Indique o nif do seu empregador ");
             subject.setNifEmpregador(s.nextLong());
 

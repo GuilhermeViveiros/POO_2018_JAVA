@@ -28,7 +28,7 @@ public class Menu
                 System.out.println( count + " - " + a );
                 count++;
             }
-            System.out.println(" 0 - Voltar para o menu anterior ");
+            System.out.println("0 - Voltar para o menu anterior ");
             value = s.nextInt();
         }while( value < 0 && value > this.opcoes.size() );
         

@@ -99,6 +99,14 @@ public class JavaFac implements Serializable {
         this.adminstrador = password;
     }
 
+    public void addAtividade( Atividade a){
+        this.areas.add(a.clone());
+    }
+
+    public List<Atividade> getAtividade(){
+        return this.areas.stream().map(Atividade::clone).collect(Collectors.toList());
+    }
+
     public Set<Entidade> getConjuntoContribuintes() throws EmptySetException {
         if (this.contribuintes.size() == 0) {
             throw new EmptySetException(" O conjunto está Vazio ");
@@ -113,10 +121,6 @@ public class JavaFac implements Serializable {
         Entidade x = this.contribuintes.get(nif);
 
         return x.clone();
-    }
-
-    public void addAtividade(Atividade a) {
-        this.areas.add(a.clone());
     }
 
     public void addContribuinte(Entidade x) throws InvalidFieldException {
