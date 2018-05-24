@@ -8,7 +8,7 @@ import java.io.Serializable;
  */
 public class FamiliaNumerosa extends Pessoa implements Reducao ,Serializable{
 
-    public FamiliaNumerosa( Pessoa x)
+    public FamiliaNumerosa(Pessoa x)
     {
         super(x);
     }

@@ -1,7 +1,7 @@
-
 import java.time.LocalDate;
+import java.io.Serializable;
 
-public class IndustriaTransformadora implements Atividade {
+public class IndustriaTransformadora implements Atividade , Serializable {
 
     private String nome; // nome da atividade
     private String codigo; // codigo da atividade

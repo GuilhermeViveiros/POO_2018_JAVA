@@ -38,7 +38,7 @@ public class Contacto implements Serializable {
     }
 
     /**
-     * Construtor parametrizado de Entidade. Aceita como parâmetros os valores para
+     * Construtor parametrizado de Fatura. Aceita como parâmetros os valores para
      * cada variável de instância.
      * @param Nif
      * @param Nome
@@ -209,7 +209,7 @@ public class Contacto implements Serializable {
      * Método que determina se 2 Contactos são iguais.
      * Esta função é deterministica, reflexiva, transitiva e simétrica.
      * 
-     * @return booleano que é verdadeiro caso as Entidades sejam iguais e falso caso
+     * @return booleano que é verdadeiro caso os Contactos sejam iguais e falso caso
      *         contrário.
      */
     public boolean equals(Object o) {

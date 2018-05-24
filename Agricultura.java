@@ -1,7 +1,7 @@
-
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Agricultura implements Atividade {
+public class Agricultura implements Atividade , Serializable {
 
     private String nome; // nome da atividade
     private String codigo; // codigo da atividade
