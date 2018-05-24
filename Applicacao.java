@@ -38,7 +38,6 @@ public class Applicacao {
         Scanner s = new Scanner(System.in);
         Menu muser = new Menu(" Indique o número da opção que pretende expandir :");
 
-        muser.add(" Indique o número da opção que pretende expandir :");
         muser.add(" Entrar como admnistrador ");
         muser.add(" Entrar como Contribuinte ");
         muser.add(" Entrar como Empresa ");
@@ -79,6 +78,7 @@ public class Applicacao {
     private JavaFac menuRecuperarEstado() {
         Scanner s = new Scanner(System.in);
         String out;
+        int j;
         JavaFac o = null;
         boolean b = false;
         do {
@@ -88,16 +88,22 @@ public class Applicacao {
                 o = JavaFac.recuperarEstado(out);
                 b = false;
             } catch (IOException aa) {
-                b = true;
                 System.out.println(" Ficheiro não encontrado ");
-
+                System.out.println(" Indique 1 para voltar ou 0 para terminar ");
+                j = s.nextInt();
+                b = (j != 0);
             } catch (ClassNotFoundException aa) {
-                b = true;
                 System.out.println(" Ficheiro com a class inválida");
+                System.out.println(" Indique 1 para voltar ou 0 para terminar ");
+                j = s.nextInt();
+                b = (j != 0);
             }
 
         } while (b);
 
+        if( j == 0 )
+            System.exit(0);
+        
         return o;
     }
 

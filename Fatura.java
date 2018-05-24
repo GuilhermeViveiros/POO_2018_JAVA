@@ -290,7 +290,7 @@ public class Fatura implements Serializable {
     }
 
     /**
-     * Redefine o contacto da Fatura
+     * Redefine o contacto da Fatura 
      */
     public void setServidor(Contacto serv) {
         this.servidor = serv.clone();
