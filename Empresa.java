@@ -29,7 +29,7 @@ public class Empresa extends Entidade implements Serializable {
     /** As areas da Empresa */
     private Set<Atividade> areas;
 
-    private Comparator<Fatura> cmpvalor;
+    transient private Comparator<Fatura> cmpvalor;
     /**
      * Construtor por omissão de Empresa.
      */

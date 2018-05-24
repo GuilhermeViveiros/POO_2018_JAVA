@@ -27,7 +27,7 @@ public abstract class Entidade implements Serializable {
     /** A password da entidade */
     private String password;
 
-    private Comparator<Fatura> cmpval;
+    transient private Comparator<Fatura> cmpval;
 
     public abstract double calculoDeducao(LocalDate begin, LocalDate end);
 
@@ -39,7 +39,7 @@ public abstract class Entidade implements Serializable {
     public Entidade() {
         this.info = new Contacto();
         this.faturas_dt = new TreeSet<Fatura>();
-        this.cmpval = new Comparator<Fatura>() {
+        this.cmpval = new Comparator<Fatura>(){
             public int compare(Fatura x, Fatura y) {
                 return x.comparePreco(y);
             }

@@ -68,7 +68,7 @@ public class Applicacao {
             try {
                 estado.gravarEstado(filename);
             } catch (IOException aa) {
-                System.out.println(" Ocorreu um erro. Tente outra vez");
+                System.out.println(" Ocorreu um erro. Tente outra vez " + aa.toString() );
             }
             return menuModos(estado);
         }
