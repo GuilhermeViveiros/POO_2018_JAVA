@@ -29,8 +29,6 @@ public class Empresa extends Entidade implements Serializable {
     /** As areas da Empresa */
     private Set<Atividade> areas;
 
-    private double faturado;
-
     private Comparator<Fatura> cmpvalor;
     /**
      * Construtor por omissão de Empresa.
@@ -47,7 +45,7 @@ public class Empresa extends Entidade implements Serializable {
         this.cliente = new HashMap<String, Set<Fatura>>();
         this.artigos = new HashSet<Produto>();
         this.areas = new HashSet<Atividade>();
-        this.faturado = 0;
+
     }
 
     /**
@@ -69,7 +67,7 @@ public class Empresa extends Entidade implements Serializable {
         this.cliente = new HashMap<String, Set<Fatura>>();
         this.artigos = new HashSet<Produto>();
         this.areas = areas.stream().map(Atividade::clone).collect(Collectors.toSet());
-        this.faturado = 0;
+
     }
 
     /**
@@ -110,7 +108,6 @@ public class Empresa extends Entidade implements Serializable {
             this.areas = new HashSet<>();
         }
 
-        this.faturado = this.emissoes_data.stream().mapToDouble(Fatura::getTotal).sum();
     }
 
     /**
@@ -128,6 +125,7 @@ public class Empresa extends Entidade implements Serializable {
             }
         }
     }
+
 
     /**
      * Privado -> apenas para os construtores pois nao queremos estar a repetir
@@ -156,6 +154,19 @@ public class Empresa extends Entidade implements Serializable {
      * Métodos de instância
      */
 
+    public void updateFatura(Fatura old ,Fatura newer) throws InvalidFieldException{
+        if( this.emissoes_data.contains(old) ){
+            
+            this.emissoes_data.remove(old);
+            this.emissoes_valor.remove(old);
+            this.cliente.get(old.getServidor().getNome()).remove(old);
+            
+            Fatura acnewer = newer.clone();
+            this.emissoes_data.add(acnewer);
+            this.emissoes_valor.add(acnewer);
+            this.cliente.get(old.getServidor().getNome()).add(acnewer);
+        }
+    }
     /**
      * Obtem o conjunto de artigos da Empresa
      */
@@ -247,7 +258,6 @@ public class Empresa extends Entidade implements Serializable {
         } else {
             this.cliente.get(x.getContacto().getNome()).add(f);
         }
-        this.faturado += f.getTotal();
         return f.clone();
     }
 
@@ -351,7 +361,12 @@ public class Empresa extends Entidade implements Serializable {
      * Obtem o total faturado pela Empresa
      */
     public double totalFaturado() {
-        return this.faturado;
+        if (this.emissoes_data.size() == 0)
+            return 0;
+
+        return this.emissoes_data.stream().filter(l -> ! l.isPendente() )
+                .mapToDouble(Fatura::getTotal).sum();
+    
     }
 
     /**

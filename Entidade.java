@@ -27,8 +27,6 @@ public abstract class Entidade implements Serializable {
     /** A password da entidade */
     private String password;
 
-    private double despesa;
-
     private Comparator<Fatura> cmpval;
 
     public abstract double calculoDeducao(LocalDate begin, LocalDate end);
@@ -48,7 +46,6 @@ public abstract class Entidade implements Serializable {
         };
         this.faturas_val = new TreeSet<Fatura>(this.cmpval);
         this.password = "invalido";
-        this.despesa = 0;
     }
 
     /**
@@ -68,7 +65,6 @@ public abstract class Entidade implements Serializable {
         this.faturas_dt = new TreeSet<Fatura>();
         this.faturas_val = new TreeSet<Fatura>(this.cmpval);
         this.password = pw;
-        this.despesa = 0;
     }
 
     /**
@@ -96,8 +92,6 @@ public abstract class Entidade implements Serializable {
             this.faturas_dt.add(j);
             this.faturas_val.add(j);
         }
-
-        this.despesa = fat.stream().mapToDouble(Fatura::getTotal).sum();
     }
 
     /**
@@ -128,7 +122,6 @@ public abstract class Entidade implements Serializable {
 
         this.faturas_dt = new TreeSet(this.faturas_val);
         // a password está vazia.
-        this.despesa = inc.getDespesa();
     }
 
     /**
@@ -241,7 +234,12 @@ public abstract class Entidade implements Serializable {
      * Obter as despesas totais do conjunto de Faturas da Entidade
      */
     public double getDespesa() {
-        return this.despesa;
+        if (this.faturas_val.size() == 0) {
+            return 0;
+        } else {
+            return this.faturas_dt.stream().filter(l -> ! l.isPendente() )
+                    .mapToDouble(Fatura::getTotal).sum();
+        }
     }
 
     /**
@@ -313,10 +311,16 @@ public abstract class Entidade implements Serializable {
     /**
      * Adiciona uma fatura
      */
-    public void addFatura(Fatura x) {
+    public void addFatura(Fatura old, Fatura x) {
         
-        this.faturas_dt.add(x.clone());
-        this.despesa += x.getTotal();
+        if( old != null && this.faturas_dt.contains(old) ){
+            this.faturas_dt.remove(old);
+            this.faturas_val.remove(old);
+        }
+
+        Fatura newer= x.clone();
+        this.faturas_dt.add(newer);
+        this.faturas_val.add(newer);
     }
 
     /**
