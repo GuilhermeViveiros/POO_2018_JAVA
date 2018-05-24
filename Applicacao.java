@@ -309,6 +309,10 @@ public class Applicacao {
         switch (mfatura.showMenu("nope")) {
         case 1:
             List<Atividade> sample = estado.getAtividade().stream().filter(l -> l instanceof IndustriaExtrativa).collect(Collectors.toList());
+            if( sample.size()==0){
+                System.out.println(" Não contêm atividades ");
+                return null;
+            }
             int count = 0;
             for(Atividade act  : sample ){
                 try{
@@ -327,6 +331,10 @@ public class Applicacao {
         case 2:
             sample = estado.getAtividade().stream().filter(l -> l instanceof IndustriaTransformadora).collect(Collectors.toList());
             count = 0;
+            if( sample.size()==0){
+                System.out.println(" Não contêm atividades ");
+                return null;
+            }
             for(Atividade act  : sample ){
                 try{
                     System.out.println( " " + count + act.getCodidigoActividade() + " " + act.getNomeActividade());
@@ -344,6 +352,10 @@ public class Applicacao {
         case 3:
             sample = estado.getAtividade().stream().filter(l -> l instanceof Agricultura).collect(Collectors.toList());
             count = 0;
+            if( sample.size()==0){
+                System.out.println(" Não contêm atividades ");
+                return null;
+            }
             for(Atividade act  : sample ){
                 try{
                     System.out.println( " " + count + act.getCodidigoActividade() + " " + act.getNomeActividade());
@@ -361,6 +373,10 @@ public class Applicacao {
         case 4:
             sample = estado.getAtividade().stream().filter(l -> l instanceof Educacao).collect(Collectors.toList());
             count = 0;
+            if( sample.size()==0){
+                System.out.println(" Não contêm atividades ");
+                return null;
+            }
             for(Atividade act  : sample ){
                 try{
                     System.out.println( " " + count + act.getCodidigoActividade() + " " + act.getNomeActividade());
@@ -378,6 +394,10 @@ public class Applicacao {
         case 5:
             sample = estado.getAtividade().stream().filter(l -> l instanceof Educacao).collect(Collectors.toList());
             count = 0;
+            if( sample.size()==0){
+                System.out.println(" Não contêm atividades ");
+                return null;
+            }
             for(Atividade act  : sample ){
                 try{
                     System.out.println( " " + count + act.getCodidigoActividade() + " " + act.getNomeActividade());
@@ -962,7 +982,7 @@ public class Applicacao {
             } catch (EmptySetException aa) {
                 System.out.println(" Não tem Faturas ");
             }
-
+            return menuEmpresa(estado, ent);
         case 12:
             ent.adicionaArea(menuAtividade(estado));
             try {
