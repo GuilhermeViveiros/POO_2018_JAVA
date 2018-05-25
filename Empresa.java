@@ -268,7 +268,7 @@ public class Empresa extends Entidade implements Serializable {
      * Adiciona uma area na Empresa
      */
     public boolean adicionaArea(Atividade x) {
-        if (this.areas.contains(x)) {
+        if (!this.areas.contains(x)) {
             this.areas.add(x);
             return true;
         }

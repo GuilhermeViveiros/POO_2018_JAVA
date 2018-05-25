@@ -68,7 +68,7 @@ public class Applicacao {
             try {
                 estado.gravarEstado(filename);
             } catch (IOException aa) {
-                System.out.println(" Ocorreu um erro. Tente outra vez " + aa.toString() + " " + aa.getMessage()  );
+                System.out.println(" Ocorreu um erro. Tente outra vez " + aa.toString() + " " + aa.getMessage());
                 aa.printStackTrace();
             }
             return menuModos(estado);
@@ -382,7 +382,7 @@ public class Applicacao {
             }
             for (Atividade act : sample) {
                 try {
-                    System.out.println(" " + count + act.getCodidigoActividade() + " " + act.getNomeActividade());
+                    System.out.println(" " + count + " " + act.getCodidigoActividade() + " " + act.getNomeActividade());
                 } catch (Exception aa) {
                     System.out.println(aa.toString());
                 }
@@ -897,7 +897,7 @@ public class Applicacao {
                     }
                 }
             } catch (EmptySetException aa) {
-                System.out.println(" Não tem Faturas ");
+                System.out.println(" Não tem Atividades ");
             }
             return menuEmpresa(estado, ent);
         case 8:
