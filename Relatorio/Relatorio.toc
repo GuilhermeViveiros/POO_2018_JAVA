@@ -1,0 +1,4 @@
+\contentsline {section}{\numberline {1}Motivação}{1}
+\contentsline {section}{\numberline {2}Descrição da arquitetura de classes: }{1}
+\contentsline {section}{\numberline {3}Descrição da aplicação desenvolvida (ilustração das funcionalidades):}{3}
+\contentsline {section}{\numberline {4}Discussão sobre como seria possível incluir novos tipos de despesas e algoritmos de cálculo de deduções fiscais:}{5}

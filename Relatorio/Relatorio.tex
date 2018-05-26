@@ -1,0 +1,169 @@
+\documentclass{article}
+
+%Package para caracteres especiais
+%\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+
+%Equacoes matematicas
+\usepackage{amsmath}
+
+\usepackage{ragged2e}
+
+%Expoentes (super script) -> \textsuperscript{th}
+%Ficar mais pequeno -> \textsubscript{th}
+
+%Notas-> \footnote bla bla bla
+
+%Para caracteres que o package nao consege associar -> $\backslash$
+
+%Graphics feitos com codigo
+%\usepackage[margin=0.5in]{geometry}
+\usepackage{textcomp}
+
+
+\usepackage{pgfplots}
+
+%Graphics inserindo (ja feitos)
+\usepackage{graphics} %Permite usar imagens
+\usepackage{graphicx}
+\usepackage{float} %Permite nos controlar a posicao 
+
+\begin{document}
+
+
+\begin{titlepage}	
+	\begin{center}
+	
+\huge{\bfseries Trabalho Prático \\ Laboratórios de Informática}\\
+[1cm]
+\Huge Grupo 6\\ 
+[0.3cm]
+
+\huge Guilherme Viveiros , Gonçalo Faria e Angelo André\\
+[0.5cm]
+
+
+\begin{figure}[h]
+\centering % para centralizarmos a figura
+\includegraphics[width=5cm]{Imagens/guilherme.jpg} 
+\includegraphics[width=6cm]{Imagens/goncalo.jpg}
+\includegraphics[width=4cm]{Imagens/angelo.jpg} \\
+[2.5cm]
+
+%\includegraphics[width=5cm]{Imagens/gonçalo.png} 
+\end{figure}
+
+
+
+\end{center}
+	\begin{flushright}
+	 	Departamento de Informática\\
+		Universidade do Minho
+				\end{flushright}
+
+	
+\end{titlepage}
+%aqui acaba tudo relacionado com o meu titulo
+
+\tableofcontents %Indice do trabalho
+\thispagestyle{empty} %tira a numeracao da pagina
+\newpage
+\setcounter{page}{1} %Numero da pagina = 1
+
+\section{Motivação}
+
+No âmbito da Unidade Curricular  Programação Orientada aos Objetos, foi proposto pelo corpo docente  a criação de uma aplicação, em Java, que providencia mecanismos para o cálculo das deduções fiscais de um dado contribuinte singular ou plural.
+
+
+Para que tal fosse possível foi necessário providenciar à aplicação o acesso às diferentes transações do contribuinte em questão, na forma de faturas, assim como introdução de mecanismos para emissão destas.\\
+[2cm]
+
+
+
+
+\section{Descrição da arquitetura de classes: }
+
+No topo da hierarquia de contribuinte, encontra-se uma classe abstrata a que designamos entidade. A entidade, para além de conter toda  a informação em comum entre os diferentes tipos de contribuinte, define também um comportamento. Este comportamento dará a possibilidade a futuros tipos de contribuintes, sem reformular a aplicação, serem adicionados facilmente na nossa aplicação. 	
+
+
+A classe abstrata entidade, contêm como atributo a instância de uma classe, denominada contacto. Esta classe, criada por nós, visa promover reutilização de código não por hierarquia mas sim por composição, para agregar informações básicas úteis em diferentes contextos na aplicação. Adicionalmente os restantes atributos são diferentes conjuntos que guardam faturas assim como uma cadeia de caracteres que guarda a chave de acesso de um dado contribuinte.
+
+
+	A classe contacto contêm como atributos unicamente o número de identificação fiscal, nome, endereço electrónico, morada assim como número de telefone. 
+	Para representar as faturas, foi criada uma classe com o mesmo nome que contém uma instância da classe contacto, que guarda informações referentes ao emissor desta, o número de identificação fiscal do cliente, uma breve descrição, a data de emissão, a lista de compras efetuadas e uma instância de atividade, o tipo de dados estabelecido para representar as diferentes atividades económicas.
+	
+	
+	O tipo de dados atividade foi criado na forma de interface e requer a todas as implementações desta, métodos para obtenção do código e nome de atividade assim como regras de cálculo para os diferentes tipos de contribuinte e função que indica se é uma área que permite deduções fiscais ou não. A implementação de atividade econômica na forma de interface estabelece um contrato que desde que comprimido permite a adição das mais diferentes formas de cálculo de deduções, independentes da hierarquia de classe.
+Para ilustrar as diferentes possibilidades, algumas implementações de atividade foram proporcionadas, no entanto a nossa intenção é a de tentar criar uma aplicação que não só é útil agora às atividade e formas de cálculo de deduções atuais como possibilita a introdução de outras que possam vir a ser introduzidas na sociedade no futuro.
+Posteriormente, para estender entidade foram essencialmente criadas duas classe. A classe pessoa que é dedicada aos contribuintes individuais e a classe empresa que é dedicada aos contribuintes colectivos.
+
+
+Os contribuintes coletivos são os únicos contribuintes em que foi adicionada a possibilidade de atribuir e criar faturas. Nos seus atributos, para além de diferentes conjuntos para faturas, consta um mapa que mapeia o nome de um cliente ao conjunto de faturas a este associado pela empresa, a lista dos produtos vendidos na empresa e o conjunto das atividades a que a empresa pertence.
+
+
+O contribuinte individual pessoa, contêm como atributos uma lista com o seu agregado o nif do seu empregador a atividade económica em que trabalha assim como o histórico de atividade económicas em que trabalhou.
+
+
+As compras aludidas na descrição dos atributos privados tanto de fatura como de empresa foram implementadas numa classe chamada produto que contêm uma atividade económica, preço e nome. Este classe mostrou ser bastante útil pois possibilitou criar mecanismos na aplicação de deduzir as atividades económicas de um dado utilizador.
+
+
+Adicionalmente de forma a satisfazer a segunda parte dos requisitos foram adicionadas duas novas classes empresa do interior e família numerosa subclasses de Empresa e Pessoa respectivamente. Ambas implementam a interface redução, devido à sua natureza especial pois as instâncias terão acesso a deduções especiais que podem ser calculadas com o método redução imposto.
+									
+
+
+
+
+
+
+
+
+\newpage
+\section{Descrição da aplicação desenvolvida (ilustração das funcionalidades):}
+
+A classe Aplicação é o que possibilita o uso dos mecanismos desenvolvidos de forma simples. Esta classe permite a utilizadores e administradores criar e gerir as informações necessárias para o cálculo de deduções.
+Para ilustrar as diferentes possibilidades, encontram-se em baixo algumas imagens dos diferentes menus da aplicação.
+ 
+Um menu que permite, tal como pedido, abrir um estado anteriormente preenchido assim como criar um novo.\\
+[0.5cm]
+
+\begin{figure}[h]
+\centering % para centralizarmos a figura
+\includegraphics[width=15cm]{Imagens/menu.jpg}\\
+\end{figure}
+
+Para o administrador conseguir aceder como Empresa ou Pessoa tem de primeiro que assegurar que esta está criada para o fazer tem de entrar no menu como contribuinte.
+                                    	
+\begin{figure}[h]
+\centering 
+\includegraphics[width=15cm]{Imagens/contribuinte.jpg}
+\end{figure}
+
+\newpage
+
+A única forma de criar novas atividades assim como introduzir novas cidade do interior é através do menu administrador, que posteriormente poderão ser utilizadas pelas Empresas assim como associar ao emprego das diferentes pessoas.
+Esta seção também permite remover Empresas/Pessoas que tenham sido criadas outrora e um conjunto de métodos que trabalham sobre valores monetários e Faturas.\\
+[1cm]
+
+\begin{figure}[h]
+\centering 
+\includegraphics[width=15cm]{Imagens/faturas.jpg}
+\end{figure}
+
+
+\newpage
+\section{Discussão sobre como seria possível incluir novos tipos de despesas e algoritmos de cálculo de deduções fiscais:}
+
+Criar uma subclasse de pessoa que introduza um atributo relativo ao grau de deficiência assim como métodos de diminuição de despesa e posteriormente acréscimo deduções na área de saúde e educação como alternativa a usar o coeficiente de dedução fiscal para este prepósito.
+Também como subclasse de pessoa, introduzir a definição de estudante Universitário ou até mesmo desportista de alta competição. Assim como métodos adjacentes para associar bolsas de estudo , que eventualmente poderiam ser utilizados para reduzir o iva em voos internacionais.
+	No que diz respeito ao algoritmo de cálculo de deduções fiscais, dada a sinergia entre a interface atividade e o cálculo de deduções qualquer programador poderia alterar esta sem perturbar o restante estado da aplicação.
+
+
+
+	
+\end{document}
+
+
+
+
+
