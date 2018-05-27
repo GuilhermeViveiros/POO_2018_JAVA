@@ -1,5 +1,5 @@
 import java.time.LocalDate;
-
+import java.io.Serializable;
 /**
  * Esta classe implementa uma Atividade.
  * Uma Atividade é uma interface que irá representar as areas em que uma Empresa pode ter.
@@ -14,7 +14,7 @@ import java.time.LocalDate;
  * @version (v1);
  */
 
-public interface Atividade
+public interface Atividade extends Serializable
 {
     public String getCodidigoActividade()throws InvalidFieldException;
     public String getNomeActividade()throws InvalidFieldException;
