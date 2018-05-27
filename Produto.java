@@ -121,16 +121,16 @@ public class Produto implements Serializable{
      * @return booleano que é verdadeiro caso as Produtos sejam iguais e falso caso
      *         contrário.
      */
-    public boolean equals(Produto obj) {
+    public boolean equals(Object obj) {
         if(obj==this) return true;
-        if(obj==null || obj.getClass()!=this.getClass()) return false;
-        Produto p = /*(Produto)*/ obj;
+        if(!( obj instanceof Produto)) return false;
+        Produto p = (Produto) obj;
 
         boolean r = false;
         boolean l;
 
         try{
-            l = this.nome.equals( p.getNome());
+            l = this.nome.equals(p.getNome());
         }catch (InvalidFieldException e ){
             l = (this.nome == "invalido");
             r = true;
