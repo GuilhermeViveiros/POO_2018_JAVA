@@ -1146,8 +1146,8 @@ public class Applicacao {
         }
 
         try {
-            System.out.println("A emitir uma nova fatura");
             usr.addFatura(null, ent.faturaEmi(usr, compras));
+            System.out.println("A emitir uma nova fatura");
         } catch (Exception aa) {
             System.out.println(aa.toString());
         }

@@ -27,9 +27,7 @@ public class Empresa extends Entidade implements Serializable {
     /** Os produtos da Empresa */
     private Set<Produto> artigos;
     /** As areas da Empresa */
-    private List<Atividade> areas;
-
-    private CmpValor priority;
+    private Set<Atividade> areas;
 
     /**
      * Construtor por omissão de Empresa.
@@ -37,8 +35,7 @@ public class Empresa extends Entidade implements Serializable {
     public Empresa() {
         super();
         this.emissoes_data = new TreeSet<Fatura>();
-        this.priority = new CmpValor();
-        this.emissoes_valor = new TreeSet<>(this.priority);
+        this.emissoes_valor = new TreeSet<>(this.getPriority());
         this.cliente = new HashMap<String, Set<Fatura>>();
         this.artigos = new HashSet<Produto>();
         this.areas = new HashSet<Atividade>();
@@ -55,8 +52,7 @@ public class Empresa extends Entidade implements Serializable {
     public Empresa(Contacto ct, String password, Set<Atividade> areas) {
         super(ct, password);
         this.emissoes_data = new TreeSet<Fatura>();
-        this.priority = new CmpValor();
-        this.emissoes_valor = new TreeSet<>(this.priority));
+        this.emissoes_valor = new TreeSet<>(this.getPriority());
         this.cliente = new HashMap<String, Set<Fatura>>();
         this.artigos = new HashSet<Produto>();
         this.areas = areas.stream().map(Atividade::clone).collect(Collectors.toSet());
@@ -72,7 +68,6 @@ public class Empresa extends Entidade implements Serializable {
      */
     public Empresa(Empresa x) {
         super(x);
-        this.priority = new CmpValor();
         try {
             this.cliente = x.getClientes();
             this.makeClienteData();
@@ -81,7 +76,7 @@ public class Empresa extends Entidade implements Serializable {
             this.cliente = new HashMap<String, Set<Fatura>>();
             this.emissoes_data = new TreeSet<Fatura>();
 
-            this.emissoes_valor = new TreeSet<>(this.priority);
+            this.emissoes_valor = new TreeSet<>(this.getPriority());
         }
 
         try {

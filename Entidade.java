@@ -27,6 +27,8 @@ public abstract class Entidade implements Serializable {
     /** A password da entidade */
     private String password;
 
+    private CmpValor priority;
+
     public abstract double calculoDeducao(LocalDate begin, LocalDate end);
 
     public abstract Entidade clone();
@@ -37,7 +39,8 @@ public abstract class Entidade implements Serializable {
     public Entidade() {
         this.info = new Contacto();
         this.faturas_dt = new TreeSet<Fatura>();
-        this.faturas_val = new TreeSet<Fatura>(new CmpValor());
+        this.priority = new CmpValor();
+        this.faturas_val = new TreeSet<Fatura>(this.priority);
         this.password = "invalido";
     }
 
@@ -51,7 +54,8 @@ public abstract class Entidade implements Serializable {
     public Entidade(Contacto x, String pw) {
         this.info = x.clone();
         this.faturas_dt = new TreeSet<Fatura>();
-        this.faturas_val = new TreeSet<Fatura>(new CmpValor());
+        this.priority = new CmpValor();
+        this.faturas_val = new TreeSet<Fatura>(this.priority);
         this.password = pw;
     }
 
@@ -66,7 +70,8 @@ public abstract class Entidade implements Serializable {
 
         this.info = x.clone();
         this.faturas_dt = new TreeSet<Fatura>();
-        this.faturas_val = new TreeSet<Fatura>(new CmpValor());
+        this.priority = new CmpValor();
+        this.faturas_val = new TreeSet<Fatura>(this.priority);
         this.password = pw;
 
         Fatura j;
@@ -86,10 +91,11 @@ public abstract class Entidade implements Serializable {
      */
     public Entidade(Entidade inc) {
         this.info = new Contacto(inc.getContacto());
+        this.priority = new CmpValor();
         try {
             this.faturas_val = inc.getfaturas_Valor();
         } catch (EmptySetException e) {
-            this.faturas_val = new TreeSet<Fatura>(new CmpValor());
+            this.faturas_val = new TreeSet<Fatura>(this.priority);
         }
 
         try {
@@ -98,7 +104,7 @@ public abstract class Entidade implements Serializable {
             this.password = "invalido";
         }
 
-        this.faturas_dt = this.faturas_val.stream().map(Entidade::clone).collect(Collectors.toSet());
+        this.faturas_dt = this.faturas_val.stream().map(Fatura::clone).collect(Collectors.toCollection(TreeSet::new));
         // a password está vazia.
     }
 
@@ -139,6 +145,9 @@ public abstract class Entidade implements Serializable {
                     .collect(Collectors.toList());
     }
 
+    public CmpValor getPriority(){
+        return this.priority;
+    }
     /**
      * Obter uma lista de faturas ordenadas por ordem cronológica entre duas datas
      */

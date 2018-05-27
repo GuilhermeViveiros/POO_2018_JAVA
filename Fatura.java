@@ -136,7 +136,7 @@ public class Fatura implements Serializable,Comparable {
     /**
      * Obtem a comparacao entre duas faturas através da data
      */
-    public int compareTo ( Object b) {
+    public int compareTo( Object b) {
         if( !(b instanceof Fatura)) return 0;
         Fatura a = (Fatura)b;
         return (this.getDate().compareTo(a.getDate()));
