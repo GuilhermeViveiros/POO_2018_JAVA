@@ -53,23 +53,30 @@ public class Applicacao {
         case 3:
             System.out.println(" Indique o numero de identificação fiscal ");
             long value = s.nextLong();
-            
-   
+            s = new Scanner(System.in); 
+
+            Entidade emp;
             try {
-                Entidade emp = estado.getContribuinte(new Long(value));
-                
-                if (emp instanceof Empresa){
-                    System.out.println("Indique a palavra chave de entrada");
-                    String chave = s.nextLine();
-                    if( chave.equals(emp.getPassword()) ){
-                        return menuEmpresa(estado, (Empresa) emp);
-                    }else{
-                        System.out.println("Palavra chave- incorreta");
-                        menuModos(estado);
-                    }
-                }
+                emp = estado.getContribuinte(new Long(value));
             } catch (Exception aa) {
                 return menuModos(estado);
+            }
+            if (emp instanceof Empresa) {
+                System.out.println("Indique a palavra chave de entrada");
+                String chave = s.nextLine();
+                String pass;
+                try {
+                    pass = emp.getPassword();
+                } catch (Exception aa) {
+                    return menuModos(estado);
+                }
+
+                if (chave.equals(pass)) {
+                    return menuEmpresa(estado, (Empresa) emp);
+                } else {
+                    System.out.println("Palavra chave- incorreta");
+                    menuModos(estado);
+                }
             }
             return menuModos(estado);
         case 4:
@@ -1125,14 +1132,19 @@ public class Applicacao {
 
         do {
             value = mcompra.showMenu();
-            if( value >0)
+            if (value > 0)
                 compras.add(avar.get(value - 1));
 
         } while (value > 0);
-        
-        for(Produto y : compras )
-            System.out.println(y.getNome());
-        
+
+        for (Produto y : compras) {
+            try {
+                System.out.println(y.getNome());
+            } catch (Exception aa) {
+                System.out.println(aa.toString());
+            }
+        }
+
         try {
             System.out.println("A emitir uma nova fatura");
             usr.addFatura(null, ent.faturaEmi(usr, compras));
