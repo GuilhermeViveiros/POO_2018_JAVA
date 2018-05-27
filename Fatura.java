@@ -18,7 +18,7 @@ import java.io.Serializable;
  * @version (v1);
  */
 
-public class Fatura implements Serializable {
+public class Fatura implements Serializable,Comparable {
 
     /** O contacto da Fatura */
     private Contacto servidor;
@@ -136,8 +136,10 @@ public class Fatura implements Serializable {
     /**
      * Obtem a comparacao entre duas faturas através da data
      */
-    public int compareTo(Fatura b) {
-        return (this.getDate().compareTo(b.getDate()));
+    public int compareTo ( Object b) {
+        if( !(b instanceof Fatura)) return 0;
+        Fatura a = (Fatura)b;
+        return (this.getDate().compareTo(a.getDate()));
     }
 
     /**
