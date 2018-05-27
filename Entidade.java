@@ -73,7 +73,7 @@ public abstract class Entidade implements Serializable {
         for (Fatura l : fat) {
             j = l.clone();
             this.faturas_dt.add(j);
-            this.faturas_val.add(j);
+            this.faturas_val.add(j.clone());
         }
     }
 
@@ -98,7 +98,7 @@ public abstract class Entidade implements Serializable {
             this.password = "invalido";
         }
 
-        this.faturas_dt = new TreeSet(this.faturas_val);
+        this.faturas_dt = this.faturas_val.stream().map(Entidade::clone).collect(Collectors.toSet());
         // a password está vazia.
     }
 
@@ -298,7 +298,7 @@ public abstract class Entidade implements Serializable {
 
         Fatura newer = x.clone();
         this.faturas_dt.add(newer);
-        this.faturas_val.add(newer);
+        this.faturas_val.add(newer.clone());
     }
 
     /**
