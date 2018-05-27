@@ -1125,7 +1125,8 @@ public class Applicacao {
 
         do {
             value = mcompra.showMenu();
-            compras.add(avar.get(value - 1));
+            if( value >0)
+                compras.add(avar.get(value - 1));
 
         } while (value > 0);
         
