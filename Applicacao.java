@@ -1128,8 +1128,12 @@ public class Applicacao {
             compras.add(avar.get(value - 1));
 
         } while (value > 0);
-
+        
+        for(Produto y : compras )
+            System.out.println(y.getNome());
+        
         try {
+            System.out.println("A emitir uma nova fatura");
             usr.addFatura(null, ent.faturaEmi(usr, compras));
         } catch (Exception aa) {
             System.out.println(aa.toString());
@@ -1138,6 +1142,7 @@ public class Applicacao {
         try {
             estado.addContribuinte(ent);
             estado.addContribuinte(usr);
+            System.out.println("Operacao realizada com sucesso");
         } catch (InvalidFieldException aa) {
             System.out.println(aa.toString());
         }
