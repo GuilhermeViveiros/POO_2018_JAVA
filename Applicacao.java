@@ -53,10 +53,21 @@ public class Applicacao {
         case 3:
             System.out.println(" Indique o numero de identificação fiscal ");
             long value = s.nextLong();
+            
+   
             try {
                 Entidade emp = estado.getContribuinte(new Long(value));
-                if (emp instanceof Empresa)
-                    return menuEmpresa(estado, (Empresa) emp);
+                
+                if (emp instanceof Empresa){
+                    System.out.println("Indique a palavra chave de entrada");
+                    String chave = s.nextLine();
+                    if( chave.equals(emp.getPassword()) ){
+                        return menuEmpresa(estado, (Empresa) emp);
+                    }else{
+                        System.out.println("Palavra chave- incorreta");
+                        menuModos(estado);
+                    }
+                }
             } catch (Exception aa) {
                 return menuModos(estado);
             }
@@ -907,7 +918,7 @@ public class Applicacao {
             menuAlterarEntidade(estado, ent);
             return menuEmpresa(estado, ent);
         case 10:
-            System.out.println(" Indique o nome do cliente que pretende remover a fatura ");
+            System.out.println(" Indique o nome do cliente a que pretende ver a fatura ");
             nome = s.nextLine();
             if (ent.contemCliente(nome)) {
                 System.out.println(" Pretende ver as faturas pendentes ? (1 para Sim / 0 para Não)");
