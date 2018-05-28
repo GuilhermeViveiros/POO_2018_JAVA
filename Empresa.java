@@ -21,9 +21,8 @@ public class Empresa extends Entidade implements Serializable {
     /** Conjunto de faturas ordenadas por ordem cronologica da Empresa */
     private TreeSet<Fatura> emissoes_data;
     /** Conjunto de faturas ordenadas por valor referidos nas faturas da Empresa */
-    private TreeSet<Fatura> emissoes_valor;
     /** Conjunto que associa um Utilizador a todas as suas faturas */
-    private Map<String, Set<Fatura>> cliente;
+    private  Map<String, Set<Fatura>> cliente;
     /** Os produtos da Empresa */
     private Set<Produto> artigos;
     /** As areas da Empresa */
@@ -35,7 +34,6 @@ public class Empresa extends Entidade implements Serializable {
     public Empresa() {
         super();
         this.emissoes_data = new TreeSet<Fatura>();
-        this.emissoes_valor = new TreeSet<>(this.getPriority());
         this.cliente = new HashMap<String, Set<Fatura>>();
         this.artigos = new HashSet<Produto>();
         this.areas = new HashSet<Atividade>();
@@ -52,7 +50,6 @@ public class Empresa extends Entidade implements Serializable {
     public Empresa(Contacto ct, String password, Set<Atividade> areas) {
         super(ct, password);
         this.emissoes_data = new TreeSet<Fatura>();
-        this.emissoes_valor = new TreeSet<>(this.getPriority());
         this.cliente = new HashMap<String, Set<Fatura>>();
         this.artigos = new HashSet<Produto>();
         this.areas = areas.stream().map(Atividade::clone).collect(Collectors.toSet());
@@ -71,12 +68,10 @@ public class Empresa extends Entidade implements Serializable {
         try {
             this.cliente = x.getClientes();
             this.makeClienteData();
-            this.makeClienteValue();
         } catch (EmptyMapException a) {
             this.cliente = new HashMap<String, Set<Fatura>>();
             this.emissoes_data = new TreeSet<Fatura>();
 
-            this.emissoes_valor = new TreeSet<>(this.getPriority());
         }
 
         try {
@@ -115,19 +110,6 @@ public class Empresa extends Entidade implements Serializable {
      * clones Atraves do Map clientes criamos um set de Faturas iguais com ordenacao
      * baseada na data
      */
-    private void makeClienteValue() {
-        this.emissoes_valor = new TreeSet<>(new Comparator<Fatura>() {
-            public int compare(Fatura x, Fatura y) {
-                return x.comparePreco(y);
-            }
-        });
-        for (Set<Fatura> l : this.cliente.values()) {
-
-            for (Fatura k : l) {
-                this.emissoes_valor.add(k);
-            }
-        }
-    }
 
     public double calculoDeducao(LocalDate begin, LocalDate end) {
         return this.areas.stream().mapToDouble(l -> l.regraCalculo(this, begin, end)).sum();
@@ -141,12 +123,10 @@ public class Empresa extends Entidade implements Serializable {
         if( this.emissoes_data.contains(old) ){
             
             this.emissoes_data.remove(old);
-            this.emissoes_valor.remove(old);
             this.cliente.get(old.getServidor().getNome()).remove(old);
             
             Fatura acnewer = newer.clone();
             this.emissoes_data.add(acnewer);
-            this.emissoes_valor.add(acnewer);
             this.cliente.get(old.getServidor().getNome()).add(acnewer);
         }
     }
@@ -173,9 +153,14 @@ public class Empresa extends Entidade implements Serializable {
      * Empresa
      */
     public Set<Fatura> getEmissoesV() throws EmptySetException {
-        if (this.emissoes_valor.size() == 0)
+        if (this.emissoes_data.size() == 0)
             throw new EmptySetException("Set de Faturas ainda nao preenchido");
-        return this.emissoes_valor.stream().filter(f -> ! f.isPendente() ).map(Fatura::clone).collect(Collectors.toSet());
+
+        TreeSet<Fatura> emissoes_valor = new TreeSet<Fatura>(this.getPriority());
+        for(Fatura x : this.emissoes_data)
+            emissoes_valor.add(x);
+
+        return emissoes_valor.stream().filter(f -> ! f.isPendente() ).map(Fatura::clone).collect(Collectors.toSet());
     }
 
     /**
@@ -226,7 +211,6 @@ public class Empresa extends Entidade implements Serializable {
         }
 
         this.emissoes_data.add(f);
-        this.emissoes_valor.add(f);
 
         if (!this.cliente.containsKey(x.getContacto().getNome())) {
             TreeSet<Fatura> l = new TreeSet<>(new Comparator<Fatura>() {
@@ -372,9 +356,15 @@ public class Empresa extends Entidade implements Serializable {
      * Obtem todas as faturas que a Empresa emitiu ordenadas por valor
      */
     public List<Fatura> faturasValor() throws EmptySetException {// ordenadas por valor
-        if (this.emissoes_valor.size() == 0)
+        if (this.emissoes_data.size() == 0)
             throw new EmptySetException("Emissoes de faturas ordenadas por valor inválidas");
-        return this.emissoes_valor.stream().filter(l -> ! l.isPendente() ).map(Fatura::clone).collect(Collectors.toList());
+
+        
+        TreeSet<Fatura> emissoes_valor = new TreeSet<Fatura>(this.getPriority());
+        for(Fatura x : this.emissoes_data)
+            emissoes_valor.add(x);
+
+        return emissoes_valor.stream().filter(l -> ! l.isPendente() ).map(Fatura::clone).collect(Collectors.toList());
     }
 
     /**
@@ -383,9 +373,14 @@ public class Empresa extends Entidade implements Serializable {
      */
     public List<Fatura> faturasValor(LocalDate begin, LocalDate end)
             throws InvalidIntervalException, EmptySetException { // ordenadas por valor
-        if (this.emissoes_valor.size() == 0)
+        if (this.emissoes_data.size() == 0)
             throw new EmptySetException("Emissoes de faturas por valor inválidas");
-        List<Fatura> x = this.emissoes_valor.stream().filter(l -> ! l.isPendente() )
+
+        TreeSet<Fatura> emissoes_valor = new TreeSet<Fatura>(this.getPriority());
+            for(Fatura x : this.emissoes_data)
+                emissoes_valor.add(x);
+
+        List<Fatura> x = emissoes_valor.stream().filter(l -> ! l.isPendente() )
                 .filter(h -> h.getDate().isAfter(begin) && h.getDate().isBefore(end)).map(Fatura::clone)
                 .collect(Collectors.toList());
         if (x.size() != 0)
